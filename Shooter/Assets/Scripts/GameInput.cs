@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 namespace Shooter
@@ -37,6 +38,8 @@ namespace Shooter
             return movment.normalized;
 
         }
+
+        public float GetSprintValue() => playerInput.Player.Sprint.ReadValue<float>();
 
         public float GetMouseXAxis()
         {

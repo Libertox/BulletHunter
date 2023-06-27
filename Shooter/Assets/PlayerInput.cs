@@ -71,6 +71,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Squat"",
+                    ""type"": ""Button"",
+                    ""id"": ""0ac75913-194d-478a-8bef-21de348bd2d0"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -227,6 +236,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""Sprint"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""de467b0a-3596-485b-af40-0e290f07e29b"",
+                    ""path"": ""<Keyboard>/leftCtrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""GameScheme"",
+                    ""action"": ""Squat"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -257,6 +277,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_Player_CameraRotationX = m_Player.FindAction("CameraRotationX", throwIfNotFound: true);
         m_Player_CameraRotationY = m_Player.FindAction("CameraRotationY", throwIfNotFound: true);
         m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
+        m_Player_Squat = m_Player.FindAction("Squat", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -323,6 +344,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_CameraRotationX;
     private readonly InputAction m_Player_CameraRotationY;
     private readonly InputAction m_Player_Sprint;
+    private readonly InputAction m_Player_Squat;
     public struct PlayerActions
     {
         private @PlayerInput m_Wrapper;
@@ -332,6 +354,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         public InputAction @CameraRotationX => m_Wrapper.m_Player_CameraRotationX;
         public InputAction @CameraRotationY => m_Wrapper.m_Player_CameraRotationY;
         public InputAction @Sprint => m_Wrapper.m_Player_Sprint;
+        public InputAction @Squat => m_Wrapper.m_Player_Squat;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -356,6 +379,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Sprint.started += instance.OnSprint;
             @Sprint.performed += instance.OnSprint;
             @Sprint.canceled += instance.OnSprint;
+            @Squat.started += instance.OnSquat;
+            @Squat.performed += instance.OnSquat;
+            @Squat.canceled += instance.OnSquat;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -375,6 +401,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Sprint.started -= instance.OnSprint;
             @Sprint.performed -= instance.OnSprint;
             @Sprint.canceled -= instance.OnSprint;
+            @Squat.started -= instance.OnSquat;
+            @Squat.performed -= instance.OnSquat;
+            @Squat.canceled -= instance.OnSquat;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -408,5 +437,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         void OnCameraRotationX(InputAction.CallbackContext context);
         void OnCameraRotationY(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);
+        void OnSquat(InputAction.CallbackContext context);
     }
 }

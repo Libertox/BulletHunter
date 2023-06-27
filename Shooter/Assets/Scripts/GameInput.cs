@@ -8,6 +8,7 @@ namespace Shooter
     public class GameInput: MonoBehaviour
     {
         public event EventHandler OnJumped;
+        public event EventHandler OnSquat;
 
         public static GameInput Instance { get; private set; }
 
@@ -24,7 +25,13 @@ namespace Shooter
             playerInput = new PlayerInput();
             playerInput.Enable();
             playerInput.Player.Jump.performed += Jump_performed;
+            playerInput.Player.Squat.performed += Squat_performed;
 
+        }
+
+        private void Squat_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+        {
+            OnSquat?.Invoke(this, EventArgs.Empty);
         }
 
         private void Jump_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)

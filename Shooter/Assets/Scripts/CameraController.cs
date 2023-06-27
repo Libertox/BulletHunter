@@ -11,7 +11,7 @@ namespace Shooter
 
         private readonly float sensitivity = .5f;
         private float rotationY;
-        private float rotationX;
+
 
         private void Update()
         {
@@ -20,13 +20,13 @@ namespace Shooter
 
         private void CameraRotate()
         {
-           // rotationX += GameInput.Instance.GetMouseXAxis() * sensitivity;
             rotationY += GameInput.Instance.GetMouseYAxis() * sensitivity;
 
-            //rotationX = Mathf.Clamp(rotationX, -maxAngleX, maxAngleX);
             rotationY = Mathf.Clamp(rotationY, -maxAngleY, maxAngleY);
 
             transform.localEulerAngles = new Vector3(-rotationY, 0, 0);
         }
+
+        
     }
 }

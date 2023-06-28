@@ -7,7 +7,6 @@ namespace Shooter
     public class CameraController : MonoBehaviour
     {
         [SerializeField] private float maxAngleY;
-        [SerializeField] private float maxAngleX;
 
         private readonly float sensitivity = .5f;
         private float rotationY;

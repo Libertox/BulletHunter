@@ -6,23 +6,28 @@ namespace Shooter
 {
     public class PlayerController : MonoBehaviour
     {
+        [Header("Basic Attributess")]
         [SerializeField] private float movementSpeed;
         [SerializeField] private float sprintBust;
-
         [SerializeField] private float jumpHeight;
         [SerializeField] private Transform orientationPoint;
-        [SerializeField] private LayerMask groundLayerMask;
 
+     
+        [Header("Colid  Attributess")]
+        [SerializeField] private LayerMask groundLayerMask;
         [SerializeField] private BoxCollider squatColider;
         [SerializeField] private BoxCollider uprightColider;
 
+        [Space(10)]
+       
         [SerializeField] private PlayerAnimation playerAnimation;
 
+     
+        private readonly float gravityScale = 10f;
 
-        private float jumpForce;
-        private float gravityScale = 10f;
         private Rigidbody rgb;
-
+        private float jumpForce;
+        private PlayerStats playerStats;
         private float rotationX;
         private Vector3 moveDirection;
         private bool isSquat;
@@ -30,6 +35,7 @@ namespace Shooter
         private void Awake()
         {
             rgb = GetComponent<Rigidbody>();
+            playerStats = GetComponent<PlayerStats>();
             jumpForce = Mathf.Sqrt(jumpHeight * -2 * (Physics.gravity.y * gravityScale));   
         }
 
@@ -39,40 +45,37 @@ namespace Shooter
             GameInput.Instance.OnSquat += GameInput_OnSquat;
         }
 
-        private void GameInput_OnSquat(object sender, System.EventArgs e)
-        {
-            Squat();
-        }
-
-        private void GameInput_OnJumped(object sender, System.EventArgs e)
-        {
-            HandleJump();
-        }
-
-        private void Update()
-        {
-            HandleRotate();
-        }
-        private void FixedUpdate()
-        {
-            HandleMovement();
- 
-        }
-
+        private void GameInput_OnSquat(object sender, System.EventArgs e) => Squat();
+       
+        private void GameInput_OnJumped(object sender, System.EventArgs e) => HandleJump();
+      
+        private void Update() => HandleRotate();
+      
+        private void FixedUpdate() => HandleMovement();
+       
         private void HandleMovement()
         {
             //if (!GroundCheck()) return;
-
+            
             Vector2 inputVector = GameInput.Instance.GetMovementVectorNormalized();
-            float speed = GameInput.Instance.GetSprintValue() * sprintBust  + movementSpeed;
 
-            if(inputVector.y != 0)
+            float speed = GetMoveSpeed();
+
+            if (inputVector.y != 0)
                 moveDirection =  (orientationPoint.forward.normalized) * (inputVector.y * speed * Time.deltaTime);
            else if(inputVector.x != 0)
                 moveDirection = (orientationPoint.right.normalized) * (inputVector.x  * speed * Time.deltaTime);
 
             if(inputVector != Vector2.zero)
                 rgb.velocity = new Vector3(moveDirection.x, rgb.velocity.y, moveDirection.z);
+        }
+
+        private float GetMoveSpeed()
+        {
+            if (playerStats.Stamina > 0)
+                return GameInput.Instance.GetSprintValue() * sprintBust + movementSpeed;
+            else
+                return movementSpeed;
         }
 
         private void HandleJump()

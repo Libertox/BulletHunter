@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4faa9fd31aac4ef4786b33d24d57d3a0, type: 3}
-  m_Name: Rifle
+  m_Name: Sniper
   m_EditorClassIdentifier: 
-  scopeMesh: {fileID: 4300000, guid: c52425aa7c1a7b849a483f7cc99974de, type: 3}
+  scopeMesh: {fileID: 4300006, guid: bafe1e4d156ffe945aa89b304a97f261, type: 3}
   scopePartMaterials:
   - {fileID: 2100000, guid: e86c377702aa20748ac223d70f899dc1, type: 2}
-  - {fileID: 2100000, guid: ce52ee3f2bf219949a94cf7c2bceedf0, type: 2}
-  - {fileID: 2100000, guid: 1aa329960fc39aa4490b3a9e7e965fa8, type: 2}
   - {fileID: 2100000, guid: 6f06e318c92984042a9074c734738fb7, type: 2}
-  weaponMesh: {fileID: 4300002, guid: c52425aa7c1a7b849a483f7cc99974de, type: 3}
+  - {fileID: 2100000, guid: 1aa329960fc39aa4490b3a9e7e965fa8, type: 2}
+  - {fileID: 2100000, guid: 979617380828bb145b74b4358d5ecd16, type: 2}
+  weaponMesh: {fileID: 4300002, guid: bafe1e4d156ffe945aa89b304a97f261, type: 3}
   weaponPartMaterials:
   - {fileID: 2100000, guid: e86c377702aa20748ac223d70f899dc1, type: 2}
   - {fileID: 2100000, guid: 1aa329960fc39aa4490b3a9e7e965fa8, type: 2}
-  weaponPrefab: {fileID: 4732866247398566998, guid: 480e4fa0099cf1a42aa30359eab3fc44,
+  weaponPrefab: {fileID: 4732866247398566998, guid: b13be445f998c994690c10394845933f,
     type: 3}
-  weaponType: 1
-  ammoInMagazine: 64
+  weaponType: 2
+  ammoInMagazine: 9

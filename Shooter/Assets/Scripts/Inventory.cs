@@ -6,6 +6,11 @@ namespace Shooter
 {
     public class Inventory: MonoBehaviour
     {
+        private const int maxGunAmmo = 64;
+        private const int maxShoutgunAmmo = 48;
+        private const int maxRifleAmmo = 192;
+        private const int maxSniperAmmo = 32;
+        private const int maxGranadeAmmo = 5;
         
         public static int MaxNumberWeapon { get; private set; } = 4;
         public WeaponSO UseWeapon { get; private set; }
@@ -19,15 +24,47 @@ namespace Shooter
         private WeaponSO[] ownedWeapon;
         private int useWeaponIndex;
 
+        public Dictionary<WeaponType, int> AmmoAmount { get; private set; }
+        private Dictionary<WeaponType, int> maxAmmoAmount;
+
+
         private void Awake()
         {
             ownedWeapon = new WeaponSO[MaxNumberWeapon];
+            AmmoAmount = new Dictionary<WeaponType, int>
+            {
+                {WeaponType.Gun,0 },
+                {WeaponType.Rifle,0 },
+                {WeaponType.Sniper,0 },
+                {WeaponType.Shoutgun,0 },
+                {WeaponType.Grenade,0 }
+            };
+
+            maxAmmoAmount = new Dictionary<WeaponType, int>
+            {
+                {WeaponType.Gun,maxGunAmmo },
+                {WeaponType.Rifle,maxRifleAmmo},
+                {WeaponType.Shoutgun,maxShoutgunAmmo},
+                {WeaponType.Sniper,maxSniperAmmo },
+                {WeaponType.Grenade,maxGranadeAmmo }
+            };
 
         }
         private void Start()
         {
             GameInput.Instance.OnWeaponSelected += GameInput_OnWeaponSelected;
             GameInput.Instance.OnWeaponDroped += GameInput_OnWeaponDroped;
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Z))
+            {
+                foreach(var element in AmmoAmount)
+                {
+                    Debug.Log(element);
+                }
+            }
         }
 
         private void GameInput_OnWeaponDroped(object sender, EventArgs e) => DropUseWeapon();
@@ -52,12 +89,21 @@ namespace Shooter
                         UseWeapon = ownedWeapon[useWeaponIndex];
                         SwapWeaponModel();
                     }
-                        
-                    //Dodawanie amunicji
+
+                    AddAmmo(weaponToAdd.WeaponSO.WeaponType,weaponToAdd.NumberOfAmmo);
                     return true;
                 }               
             }
             return false;
+        }
+
+        public void AddAmmo(WeaponType typeOfAmmo , int ammoNumber)
+        {
+            int newAmmo = AmmoAmount[typeOfAmmo] + ammoNumber;
+            if (newAmmo < maxAmmoAmount[typeOfAmmo])
+                AmmoAmount[typeOfAmmo] += ammoNumber;
+            else
+                AmmoAmount[typeOfAmmo] = maxAmmoAmount[typeOfAmmo];
         }
 
         private void SwapWeaponModel()

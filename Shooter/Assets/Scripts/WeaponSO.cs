@@ -12,17 +12,25 @@ namespace Shooter
         [SerializeField] private Mesh weaponMesh;
         [SerializeField] private Material[] weaponPartMaterials;
         [SerializeField] private Weapon weaponPrefab;
+        [SerializeField] private WeaponType weaponType;
+        [SerializeField] private int ammoInMagazine;
 
         public Mesh ScopeMesh => scopeMesh;
         public Material[] ScopePartMaterials => scopePartMaterials;
-
         public Mesh WeaponMesh => weaponMesh;
         public Material[] WeaponPartMaterials => weaponPartMaterials;
-
         public Weapon WeaponPrefab => weaponPrefab;
+        public WeaponType WeaponType => weaponType;
+        public int AmmoInMagazine => ammoInMagazine;
 
+    }
 
-
-
+    public enum WeaponType
+    {
+        Gun,
+        Rifle,
+        Sniper,
+        Shoutgun,
+        Grenade
     }
 }

@@ -6,13 +6,8 @@ namespace Shooter
 {
     public class PlayerShoot:MonoBehaviour
     {
-        public WeaponSO weaponSO;
+       /* public WeaponSO weaponSO;
 
-        public MeshFilter firstMeshFilter;
-        public MeshRenderer firstMeshRender;
-
-        public MeshFilter secondMeshFiler;
-        public MeshRenderer secondMeshRender;
 
         public Transform dropWeaponPosition;
 
@@ -28,13 +23,13 @@ namespace Shooter
                 secondMeshRender.materials = weaponSO.secondPartMaterials;
 
             }
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.R))
             {
                 Weapon weapon = Instantiate(weaponSO.weapon, dropWeaponPosition.position, Quaternion.identity);
                 weapon.Drop();
             }
 
-        }
+        }*/
 
     }
 }

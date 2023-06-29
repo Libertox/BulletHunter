@@ -80,6 +80,42 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""de0a033e-6105-4db7-baba-7de7c187e984"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SelectWeapon"",
+                    ""type"": ""Value"",
+                    ""id"": ""14247622-225a-497b-8782-db6fdbece0e8"",
+                    ""expectedControlType"": ""Integer"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""SelectWeaponByScroll"",
+                    ""type"": ""Value"",
+                    ""id"": ""83dc711e-1672-43f7-9dba-b6c15ce2a559"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""DropWeapon"",
+                    ""type"": ""Button"",
+                    ""id"": ""4fea43a8-f92d-4732-a483-14137f5764cb"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -247,6 +283,83 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""Squat"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1ecd0b0d-04c8-40c4-9b93-1e681ec6c5f4"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""GameScheme"",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d3ba484f-053b-4193-bc03-9e0b407da191"",
+                    ""path"": ""<Mouse>/scroll/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""GameScheme"",
+                    ""action"": ""SelectWeaponByScroll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""71edfac5-f2f0-490e-9655-9c285aeecda8"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""GameScheme"",
+                    ""action"": ""SelectWeapon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2d4b473f-7187-4c1e-a934-c8444cbaae67"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""GameScheme"",
+                    ""action"": ""SelectWeapon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""560f42a8-fe7d-4c39-8001-b50ece5811b0"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""GameScheme"",
+                    ""action"": ""SelectWeapon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7d3c644f-f295-4e72-9260-94eba4f3cec6"",
+                    ""path"": ""<Keyboard>/4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""GameScheme"",
+                    ""action"": ""SelectWeapon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0df8cfcc-2fa9-48b0-b0d6-9d6e0a934d85"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""GameScheme"",
+                    ""action"": ""DropWeapon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -278,6 +391,10 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_Player_CameraRotationY = m_Player.FindAction("CameraRotationY", throwIfNotFound: true);
         m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
         m_Player_Squat = m_Player.FindAction("Squat", throwIfNotFound: true);
+        m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
+        m_Player_SelectWeapon = m_Player.FindAction("SelectWeapon", throwIfNotFound: true);
+        m_Player_SelectWeaponByScroll = m_Player.FindAction("SelectWeaponByScroll", throwIfNotFound: true);
+        m_Player_DropWeapon = m_Player.FindAction("DropWeapon", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -345,6 +462,10 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_CameraRotationY;
     private readonly InputAction m_Player_Sprint;
     private readonly InputAction m_Player_Squat;
+    private readonly InputAction m_Player_Interact;
+    private readonly InputAction m_Player_SelectWeapon;
+    private readonly InputAction m_Player_SelectWeaponByScroll;
+    private readonly InputAction m_Player_DropWeapon;
     public struct PlayerActions
     {
         private @PlayerInput m_Wrapper;
@@ -355,6 +476,10 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         public InputAction @CameraRotationY => m_Wrapper.m_Player_CameraRotationY;
         public InputAction @Sprint => m_Wrapper.m_Player_Sprint;
         public InputAction @Squat => m_Wrapper.m_Player_Squat;
+        public InputAction @Interact => m_Wrapper.m_Player_Interact;
+        public InputAction @SelectWeapon => m_Wrapper.m_Player_SelectWeapon;
+        public InputAction @SelectWeaponByScroll => m_Wrapper.m_Player_SelectWeaponByScroll;
+        public InputAction @DropWeapon => m_Wrapper.m_Player_DropWeapon;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -382,6 +507,18 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Squat.started += instance.OnSquat;
             @Squat.performed += instance.OnSquat;
             @Squat.canceled += instance.OnSquat;
+            @Interact.started += instance.OnInteract;
+            @Interact.performed += instance.OnInteract;
+            @Interact.canceled += instance.OnInteract;
+            @SelectWeapon.started += instance.OnSelectWeapon;
+            @SelectWeapon.performed += instance.OnSelectWeapon;
+            @SelectWeapon.canceled += instance.OnSelectWeapon;
+            @SelectWeaponByScroll.started += instance.OnSelectWeaponByScroll;
+            @SelectWeaponByScroll.performed += instance.OnSelectWeaponByScroll;
+            @SelectWeaponByScroll.canceled += instance.OnSelectWeaponByScroll;
+            @DropWeapon.started += instance.OnDropWeapon;
+            @DropWeapon.performed += instance.OnDropWeapon;
+            @DropWeapon.canceled += instance.OnDropWeapon;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -404,6 +541,18 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Squat.started -= instance.OnSquat;
             @Squat.performed -= instance.OnSquat;
             @Squat.canceled -= instance.OnSquat;
+            @Interact.started -= instance.OnInteract;
+            @Interact.performed -= instance.OnInteract;
+            @Interact.canceled -= instance.OnInteract;
+            @SelectWeapon.started -= instance.OnSelectWeapon;
+            @SelectWeapon.performed -= instance.OnSelectWeapon;
+            @SelectWeapon.canceled -= instance.OnSelectWeapon;
+            @SelectWeaponByScroll.started -= instance.OnSelectWeaponByScroll;
+            @SelectWeaponByScroll.performed -= instance.OnSelectWeaponByScroll;
+            @SelectWeaponByScroll.canceled -= instance.OnSelectWeaponByScroll;
+            @DropWeapon.started -= instance.OnDropWeapon;
+            @DropWeapon.performed -= instance.OnDropWeapon;
+            @DropWeapon.canceled -= instance.OnDropWeapon;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -438,5 +587,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         void OnCameraRotationY(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);
         void OnSquat(InputAction.CallbackContext context);
+        void OnInteract(InputAction.CallbackContext context);
+        void OnSelectWeapon(InputAction.CallbackContext context);
+        void OnSelectWeaponByScroll(InputAction.CallbackContext context);
+        void OnDropWeapon(InputAction.CallbackContext context);
     }
 }

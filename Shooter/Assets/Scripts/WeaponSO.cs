@@ -7,14 +7,22 @@ namespace Shooter
     [CreateAssetMenu(fileName = "Weapon", menuName = "ScriptableObject/Weapon", order = 1)]
     public class WeaponSO : ScriptableObject
     {
-        public Mesh firstMesh;
-        public Material[] firstPartMaterials;
+        [SerializeField] private Mesh scopeMesh;
+        [SerializeField] private Material[] scopePartMaterials;
+        [SerializeField] private Mesh weaponMesh;
+        [SerializeField] private Material[] weaponPartMaterials;
+        [SerializeField] private Weapon weaponPrefab;
 
-        public Mesh secondMesh;
-        public Material[] secondPartMaterials;
+        public Mesh ScopeMesh => scopeMesh;
+        public Material[] ScopePartMaterials => scopePartMaterials;
 
-        public Weapon weapon;
-      
+        public Mesh WeaponMesh => weaponMesh;
+        public Material[] WeaponPartMaterials => weaponPartMaterials;
+
+        public Weapon WeaponPrefab => weaponPrefab;
+
+
+
 
     }
 }

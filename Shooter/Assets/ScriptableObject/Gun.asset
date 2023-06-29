@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4faa9fd31aac4ef4786b33d24d57d3a0, type: 3}
   m_Name: Gun
   m_EditorClassIdentifier: 
-  firstMesh: {fileID: 4300000, guid: c1232b0a1b78ddf44bd877453fb7a84c, type: 3}
-  firstPartMaterials:
+  scopeMesh: {fileID: 4300000, guid: c1232b0a1b78ddf44bd877453fb7a84c, type: 3}
+  scopePartMaterials:
   - {fileID: 2100000, guid: 36f616b823d57714b97b12b9319c9db9, type: 2}
-  secondMesh: {fileID: 4300002, guid: c1232b0a1b78ddf44bd877453fb7a84c, type: 3}
-  secondPartMaterials:
+  weaponMesh: {fileID: 4300002, guid: c1232b0a1b78ddf44bd877453fb7a84c, type: 3}
+  weaponPartMaterials:
   - {fileID: 2100000, guid: 1aa329960fc39aa4490b3a9e7e965fa8, type: 2}
   - {fileID: 2100000, guid: 36f616b823d57714b97b12b9319c9db9, type: 2}
   - {fileID: 2100000, guid: e86c377702aa20748ac223d70f899dc1, type: 2}
-  weapon: {fileID: 9169880162456296231, guid: fd7481522d2bbee4cb1a2fb65589e216, type: 3}
+  weaponPrefab: {fileID: 9169880162456296231, guid: fd7481522d2bbee4cb1a2fb65589e216,
+    type: 3}

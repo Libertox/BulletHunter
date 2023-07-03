@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4732866247398566998}
   - component: {fileID: 5484422178723424606}
   - component: {fileID: 3855691600191856035}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Grenade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -49,7 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rgb: {fileID: 5484422178723424606}
   weaponSO: {fileID: 11400000, guid: a124b1e75984f914ca61fc59eaf170c5, type: 2}
-  numberOfAmmo: 1
+  numberOfMagazine: 0
 --- !u!54 &5484422178723424606
 Rigidbody:
   m_ObjectHideFlags: 0

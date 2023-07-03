@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Shooter
 {
-    public class AmmoPack:MonoBehaviour, Interactable
+    public class AmmoPack:MonoBehaviour, IInteractable
     {
         [SerializeField] private WeaponType weaponType;
         [SerializeField] private int amount;
@@ -12,7 +12,7 @@ namespace Shooter
 
         public void Interact(PlayerController playerController)
         {
-            playerController.Inventory.AddAmmo(weaponType, amount);
+            Inventory.Instance.AddMagazine(weaponType, amount);
             Destroy(gameObject);
         }
 

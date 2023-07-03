@@ -6,30 +6,32 @@ namespace Shooter
 {
     public class PlayerShoot:MonoBehaviour
     {
-       /* public WeaponSO weaponSO;
+        [SerializeField] private LayerMask damageableLayerMask;
 
-
-        public Transform dropWeaponPosition;
-
-        private void Update()
+        private void Start()
         {
-            if (Input.GetKeyDown(KeyCode.Q))
+            GameInput.Instance.OnShooted += GameInput_OnShooted;
+        }
+
+        private void GameInput_OnShooted(object sender, EventArgs e)
+        {
+            if (!Inventory.Instance.CanShoot()) return;
+
+            Inventory.Instance.SubstractAmmo();
+
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit raycastHit;
+            if(Physics.Raycast(ray, out raycastHit, Inventory.Instance.UseWeapon.WeaponRange, damageableLayerMask))
             {
-
-                firstMeshFilter.mesh = weaponSO.firstMesh;
-                firstMeshRender.materials = weaponSO.firstPartMaterials;
-
-                secondMeshFiler.mesh = weaponSO.secondMesh;
-                secondMeshRender.materials = weaponSO.secondPartMaterials;
-
+                if(raycastHit.transform.TryGetComponent(out IDamageable damageable))
+                {                
+                    damageable.TakeDamage();
+                }
             }
-            if (Input.GetKeyDown(KeyCode.R))
-            {
-                Weapon weapon = Instantiate(weaponSO.weapon, dropWeaponPosition.position, Quaternion.identity);
-                weapon.Drop();
-            }
+        }
 
-        }*/
 
     }
+
+
 }

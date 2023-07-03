@@ -4,9 +4,8 @@ using UnityEngine;
 
 namespace Shooter
 {
-    public interface Interactable
+    public interface IDamageable
     {
-        public void Interact(PlayerController playerController);
-
+        public void TakeDamage();
     }
 }

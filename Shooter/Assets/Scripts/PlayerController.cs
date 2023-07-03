@@ -21,10 +21,6 @@ namespace Shooter
         [Space(10)]
        
         [SerializeField] private PlayerAnimation playerAnimation;
-        [SerializeField] private Inventory inventory;
-
-        public Inventory Inventory => inventory;
-
      
         private readonly float gravityScale = 10f;
 

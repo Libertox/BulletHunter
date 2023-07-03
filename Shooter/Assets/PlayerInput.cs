@@ -116,6 +116,33 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Shoot"",
+                    ""type"": ""Button"",
+                    ""id"": ""551f9b6c-2264-4da2-8a2a-eea9be9ef7eb"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Reload"",
+                    ""type"": ""Button"",
+                    ""id"": ""a6badfc2-f891-45ee-9b7b-26ae90d27bec"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Aim"",
+                    ""type"": ""Button"",
+                    ""id"": ""62d14c5f-2889-4fbc-b470-6a0e87d8a03e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Hold"",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -360,6 +387,39 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""DropWeapon"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9c8b36b0-5661-44c5-a402-a14d6f80ca59"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""GameScheme"",
+                    ""action"": ""Shoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0ebf819a-0e55-4ab5-b416-b740558f3bfc"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""GameScheme"",
+                    ""action"": ""Reload"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""efc467ad-e454-4bc1-97b6-66173a9f3f8e"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""GameScheme"",
+                    ""action"": ""Aim"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -395,6 +455,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_Player_SelectWeapon = m_Player.FindAction("SelectWeapon", throwIfNotFound: true);
         m_Player_SelectWeaponByScroll = m_Player.FindAction("SelectWeaponByScroll", throwIfNotFound: true);
         m_Player_DropWeapon = m_Player.FindAction("DropWeapon", throwIfNotFound: true);
+        m_Player_Shoot = m_Player.FindAction("Shoot", throwIfNotFound: true);
+        m_Player_Reload = m_Player.FindAction("Reload", throwIfNotFound: true);
+        m_Player_Aim = m_Player.FindAction("Aim", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -466,6 +529,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_SelectWeapon;
     private readonly InputAction m_Player_SelectWeaponByScroll;
     private readonly InputAction m_Player_DropWeapon;
+    private readonly InputAction m_Player_Shoot;
+    private readonly InputAction m_Player_Reload;
+    private readonly InputAction m_Player_Aim;
     public struct PlayerActions
     {
         private @PlayerInput m_Wrapper;
@@ -480,6 +546,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         public InputAction @SelectWeapon => m_Wrapper.m_Player_SelectWeapon;
         public InputAction @SelectWeaponByScroll => m_Wrapper.m_Player_SelectWeaponByScroll;
         public InputAction @DropWeapon => m_Wrapper.m_Player_DropWeapon;
+        public InputAction @Shoot => m_Wrapper.m_Player_Shoot;
+        public InputAction @Reload => m_Wrapper.m_Player_Reload;
+        public InputAction @Aim => m_Wrapper.m_Player_Aim;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -519,6 +588,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @DropWeapon.started += instance.OnDropWeapon;
             @DropWeapon.performed += instance.OnDropWeapon;
             @DropWeapon.canceled += instance.OnDropWeapon;
+            @Shoot.started += instance.OnShoot;
+            @Shoot.performed += instance.OnShoot;
+            @Shoot.canceled += instance.OnShoot;
+            @Reload.started += instance.OnReload;
+            @Reload.performed += instance.OnReload;
+            @Reload.canceled += instance.OnReload;
+            @Aim.started += instance.OnAim;
+            @Aim.performed += instance.OnAim;
+            @Aim.canceled += instance.OnAim;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -553,6 +631,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @DropWeapon.started -= instance.OnDropWeapon;
             @DropWeapon.performed -= instance.OnDropWeapon;
             @DropWeapon.canceled -= instance.OnDropWeapon;
+            @Shoot.started -= instance.OnShoot;
+            @Shoot.performed -= instance.OnShoot;
+            @Shoot.canceled -= instance.OnShoot;
+            @Reload.started -= instance.OnReload;
+            @Reload.performed -= instance.OnReload;
+            @Reload.canceled -= instance.OnReload;
+            @Aim.started -= instance.OnAim;
+            @Aim.performed -= instance.OnAim;
+            @Aim.canceled -= instance.OnAim;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -591,5 +678,8 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         void OnSelectWeapon(InputAction.CallbackContext context);
         void OnSelectWeaponByScroll(InputAction.CallbackContext context);
         void OnDropWeapon(InputAction.CallbackContext context);
+        void OnShoot(InputAction.CallbackContext context);
+        void OnReload(InputAction.CallbackContext context);
+        void OnAim(InputAction.CallbackContext context);
     }
 }

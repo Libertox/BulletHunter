@@ -4,14 +4,14 @@ using UnityEngine;
 
 namespace Shooter
 {
-    public class Weapon: MonoBehaviour, Interactable
+    public class Weapon: MonoBehaviour, IInteractable
     {
         [SerializeField] private Rigidbody rgb;
         [SerializeField] private WeaponSO weaponSO;
-        [SerializeField] private int numberOfAmmo;
+        [SerializeField] private int numberOfMagazine;
 
         public WeaponSO WeaponSO => weaponSO;
-        public int NumberOfAmmo => numberOfAmmo;
+        public int NumberOfMagazine => numberOfMagazine;
 
         public void Drop()
         {
@@ -21,7 +21,7 @@ namespace Shooter
 
         public void Interact(PlayerController playerController)
         {
-            if(playerController.Inventory.AddWeapon(this))
+            if(Inventory.Instance.AddWeapon(this))
             {
                 Destroy(gameObject);
             }

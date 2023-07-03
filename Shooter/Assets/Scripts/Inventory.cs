@@ -1,79 +1,87 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Shooter
 {
-    public class Inventory: MonoBehaviour
+    public class Inventory : MonoBehaviour
     {
-        private const int maxGunAmmo = 64;
-        private const int maxShoutgunAmmo = 48;
-        private const int maxRifleAmmo = 192;
-        private const int maxSniperAmmo = 32;
-        private const int maxGranadeAmmo = 5;
-        
+        private const int maxGunMagazine = 64;
+        private const int maxShoutgunMagazine = 48;
+        private const int maxRifleMagazine = 192;
+        private const int maxSniperMagazine = 32;
+        private const int maxGranadeMagazine = 5;
+
+        public static Inventory Instance { get; private set; }
+
+        public event EventHandler<OnSelectedWeaponChangedEventArgs> OnSelectedWeaponChanged;
+        public event EventHandler<OnSelectedWeaponChangedEventArgs> OnSelectedWeaponDroped;
+        public class OnSelectedWeaponChangedEventArgs : EventArgs { public WeaponSO selectedWeapon; }
+
         public static int MaxNumberWeapon { get; private set; } = 4;
         public WeaponSO UseWeapon { get; private set; }
-
-        [SerializeField] private MeshFilter scopeMeshFilter;
-        [SerializeField] private MeshRenderer scopeMeshRender;
-
-        [SerializeField] private MeshFilter weaponMeshFiler;
-        [SerializeField] private MeshRenderer weaponMeshRender;
 
         private WeaponSO[] ownedWeapon;
         private int useWeaponIndex;
 
-        public Dictionary<WeaponType, int> AmmoAmount { get; private set; }
-        private Dictionary<WeaponType, int> maxAmmoAmount;
-
-
-        private void Awake()
+        public Dictionary<WeaponType, int> AmmoAmount { get; private set; } = new Dictionary<WeaponType, int>
         {
-            ownedWeapon = new WeaponSO[MaxNumberWeapon];
-            AmmoAmount = new Dictionary<WeaponType, int>
-            {
                 {WeaponType.Gun,0 },
                 {WeaponType.Rifle,0 },
                 {WeaponType.Sniper,0 },
                 {WeaponType.Shoutgun,0 },
                 {WeaponType.Grenade,0 }
-            };
+        };
 
-            maxAmmoAmount = new Dictionary<WeaponType, int>
-            {
-                {WeaponType.Gun,maxGunAmmo },
-                {WeaponType.Rifle,maxRifleAmmo},
-                {WeaponType.Shoutgun,maxShoutgunAmmo},
-                {WeaponType.Sniper,maxSniperAmmo },
-                {WeaponType.Grenade,maxGranadeAmmo }
-            };
+        public Dictionary<WeaponType, int> MagazineAmount { get; private set; } = new Dictionary<WeaponType, int>
+        {
+            {WeaponType.Gun,0 },
+            {WeaponType.Rifle,0 },
+            {WeaponType.Sniper,0 },
+            {WeaponType.Shoutgun,0 },
+            {WeaponType.Grenade,0 }
+        };
 
+        private Dictionary<WeaponType, int> maxAmmoMagazine = new Dictionary<WeaponType, int> 
+        {
+                {WeaponType.Gun,maxGunMagazine },
+                {WeaponType.Rifle,maxRifleMagazine},
+                {WeaponType.Shoutgun,maxShoutgunMagazine},
+                {WeaponType.Sniper,maxSniperMagazine },
+                {WeaponType.Grenade,maxGranadeMagazine }
+        };
+
+
+        private void Awake()
+        {
+            if (!Instance)
+                Instance = this;
+            else
+                Destroy(gameObject);
+
+            ownedWeapon = new WeaponSO[MaxNumberWeapon];
+         
         }
         private void Start()
         {
             GameInput.Instance.OnWeaponSelected += GameInput_OnWeaponSelected;
             GameInput.Instance.OnWeaponDroped += GameInput_OnWeaponDroped;
+            GameInput.Instance.OnReloaded += GameInput_OnReloaded;
         }
 
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.Z))
-            {
-                foreach(var element in AmmoAmount)
-                {
-                    Debug.Log(element);
-                }
-            }
-        }
-
+        private void GameInput_OnReloaded(object sender, EventArgs e) => Reload();
+       
         private void GameInput_OnWeaponDroped(object sender, EventArgs e) => DropUseWeapon();
      
         private void GameInput_OnWeaponSelected(object sender, GameInput.OnWeaponSelectedEventArgs e)
         {
             UseWeapon = ownedWeapon[e.selectWeaponIndex];
             useWeaponIndex = e.selectWeaponIndex;
-            SwapWeaponModel();
+            OnSelectedWeaponChanged?.Invoke(this, new OnSelectedWeaponChangedEventArgs
+            {
+                selectedWeapon = UseWeapon
+            });
         }
 
         public bool AddWeapon(Weapon weaponToAdd)
@@ -87,61 +95,70 @@ namespace Shooter
                     if (!UseWeapon)
                     {
                         UseWeapon = ownedWeapon[useWeaponIndex];
-                        SwapWeaponModel();
+                        OnSelectedWeaponChanged?.Invoke(this, new OnSelectedWeaponChangedEventArgs
+                        {
+                            selectedWeapon = UseWeapon
+                        });
                     }
 
-                    AddAmmo(weaponToAdd.WeaponSO.WeaponType,weaponToAdd.NumberOfAmmo);
+                    AddMagazine(weaponToAdd.WeaponSO.WeaponType,weaponToAdd.NumberOfMagazine);
                     return true;
                 }               
             }
             return false;
         }
 
-        public void AddAmmo(WeaponType typeOfAmmo , int ammoNumber)
+        public void AddMagazine(WeaponType typeOfWeapon , int magazineNumber)
         {
-            int newAmmo = AmmoAmount[typeOfAmmo] + ammoNumber;
-            if (newAmmo < maxAmmoAmount[typeOfAmmo])
-                AmmoAmount[typeOfAmmo] += ammoNumber;
+            if (MagazineAmount[typeOfWeapon] + magazineNumber < maxAmmoMagazine[typeOfWeapon])
+                MagazineAmount[typeOfWeapon] += magazineNumber;
             else
-                AmmoAmount[typeOfAmmo] = maxAmmoAmount[typeOfAmmo];
-        }
-
-        private void SwapWeaponModel()
-        {
-            if (UseWeapon)
-            {
-                scopeMeshFilter.mesh = UseWeapon.ScopeMesh;
-                scopeMeshRender.materials = UseWeapon.ScopePartMaterials;
-                weaponMeshFiler.mesh = UseWeapon.WeaponMesh;
-                weaponMeshRender.materials = UseWeapon.WeaponPartMaterials;
-                ShowWeaponModel();
-            }
-            else
-                HideWeaponModel();
-
-        }
-
-        private void HideWeaponModel()
-        {
-            scopeMeshFilter.gameObject.SetActive(false);
-            weaponMeshFiler.gameObject.SetActive(false);
-        }
-
-        private void ShowWeaponModel()
-        {
-            scopeMeshFilter.gameObject.SetActive(true);
-            weaponMeshFiler.gameObject.SetActive(true);
+                MagazineAmount[typeOfWeapon] = maxAmmoMagazine[typeOfWeapon];
         }
 
         private void DropUseWeapon()
         {
             if (!UseWeapon) return;
 
-            HideWeaponModel();
-            Weapon weapon = Instantiate(UseWeapon.WeaponPrefab, transform.position, Quaternion.identity);
-            weapon.Drop();
+            OnSelectedWeaponDroped?.Invoke(this, new OnSelectedWeaponChangedEventArgs
+            {
+                selectedWeapon = UseWeapon
+            });
+
             UseWeapon = null;
             ownedWeapon[useWeaponIndex] = null;
+            
+        }
+
+        public bool CanShoot()
+        {
+            if (!UseWeapon) return false;
+
+            if (AmmoAmount[UseWeapon.WeaponType] <= 0)
+            {
+                Reload();
+                return false;
+            }
+
+            return true;
+        }
+
+        public void SubstractAmmo()
+        {
+            if (AmmoAmount[UseWeapon.WeaponType] > 0)
+                 AmmoAmount[UseWeapon.WeaponType]--;
+        }
+
+
+        public void Reload()
+        {
+            if (!UseWeapon) return;
+
+            if (MagazineAmount[UseWeapon.WeaponType] > 0)
+            {
+                MagazineAmount[UseWeapon.WeaponType]--;
+                AmmoAmount[UseWeapon.WeaponType] = UseWeapon.AmmoInMagazine;
+            }
         }
 
     }

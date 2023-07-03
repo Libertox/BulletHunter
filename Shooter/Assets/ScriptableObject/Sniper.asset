@@ -26,3 +26,5 @@ MonoBehaviour:
     type: 3}
   weaponType: 2
   ammoInMagazine: 9
+  weaponRange: 32
+  weaponZoom: 20

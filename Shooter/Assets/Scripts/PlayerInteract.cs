@@ -8,6 +8,8 @@ namespace Shooter
     {
 
         [SerializeField] private PlayerController playerController;
+        [SerializeField] private float interactRange;
+        [SerializeField] private LayerMask interactableLayerMask;
 
         private void Start()
         {
@@ -19,9 +21,9 @@ namespace Shooter
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-            if(Physics.Raycast(ray,out hit,2f))
+            if(Physics.Raycast(ray,out hit,interactRange,interactableLayerMask))
             {
-                if(hit.transform.TryGetComponent(out Interactable interactable))
+                if(hit.transform.TryGetComponent(out IInteractable interactable))
                 {
                     interactable.Interact(playerController);
                 }

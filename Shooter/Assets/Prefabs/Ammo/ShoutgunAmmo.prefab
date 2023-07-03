@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3790418580616972669}
   - component: {fileID: 7759299689004112845}
   - component: {fileID: 5014445948893760576}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: ShoutgunAmmo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -63,7 +63,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3

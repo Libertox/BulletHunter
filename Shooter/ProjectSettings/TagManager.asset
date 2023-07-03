@@ -16,6 +16,7 @@ TagManager:
   - metall
   - wood_door_glass
   - petrol
+  - Target
   layers:
   - Default
   - TransparentFX
@@ -25,9 +26,9 @@ TagManager:
   - UI
   - Ground
   - Player
-  - 
-  - 
-  - 
+  - Damageable
+  - Interactable
+  - Gun
   - 
   - 
   - 

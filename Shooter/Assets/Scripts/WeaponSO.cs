@@ -14,6 +14,9 @@ namespace Shooter
         [SerializeField] private Weapon weaponPrefab;
         [SerializeField] private WeaponType weaponType;
         [SerializeField] private int ammoInMagazine;
+        [SerializeField] private float weaponRange;
+        [SerializeField] private float weaponZoom;
+
 
         public Mesh ScopeMesh => scopeMesh;
         public Material[] ScopePartMaterials => scopePartMaterials;
@@ -22,6 +25,8 @@ namespace Shooter
         public Weapon WeaponPrefab => weaponPrefab;
         public WeaponType WeaponType => weaponType;
         public int AmmoInMagazine => ammoInMagazine;
+        public float WeaponRange => weaponRange;
+        public float WeaponZoom => weaponZoom;
 
     }
 

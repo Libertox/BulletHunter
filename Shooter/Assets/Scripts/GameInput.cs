@@ -13,6 +13,12 @@ namespace Shooter
         public event EventHandler OnSquat;
         public event EventHandler OnInteract;
         public event EventHandler OnWeaponDroped;
+        public event EventHandler OnShooted;
+        public event EventHandler OnReloaded;
+
+        public event EventHandler OnAimed;
+        public event EventHandler OnCancelAimed;
+
         public event EventHandler<OnWeaponSelectedEventArgs> OnWeaponSelected;
 
         public class OnWeaponSelectedEventArgs: EventArgs { public int selectWeaponIndex; }
@@ -38,9 +44,28 @@ namespace Shooter
             playerInput.Player.SelectWeaponByScroll.performed += SelectWeaponByScroll_performed;
             playerInput.Player.SelectWeapon.performed += SelectWeapon_performed;
             playerInput.Player.DropWeapon.performed += DropWeapon_performed;
+            playerInput.Player.Shoot.performed += Shoot_performed;
+            playerInput.Player.Reload.performed += Reload_performed;
+
+            playerInput.Player.Aim.performed += Aim_performed;
+            playerInput.Player.Aim.canceled += Aim_canceled;
 
         }
 
+        private void Aim_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+        {
+            OnCancelAimed?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void Aim_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+        {
+            OnAimed?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void Reload_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) => OnReloaded?.Invoke(this, EventArgs.Empty);
+       
+        private void Shoot_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) => OnShooted?.Invoke(this, EventArgs.Empty);
+      
         private void DropWeapon_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) => OnWeaponDroped?.Invoke(this, EventArgs.Empty);
      
         private void SelectWeapon_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)

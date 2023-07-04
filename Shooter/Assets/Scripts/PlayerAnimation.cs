@@ -10,15 +10,18 @@ namespace Shooter
 
         private Animator animator;
 
-        private void Awake()
+        private void Awake() => animator = GetComponent<Animator>();
+
+        private void Start()
         {
-            animator = GetComponent<Animator>();
+            PlayerController.OnSquated += PlayerController_OnSquated;
         }
 
-        public void SquatAnimation(bool isSquat)
+        private void PlayerController_OnSquated(object sender, PlayerController.OnSquatedEventArgs e)
         {
-            animator.SetBool(ANIM_IS_SQUAT, isSquat);
+            animator.SetBool(ANIM_IS_SQUAT, e.isSquat);
         }
+
 
 
     }

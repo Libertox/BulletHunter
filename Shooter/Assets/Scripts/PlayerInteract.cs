@@ -11,10 +11,28 @@ namespace Shooter
         [SerializeField] private float interactRange;
         [SerializeField] private LayerMask interactableLayerMask;
 
+        [SerializeField] private BoxCollider squatColider;
+        [SerializeField] private BoxCollider uprightColider;
+
         private void Start()
         {
             GameInput.Instance.OnInteract += GameInput_OnInteract;
+            PlayerController.OnSquated += PlayerController_OnSquated;
 
+        }
+
+        private void PlayerController_OnSquated(object sender, PlayerController.OnSquatedEventArgs e)
+        {
+            if (e.isSquat)
+            {
+                uprightColider.enabled = false;
+                squatColider.enabled = true;
+            }
+            else
+            {
+                uprightColider.enabled = true;
+                squatColider.enabled = false;
+            }
         }
 
         private void GameInput_OnInteract(object sender, EventArgs e)

@@ -451,6 +451,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 230353412}
+  - component: {fileID: 230353413}
   m_Layer: 5
   m_Name: HealthStatus
   m_TagString: Untagged
@@ -481,6 +482,19 @@ RectTransform:
   m_AnchoredPosition: {x: 296, y: -217.7649}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &230353413
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 230353411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aaf28bbdd51b4f04da164f1a578505a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  barImage: {fileID: 1918478443}
 --- !u!1001 &249907323
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -608,6 +622,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 300924634}
+  - component: {fileID: 300924635}
   m_Layer: 5
   m_Name: StaminaStatus
   m_TagString: Untagged
@@ -638,6 +653,19 @@ RectTransform:
   m_AnchoredPosition: {x: 296, y: -137.4}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &300924635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 300924633}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aaf28bbdd51b4f04da164f1a578505a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  barImage: {fileID: 2098506336}
 --- !u!1 &357060068
 GameObject:
   m_ObjectHideFlags: 0
@@ -1332,6 +1360,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 740479460}
+  - component: {fileID: 740479461}
   m_Layer: 5
   m_Name: StatsSlider
   m_TagString: Untagged
@@ -1362,6 +1391,20 @@ RectTransform:
   m_AnchoredPosition: {x: -480, y: -270}
   m_SizeDelta: {x: -960, y: -540}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &740479461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 740479459}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 332875ef2702565479b97c388a03d691, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthBar: {fileID: 230353413}
+  staminaBar: {fileID: 300924635}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -1734,6 +1777,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1345992973}
   m_CullTransparentMesh: 1
+--- !u!65 &1370818528 stripped
+BoxCollider:
+  m_CorrespondingSourceObject: {fileID: 8011574742546082726, guid: 25bb7517aa2f89b409eb3019b019514b,
+    type: 3}
+  m_PrefabInstance: {fileID: 8377538900657715081}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &1370818529 stripped
+BoxCollider:
+  m_CorrespondingSourceObject: {fileID: 1160402203467028410, guid: 25bb7517aa2f89b409eb3019b019514b,
+    type: 3}
+  m_PrefabInstance: {fileID: 8377538900657715081}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1390068343
 GameObject:
   m_ObjectHideFlags: 0
@@ -2851,6 +2906,7 @@ GameObject:
   - component: {fileID: 1971537032}
   - component: {fileID: 1971537035}
   - component: {fileID: 1971537034}
+  - component: {fileID: 1971537036}
   m_Layer: 5
   m_Name: PlayerPosition
   m_TagString: Untagged
@@ -2916,6 +2972,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1971537031}
   m_CullTransparentMesh: 1
+--- !u!114 &1971537036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1971537031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b918e7b9f5f1dc049bf19312497fd896, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerPositionImage: {fileID: 1971537034}
+  playerPositionImageSO: {fileID: 11400000, guid: 784149401febe9142888b900e8fd989d,
+    type: 2}
 --- !u!1 &2043445549
 GameObject:
   m_ObjectHideFlags: 0
@@ -3097,7 +3168,7 @@ GameObject:
   - component: {fileID: 2098506336}
   - component: {fileID: 2098506335}
   m_Layer: 5
-  m_Name: HealthBar
+  m_Name: StaminaBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3442,6 +3513,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 4268489549942046435, guid: 25bb7517aa2f89b409eb3019b019514b,
+        type: 3}
+      propertyPath: baseMovementSpeed
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 6879063285447923455, guid: 25bb7517aa2f89b409eb3019b019514b,
+        type: 3}
+      propertyPath: squatColider
+      value: 
+      objectReference: {fileID: 1370818528}
+    - target: {fileID: 6879063285447923455, guid: 25bb7517aa2f89b409eb3019b019514b,
+        type: 3}
+      propertyPath: uprightColider
+      value: 
+      objectReference: {fileID: 1370818529}
     - target: {fileID: 8454700824651162127, guid: 25bb7517aa2f89b409eb3019b019514b,
         type: 3}
       propertyPath: m_RootOrder

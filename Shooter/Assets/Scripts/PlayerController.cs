@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,13 @@ namespace Shooter
 {
     public class PlayerController : MonoBehaviour
     {
+        public static event EventHandler<OnSquatedEventArgs> OnSquated;
+        public static event EventHandler<OnSprintedEventArgs> OnSprinted;
+
+        public class OnSquatedEventArgs : EventArgs { public bool isSquat; }
+
+        public class OnSprintedEventArgs: EventArgs { public bool isSprint, isSquat; }
+
         [Header("Basic Attributess")]
         [SerializeField] private float movementSpeed;
         [SerializeField] private float sprintBust;
@@ -30,7 +38,8 @@ namespace Shooter
         private float rotationX;
         private Vector3 moveDirection;
         private bool isSquat;
-  
+
+      
         private void Awake()
         {
             rgb = GetComponent<Rigidbody>();
@@ -42,8 +51,10 @@ namespace Shooter
         {
             GameInput.Instance.OnJumped += GameInput_OnJumped;
             GameInput.Instance.OnSquat += GameInput_OnSquat;
+
         }
 
+    
         private void GameInput_OnSquat(object sender, System.EventArgs e) => Squat();
        
         private void GameInput_OnJumped(object sender, System.EventArgs e) => HandleJump();
@@ -58,6 +69,8 @@ namespace Shooter
             
             Vector2 inputVector = GameInput.Instance.GetMovementVectorNormalized();
 
+            if (inputVector == Vector2.zero) return;
+
             float speed = GetMoveSpeed();
 
             if (inputVector.y != 0)
@@ -65,16 +78,34 @@ namespace Shooter
            else if(inputVector.x != 0)
                 moveDirection = (orientationPoint.right.normalized) * (inputVector.x  * speed * Time.deltaTime);
 
-            if(inputVector != Vector2.zero)
-                rgb.velocity = new Vector3(moveDirection.x, rgb.velocity.y, moveDirection.z);
+             rgb.velocity = new Vector3(moveDirection.x, rgb.velocity.y, moveDirection.z);
         }
-
         private float GetMoveSpeed()
         {
             if (playerStats.Stamina > 0)
+            {
+                if (GameInput.Instance.GetSprintValue() == 0)
+                    InvokeSprintEvent(false);
+                else
+                    InvokeSprintEvent(true);
+
                 return GameInput.Instance.GetSprintValue() * sprintBust + movementSpeed;
+            }
             else
+            {
+                InvokeSprintEvent(false);
                 return movementSpeed;
+            }
+                
+        }
+
+        private void InvokeSprintEvent(bool isSprint)
+        {
+            OnSprinted?.Invoke(this, new OnSprintedEventArgs
+            {
+                isSprint = isSprint,
+                isSquat = isSquat
+            });
         }
 
         private void HandleJump()
@@ -105,18 +136,10 @@ namespace Shooter
         private void Squat()
         {
             isSquat = !isSquat;
-            if(isSquat)
+            OnSquated?.Invoke(this, new OnSquatedEventArgs
             {
-                uprightColider.enabled = false;
-                squatColider.enabled = true;
-            }
-            else
-            {
-                uprightColider.enabled = true;
-                squatColider.enabled = false;
-            }
-
-            playerAnimation.SquatAnimation(isSquat);
+                isSquat = this.isSquat
+            });
 
         }
     }

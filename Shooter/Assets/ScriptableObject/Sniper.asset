@@ -12,19 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4faa9fd31aac4ef4786b33d24d57d3a0, type: 3}
   m_Name: Sniper
   m_EditorClassIdentifier: 
-  scopeMesh: {fileID: 4300006, guid: bafe1e4d156ffe945aa89b304a97f261, type: 3}
-  scopePartMaterials:
+  <ScopeMesh>k__BackingField: {fileID: 4300006, guid: bafe1e4d156ffe945aa89b304a97f261,
+    type: 3}
+  <ScopePartMaterials>k__BackingField:
   - {fileID: 2100000, guid: e86c377702aa20748ac223d70f899dc1, type: 2}
   - {fileID: 2100000, guid: 6f06e318c92984042a9074c734738fb7, type: 2}
   - {fileID: 2100000, guid: 1aa329960fc39aa4490b3a9e7e965fa8, type: 2}
   - {fileID: 2100000, guid: 979617380828bb145b74b4358d5ecd16, type: 2}
-  weaponMesh: {fileID: 4300002, guid: bafe1e4d156ffe945aa89b304a97f261, type: 3}
-  weaponPartMaterials:
+  <WeaponMesh>k__BackingField: {fileID: 4300002, guid: bafe1e4d156ffe945aa89b304a97f261,
+    type: 3}
+  <WeaponPartMaterials>k__BackingField:
   - {fileID: 2100000, guid: e86c377702aa20748ac223d70f899dc1, type: 2}
   - {fileID: 2100000, guid: 1aa329960fc39aa4490b3a9e7e965fa8, type: 2}
-  weaponPrefab: {fileID: 4732866247398566998, guid: b13be445f998c994690c10394845933f,
+  <WeaponIcon>k__BackingField: {fileID: 21300000, guid: 1db67ddcdf1d2834ba9aa83075cca57d,
     type: 3}
-  weaponType: 2
-  ammoInMagazine: 9
-  weaponRange: 32
-  weaponZoom: 20
+  <WeaponPrefab>k__BackingField: {fileID: 4732866247398566998, guid: b13be445f998c994690c10394845933f,
+    type: 3}
+  <WeaponType>k__BackingField: 2
+  <AmmoInMagazine>k__BackingField: 9
+  <WeaponRange>k__BackingField: 25
+  <WeaponZoom>k__BackingField: 20
+  <ReloadTime>k__BackingField: 6

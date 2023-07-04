@@ -10,7 +10,7 @@ namespace Shooter.UI
         [SerializeField] private Image barImage;
 
         public void ChangeFillAmount(float newValue) => barImage.fillAmount = newValue;
-
+      
         public void Show() => gameObject.SetActive(true);
 
         public void Hide() => gameObject.SetActive(false);

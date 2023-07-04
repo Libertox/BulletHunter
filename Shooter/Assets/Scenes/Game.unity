@@ -477,9 +477,9 @@ RectTransform:
   m_Father: {fileID: 740479460}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.5}
-  m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 296, y: -217.7649}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -191, y: -188}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &230353413
@@ -648,9 +648,9 @@ RectTransform:
   m_Father: {fileID: 740479460}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.5}
-  m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 296, y: -137.4}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -191, y: -107.6351}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &300924635
@@ -1387,9 +1387,9 @@ RectTransform:
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -480, y: -270}
-  m_SizeDelta: {x: -960, y: -540}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 480, y: 270}
+  m_SizeDelta: {x: 960, y: 540}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &740479461
 MonoBehaviour:
@@ -1527,6 +1527,11 @@ PrefabInstance:
       propertyPath: numberOfMagazine
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4732866247398566998, guid: 2b7a3ef15ef181742969ad6d93dd12b7,
+        type: 3}
+      propertyPath: <NumberOfMagazine>k__BackingField
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8695509805180829595, guid: 2b7a3ef15ef181742969ad6d93dd12b7,
         type: 3}
       propertyPath: m_Name
@@ -1546,13 +1551,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1234811067}
+  - component: {fileID: 1234811068}
   m_Layer: 5
   m_Name: ReloadStatus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1234811067
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1571,9 +1577,22 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -11.4}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1234811068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1234811066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aaf28bbdd51b4f04da164f1a578505a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  barImage: {fileID: 102064863}
 --- !u!1001 &1252597484
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1645,6 +1664,11 @@ PrefabInstance:
     - target: {fileID: 4732866247398566998, guid: b13be445f998c994690c10394845933f,
         type: 3}
       propertyPath: numberOfMagazine
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4732866247398566998, guid: b13be445f998c994690c10394845933f,
+        type: 3}
+      propertyPath: <NumberOfMagazine>k__BackingField
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8695509805180829595, guid: b13be445f998c994690c10394845933f,
@@ -1736,7 +1760,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -135, y: -4.6}
+  m_AnchoredPosition: {x: -135, y: -5.5}
   m_SizeDelta: {x: 67.357, y: 49.173}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1345992975
@@ -1890,6 +1914,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1402446836}
+  - component: {fileID: 1402446837}
   m_Layer: 5
   m_Name: Contener
   m_TagString: Untagged
@@ -1915,11 +1940,26 @@ RectTransform:
   m_Father: {fileID: 1734320043}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 480, y: -270}
-  m_SizeDelta: {x: 960, y: 540}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -479, y: 270}
+  m_SizeDelta: {x: 958, y: 540}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1402446837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1402446835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c97937948dd205e4186864233c52e761, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ammoAmountText: {fileID: 1578552248}
+  weaponIcon: {fileID: 1891948545}
+  weaponReloadBar: {fileID: 1234811068}
 --- !u!1 &1410687825
 GameObject:
   m_ObjectHideFlags: 0
@@ -2241,7 +2281,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 338, y: -101}
+  m_AnchoredPosition: {x: 338, y: -81.9}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1578552248
@@ -2616,10 +2656,10 @@ RectTransform:
   m_Father: {fileID: 1534424751}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1920, y: 1080}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1891948543
 GameObject:
@@ -2657,7 +2697,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 337.687, y: -176}
-  m_SizeDelta: {x: 282.1141, y: 113.556}
+  m_SizeDelta: {x: 282.11414, y: 113.556}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1891948545
 MonoBehaviour:
@@ -2679,7 +2719,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 46d0f367893425444b488bd59fcc874f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: cb48df8ef8379b54bada531118f4a28b, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -2931,8 +2971,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -435, y: -183.2}
-  m_SizeDelta: {x: 137.4031, y: 145.5963}
+  m_AnchoredPosition: {x: -432.09998, y: -153.43512}
+  m_SizeDelta: {x: 137.40308, y: 145.59631}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1971537034
 MonoBehaviour:
@@ -3412,6 +3452,11 @@ PrefabInstance:
       propertyPath: numberOfMagazine
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4732866247398566998, guid: 480e4fa0099cf1a42aa30359eab3fc44,
+        type: 3}
+      propertyPath: <NumberOfMagazine>k__BackingField
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8695509805180829595, guid: 480e4fa0099cf1a42aa30359eab3fc44,
         type: 3}
       propertyPath: m_Name
@@ -3664,6 +3709,11 @@ PrefabInstance:
     - target: {fileID: 9169880162456296231, guid: fd7481522d2bbee4cb1a2fb65589e216,
         type: 3}
       propertyPath: numberOfMagazine
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9169880162456296231, guid: fd7481522d2bbee4cb1a2fb65589e216,
+        type: 3}
+      propertyPath: <NumberOfMagazine>k__BackingField
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []

@@ -12,19 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4faa9fd31aac4ef4786b33d24d57d3a0, type: 3}
   m_Name: Shoutgun
   m_EditorClassIdentifier: 
-  scopeMesh: {fileID: 4300000, guid: 25ef084687daa014b8538f35cf0d5aa6, type: 3}
-  scopePartMaterials:
+  <ScopeMesh>k__BackingField: {fileID: 4300000, guid: 25ef084687daa014b8538f35cf0d5aa6,
+    type: 3}
+  <ScopePartMaterials>k__BackingField:
   - {fileID: 2100000, guid: 1aa329960fc39aa4490b3a9e7e965fa8, type: 2}
   - {fileID: 2100000, guid: 4065b5c48a33f22498535ade4014f3b0, type: 2}
   - {fileID: 2100000, guid: 6f06e318c92984042a9074c734738fb7, type: 2}
   - {fileID: 2100000, guid: e86c377702aa20748ac223d70f899dc1, type: 2}
-  weaponMesh: {fileID: 4300002, guid: 25ef084687daa014b8538f35cf0d5aa6, type: 3}
-  weaponPartMaterials:
+  <WeaponMesh>k__BackingField: {fileID: 4300002, guid: 25ef084687daa014b8538f35cf0d5aa6,
+    type: 3}
+  <WeaponPartMaterials>k__BackingField:
   - {fileID: 2100000, guid: 4065b5c48a33f22498535ade4014f3b0, type: 2}
   - {fileID: 2100000, guid: a0051530ee26a80408fd114b17a7424a, type: 2}
-  weaponPrefab: {fileID: 4732866247398566998, guid: 2b7a3ef15ef181742969ad6d93dd12b7,
+  <WeaponIcon>k__BackingField: {fileID: 21300000, guid: 456b82de3d99ed143a32132cbd69892c,
     type: 3}
-  weaponType: 3
-  ammoInMagazine: 16
-  weaponRange: 6
-  weaponZoom: 50
+  <WeaponPrefab>k__BackingField: {fileID: 4732866247398566998, guid: 2b7a3ef15ef181742969ad6d93dd12b7,
+    type: 3}
+  <WeaponType>k__BackingField: 3
+  <AmmoInMagazine>k__BackingField: 12
+  <WeaponRange>k__BackingField: 10
+  <WeaponZoom>k__BackingField: 50
+  <ReloadTime>k__BackingField: 4

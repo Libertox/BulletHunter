@@ -7,11 +7,9 @@ namespace Shooter
     public class Weapon: MonoBehaviour, IInteractable
     {
         [SerializeField] private Rigidbody rgb;
-        [SerializeField] private WeaponSO weaponSO;
-        [SerializeField] private int numberOfMagazine;
+        [field: SerializeField] public WeaponSO WeaponSO { get; private set; }
+        [field: SerializeField] public int NumberOfMagazine { get; private set; }
 
-        public WeaponSO WeaponSO => weaponSO;
-        public int NumberOfMagazine => numberOfMagazine;
 
         public void Drop()
         {

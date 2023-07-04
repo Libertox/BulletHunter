@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -15,9 +16,14 @@ namespace Shooter
 
         public static Inventory Instance { get; private set; }
 
-        public event EventHandler<OnSelectedWeaponChangedEventArgs> OnSelectedWeaponChanged;
+        public event EventHandler OnAmmoChanged;
+        public event EventHandler<OnReloadedEventArgs> OnReloaded;
+        public event EventHandler OnCanelReloaded;
+        public event EventHandler<OnSelectedWeaponChangedEventArgs> OnSelectedWeaponChanged; 
         public event EventHandler<OnSelectedWeaponChangedEventArgs> OnSelectedWeaponDroped;
         public class OnSelectedWeaponChangedEventArgs : EventArgs { public WeaponSO selectedWeapon; }
+
+        public class OnReloadedEventArgs: EventArgs { public float reloadTime; }
 
         public static int MaxNumberWeapon { get; private set; } = 4;
         public WeaponSO UseWeapon { get; private set; }
@@ -52,6 +58,8 @@ namespace Shooter
                 {WeaponType.Grenade,maxGranadeMagazine }
         };
 
+        private bool isReload;
+        private float time;
 
         private void Awake()
         {
@@ -70,7 +78,7 @@ namespace Shooter
             GameInput.Instance.OnReloaded += GameInput_OnReloaded;
         }
 
-        private void GameInput_OnReloaded(object sender, EventArgs e) => Reload();
+        private void GameInput_OnReloaded(object sender, EventArgs e) => isReload = true;
        
         private void GameInput_OnWeaponDroped(object sender, EventArgs e) => DropUseWeapon();
      
@@ -78,10 +86,28 @@ namespace Shooter
         {
             UseWeapon = ownedWeapon[e.selectWeaponIndex];
             useWeaponIndex = e.selectWeaponIndex;
+            CancelReload();
             OnSelectedWeaponChanged?.Invoke(this, new OnSelectedWeaponChangedEventArgs
             {
                 selectedWeapon = UseWeapon
             });
+        }
+
+        private void Update()
+        {
+            if (!CanReload()) return;
+
+            time += Time.deltaTime;
+            OnReloaded?.Invoke(this, new OnReloadedEventArgs
+            {
+                reloadTime = time / UseWeapon.ReloadTime
+            });
+            if(time > UseWeapon.ReloadTime)
+            {
+                Reload();
+                CancelReload();
+            }  
+
         }
 
         public bool AddWeapon(Weapon weaponToAdd)
@@ -108,13 +134,27 @@ namespace Shooter
             return false;
         }
 
+        public int GetUseAmmo() => AmmoAmount[UseWeapon.WeaponType];
+
+        public int GetUseMagazine() => MagazineAmount[UseWeapon.WeaponType];
+
         public void AddMagazine(WeaponType typeOfWeapon , int magazineNumber)
         {
             if (MagazineAmount[typeOfWeapon] + magazineNumber < maxAmmoMagazine[typeOfWeapon])
                 MagazineAmount[typeOfWeapon] += magazineNumber;
             else
                 MagazineAmount[typeOfWeapon] = maxAmmoMagazine[typeOfWeapon];
+
+            OnAmmoChanged?.Invoke(this, EventArgs.Empty);
         }
+        public void SubstractAmmo()
+        {
+            if (GetUseAmmo() > 0)
+                AmmoAmount[UseWeapon.WeaponType]--;
+
+            OnAmmoChanged?.Invoke(this, EventArgs.Empty);
+        }
+
 
         private void DropUseWeapon()
         {
@@ -124,7 +164,7 @@ namespace Shooter
             {
                 selectedWeapon = UseWeapon
             });
-
+            CancelReload();
             UseWeapon = null;
             ownedWeapon[useWeaponIndex] = null;
             
@@ -134,31 +174,31 @@ namespace Shooter
         {
             if (!UseWeapon) return false;
 
-            if (AmmoAmount[UseWeapon.WeaponType] <= 0)
+            if (GetUseAmmo() <= 0)
             {
-                Reload();
+                isReload = true;
                 return false;
             }
 
             return true;
         }
 
-        public void SubstractAmmo()
+        private bool CanReload() => isReload && UseWeapon && GetUseMagazine() > 0;
+
+        private void Reload()
         {
-            if (AmmoAmount[UseWeapon.WeaponType] > 0)
-                 AmmoAmount[UseWeapon.WeaponType]--;
+          
+           MagazineAmount[UseWeapon.WeaponType]--;
+           AmmoAmount[UseWeapon.WeaponType] = UseWeapon.AmmoInMagazine;
+            
+           OnAmmoChanged?.Invoke(this, EventArgs.Empty);
         }
 
-
-        public void Reload()
+        private void CancelReload()
         {
-            if (!UseWeapon) return;
-
-            if (MagazineAmount[UseWeapon.WeaponType] > 0)
-            {
-                MagazineAmount[UseWeapon.WeaponType]--;
-                AmmoAmount[UseWeapon.WeaponType] = UseWeapon.AmmoInMagazine;
-            }
+            isReload = false;
+            time = 0;
+            OnCanelReloaded?.Invoke(this, EventArgs.Empty);
         }
 
     }

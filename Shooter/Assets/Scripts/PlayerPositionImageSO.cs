@@ -7,12 +7,9 @@ namespace Shooter.UI
     [CreateAssetMenu(fileName = "PlayerPositionImage", menuName = "ScriptableObject/PlayerPositionImage", order = 2)]
     public class PlayerPositionImageSO: ScriptableObject
     {
-        [SerializeField] private Sprite uprightPositionImage;
-        [SerializeField] private Sprite squatPositionImage;
-        [SerializeField] private Sprite sprintPositionImage;
+        [field: SerializeField] public Sprite UprightPositionImage;
+        [field: SerializeField] public Sprite SquatPositionImage;
+        [field: SerializeField] public Sprite SprintPositionImage;
 
-        public Sprite UprightPositionImage => uprightPositionImage;
-        public Sprite SquatPositionImage => squatPositionImage;
-        public Sprite SprintPositionImage => sprintPositionImage;
     }
 }

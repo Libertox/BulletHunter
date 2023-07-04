@@ -48,8 +48,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rgb: {fileID: 5484422178723424606}
-  weaponSO: {fileID: 11400000, guid: 9ed49d4ee584e0c46a2291502d1df326, type: 2}
-  numberOfMagazine: 0
+  <WeaponSO>k__BackingField: {fileID: 11400000, guid: 9ed49d4ee584e0c46a2291502d1df326,
+    type: 2}
+  <NumberOfMagazine>k__BackingField: 0
 --- !u!54 &5484422178723424606
 Rigidbody:
   m_ObjectHideFlags: 0

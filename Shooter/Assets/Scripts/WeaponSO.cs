@@ -7,26 +7,19 @@ namespace Shooter
     [CreateAssetMenu(fileName = "Weapon", menuName = "ScriptableObject/Weapon", order = 1)]
     public class WeaponSO : ScriptableObject
     {
-        [SerializeField] private Mesh scopeMesh;
-        [SerializeField] private Material[] scopePartMaterials;
-        [SerializeField] private Mesh weaponMesh;
-        [SerializeField] private Material[] weaponPartMaterials;
-        [SerializeField] private Weapon weaponPrefab;
-        [SerializeField] private WeaponType weaponType;
-        [SerializeField] private int ammoInMagazine;
-        [SerializeField] private float weaponRange;
-        [SerializeField] private float weaponZoom;
+        [field: SerializeField] public Mesh ScopeMesh { get; private set; }
+        [field: SerializeField] public Material[] ScopePartMaterials { get; private set; }
+        [field: SerializeField] public Mesh WeaponMesh { get; private set; }
+        [field: SerializeField] public Material[] WeaponPartMaterials { get; private set; }
+        [field: SerializeField] public Sprite WeaponIcon { get; private set; }
+        [field: SerializeField] public Weapon WeaponPrefab { get; private set; }
+        [field: SerializeField] public WeaponType WeaponType { get; private set; }
+        [field: SerializeField] public int AmmoInMagazine { get; private set; }
+        [field: SerializeField] public float WeaponRange { get; private set; }
+        [field: SerializeField] public float WeaponZoom { get; private set; }
 
+        [field: SerializeField] public float ReloadTime { get; private set; }
 
-        public Mesh ScopeMesh => scopeMesh;
-        public Material[] ScopePartMaterials => scopePartMaterials;
-        public Mesh WeaponMesh => weaponMesh;
-        public Material[] WeaponPartMaterials => weaponPartMaterials;
-        public Weapon WeaponPrefab => weaponPrefab;
-        public WeaponType WeaponType => weaponType;
-        public int AmmoInMagazine => ammoInMagazine;
-        public float WeaponRange => weaponRange;
-        public float WeaponZoom => weaponZoom;
 
     }
 

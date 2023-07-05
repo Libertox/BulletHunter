@@ -10,13 +10,10 @@ namespace Shooter.UI
         [SerializeField] private Image playerPositionImage;
         [SerializeField] private PlayerPositionImageSO playerPositionImageSO;
 
-   
         private void Start()
         {
             PlayerController.OnSquated += PlayerController_OnSquated;
             PlayerController.OnSprinted += PlayerController_OnSprinted;
-
-            playerPositionImage.sprite = playerPositionImageSO.UprightPositionImage;
         }
 
         private void PlayerController_OnSprinted(object sender, PlayerController.OnSprintedEventArgs e)

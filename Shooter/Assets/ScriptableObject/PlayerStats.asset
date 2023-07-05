@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71050d7eb9adedf4d9cb79d1adf2a84c, type: 3}
   m_Name: PlayerStats
   m_EditorClassIdentifier: 
-  <MaxHealth>k__BackingField: 0
+  <MaxHealth>k__BackingField: 20
   <MaxStamina>k__BackingField: 5

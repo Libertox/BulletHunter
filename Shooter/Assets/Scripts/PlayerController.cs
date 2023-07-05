@@ -11,31 +11,23 @@ namespace Shooter
         public static event EventHandler<OnSprintedEventArgs> OnSprinted;
 
         public class OnSquatedEventArgs : EventArgs { public bool isSquat; }
-
         public class OnSprintedEventArgs: EventArgs { public bool isSprint, isSquat; }
 
-        [Header("Basic Attributess")]
+        public PlayerStats PlayerStats { get; private set; }
+
         [SerializeField] private float movementSpeed;
         [SerializeField] private float sprintBust;
         [SerializeField] private float jumpHeight;
         [SerializeField] private Transform orientationPoint;
 
-     
-        [Header("Colid  Attributess")]
-        [SerializeField] private LayerMask groundLayerMask;
-        [SerializeField] private BoxCollider squatColider;
-        [SerializeField] private BoxCollider uprightColider;
-
-        [Space(10)]
-       
-        [SerializeField] private PlayerAnimation playerAnimation;
-     
         private readonly float gravityScale = 10f;
 
         private Rigidbody rgb;
+        private PlayerInteract playerInteract;
+
         private float jumpForce;
-        private PlayerStats playerStats;
         private float rotationX;
+
         private Vector3 moveDirection;
         private bool isSquat;
 
@@ -43,7 +35,8 @@ namespace Shooter
         private void Awake()
         {
             rgb = GetComponent<Rigidbody>();
-            playerStats = GetComponent<PlayerStats>();
+            PlayerStats = GetComponent<PlayerStats>();
+            playerInteract = GetComponent<PlayerInteract>();
             jumpForce = Mathf.Sqrt(jumpHeight * -2 * (Physics.gravity.y * gravityScale));   
         }
 
@@ -53,23 +46,29 @@ namespace Shooter
             GameInput.Instance.OnSquat += GameInput_OnSquat;
 
         }
-
     
-        private void GameInput_OnSquat(object sender, System.EventArgs e) => Squat();
+        private void GameInput_OnSquat(object sender, System.EventArgs e) => HandleSquat();
        
         private void GameInput_OnJumped(object sender, System.EventArgs e) => HandleJump();
       
         private void Update() => HandleRotate();
       
         private void FixedUpdate() => HandleMovement();
-       
+
         private void HandleMovement()
         {
-            //if (!GroundCheck()) return;
-            
             Vector2 inputVector = GameInput.Instance.GetMovementVectorNormalized();
 
-            if (inputVector == Vector2.zero) return;
+            if (GameInput.Instance.GetSprintValue() == 0 || inputVector == Vector2.zero)
+            {
+                PlayerStats.IncreaseStamina(Time.deltaTime);
+                InvokeSprintEvent(false);
+            }
+                
+            if (inputVector == Vector2.zero) return;  
+
+            if(GameInput.Instance.GetSprintValue() == 1)
+                PlayerStats.DecreaseStamina(Time.deltaTime);
 
             float speed = GetMoveSpeed();
 
@@ -80,13 +79,12 @@ namespace Shooter
 
              rgb.velocity = new Vector3(moveDirection.x, rgb.velocity.y, moveDirection.z);
         }
+
         private float GetMoveSpeed()
         {
-            if (playerStats.Stamina > 0)
+            if (PlayerStats.Stamina > 0)
             {
-                if (GameInput.Instance.GetSprintValue() == 0)
-                    InvokeSprintEvent(false);
-                else
+                if(GameInput.Instance.GetSprintValue() == 1)
                     InvokeSprintEvent(true);
 
                 return GameInput.Instance.GetSprintValue() * sprintBust + movementSpeed;
@@ -114,26 +112,17 @@ namespace Shooter
 
             Vector3 jumpDirection = new Vector3(rgb.velocity.x, jumpForce, rgb.velocity.z);
 
-            if (GroundCheck())
+            if (playerInteract.GroundCheck())
                 rgb.AddForce(jumpDirection, ForceMode.Impulse);            
         }
 
-        private bool GroundCheck()
-        {
-            Vector3 boxSize = new Vector3(0.6f, 0.6f, 0.6f);
-            if (Physics.CheckBox(transform.position, boxSize, Quaternion.identity, groundLayerMask))
-                return true;
-
-            return false;
-        }
-        
         private void HandleRotate()
         {
             rotationX += GameInput.Instance.GetMouseXAxis();
             transform.eulerAngles = new Vector3(transform.rotation.x, rotationX, transform.rotation.z);
         }
 
-        private void Squat()
+        private void HandleSquat()
         {
             isSquat = !isSquat;
             OnSquated?.Invoke(this, new OnSquatedEventArgs

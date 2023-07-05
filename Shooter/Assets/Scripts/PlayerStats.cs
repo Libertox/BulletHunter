@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEditor.Rendering;
 using UnityEngine;
 
 
@@ -22,25 +23,14 @@ namespace Shooter
         {
             Health = playerStatsSO.MaxHealth;
             Stamina = playerStatsSO.MaxStamina;
-
         }
 
-
-        private void Update()
-        {
-            if (GameInput.Instance.GetSprintValue() == 1)
-                DecreaseStamina();
-            else
-                IncreaseStamina();
-        }
-
-
-        private void IncreaseStamina()
+        public void IncreaseStamina(float increaseValue)
         {
             if (Stamina == playerStatsSO.MaxStamina) return;
 
             if (Stamina < playerStatsSO.MaxStamina)
-                Stamina += Time.deltaTime;
+                Stamina += increaseValue;
             else
                 Stamina = playerStatsSO.MaxStamina;
 
@@ -48,17 +38,43 @@ namespace Shooter
 
         }
 
-        private void DecreaseStamina()
+        public void DecreaseStamina(float decreaseValue)
         {
             if (Stamina == 0) return;
 
             if (Stamina > 0)
-                Stamina -= Time.deltaTime;
+                Stamina -= decreaseValue;
             else
                 Stamina = 0;
 
             ChangeStaminaValue();
         }
+
+        public void IncreaseHealth(float increaseValue)
+        {
+            if (Stamina == playerStatsSO.MaxHealth) return;
+
+            if (Stamina < playerStatsSO.MaxHealth)
+                Health += increaseValue;
+            else
+                Health = playerStatsSO.MaxHealth;
+
+            ChnageHealthValue();
+        }
+
+        public void DecreaseHealth(float decreaseValue)
+        {
+            if (Health == 0) return;
+
+            if (Health > 0)
+                Health -= decreaseValue;
+            else
+                Health = 0;
+
+            ChnageHealthValue();
+        }
+
+
 
         private void ChangeStaminaValue()
         {

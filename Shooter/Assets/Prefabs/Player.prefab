@@ -69,7 +69,7 @@ Transform:
   - {fileID: 5840581907007212409}
   - {fileID: 4504808687870108260}
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4268489549942046435
 MonoBehaviour:
@@ -87,12 +87,6 @@ MonoBehaviour:
   sprintBust: 60
   jumpHeight: 8
   orientationPoint: {fileID: 6970721620267326309}
-  groundLayerMask:
-    serializedVersion: 2
-    m_Bits: 64
-  squatColider: {fileID: 8011574742546082726}
-  uprightColider: {fileID: 1160402203467028410}
-  playerAnimation: {fileID: 8871068495641731836}
 --- !u!114 &5117945662046298306
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -207,6 +201,11 @@ MonoBehaviour:
   interactableLayerMask:
     serializedVersion: 2
     m_Bits: 512
+  groundLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
+  squatColider: {fileID: 8011574742546082726}
+  uprightColider: {fileID: 1160402203467028410}
 --- !u!1 &1763912091008192566
 GameObject:
   m_ObjectHideFlags: 0
@@ -659,7 +658,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxAngleY: 80
-  zoomValue: 30
   unzoomValue: 60
 --- !u!1 &5770575723795564057
 GameObject:

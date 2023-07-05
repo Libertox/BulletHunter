@@ -32,7 +32,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3445797394399883179}
-  - {fileID: 1053934259312957656}
+  - {fileID: 6269445147206798629}
   m_Father: {fileID: 3743801333937695749}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -170,7 +170,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 1db67ddcdf1d2834ba9aa83075cca57d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2619487cb31a0c34cabe4eb8512abc97, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -180,7 +180,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!1 &3868857643275630009
+--- !u!1 &7894742419931338149
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -188,9 +188,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1053934259312957656}
-  - component: {fileID: 4969848943759213587}
-  - component: {fileID: 8984361456541411889}
+  - component: {fileID: 6269445147206798629}
+  - component: {fileID: 7602556628805488209}
+  - component: {fileID: 1674763231288517742}
   m_Layer: 5
   m_Name: WeaponIcon_1
   m_TagString: Untagged
@@ -198,15 +198,15 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &1053934259312957656
+--- !u!224 &6269445147206798629
 RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3868857643275630009}
+  m_GameObject: {fileID: 7894742419931338149}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.375}
+  m_LocalPosition: {x: 0, y: 0, z: -0.37}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -218,21 +218,21 @@ RectTransform:
   m_AnchoredPosition: {x: -0.0056, y: 0.3502}
   m_SizeDelta: {x: 0.9792, y: 0.6743}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &4969848943759213587
+--- !u!222 &7602556628805488209
 CanvasRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3868857643275630009}
+  m_GameObject: {fileID: 7894742419931338149}
   m_CullTransparentMesh: 1
---- !u!114 &8984361456541411889
+--- !u!114 &1674763231288517742
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3868857643275630009}
+  m_GameObject: {fileID: 7894742419931338149}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
@@ -246,7 +246,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 1db67ddcdf1d2834ba9aa83075cca57d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2619487cb31a0c34cabe4eb8512abc97, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -267,9 +267,9 @@ GameObject:
   - component: {fileID: 3790418580616972669}
   - component: {fileID: 7759299689004112845}
   - component: {fileID: 1672928525496349377}
-  - component: {fileID: -716211753310108863}
+  - component: {fileID: 2866097379992508535}
   m_Layer: 9
-  m_Name: SniperAmmo
+  m_Name: RifleAmmo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -303,7 +303,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64a7c03867d360d4f80bf7d7fae7a41f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponType: 2
+  weaponType: 1
   amount: 1
 --- !u!65 &1672928525496349377
 BoxCollider:
@@ -326,7 +326,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.5, y: 2.0214796, z: 1.5298846}
   m_Center: {x: 0, y: 1.2607398, z: -0.014942318}
---- !u!114 &-716211753310108863
+--- !u!114 &2866097379992508535
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

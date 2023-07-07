@@ -12,7 +12,7 @@ namespace Shooter
         private readonly float sensitivity = .5f;
         private float rotationY;
         private Camera cameraToControl;
-
+        float rotationX;
         private void Awake()
         {
             cameraToControl = GetComponent<Camera>();
@@ -45,9 +45,9 @@ namespace Shooter
         private void Rotate()
         {
             rotationY += GameInput.Instance.GetMouseYAxis() * sensitivity;
-
+            rotationX += GameInput.Instance.GetMouseXAxis();
             rotationY = Mathf.Clamp(rotationY, -maxAngleY, maxAngleY);
-
+            //rotationX = Mathf.Clamp(rotationX, -360, 360);
             transform.localEulerAngles = new Vector3(-rotationY, 0, 0);
         }
 

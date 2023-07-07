@@ -19,6 +19,9 @@ namespace Shooter
         public event EventHandler OnAimed;
         public event EventHandler OnCancelAimed;
 
+        public event EventHandler OnThrowed;
+        public event EventHandler OnCancelThrowed;
+
         public event EventHandler<OnWeaponSelectedEventArgs> OnWeaponSelected;
 
         public class OnWeaponSelectedEventArgs: EventArgs { public int selectWeaponIndex; }
@@ -50,6 +53,19 @@ namespace Shooter
             playerInput.Player.Aim.performed += Aim_performed;
             playerInput.Player.Aim.canceled += Aim_canceled;
 
+            playerInput.Player.Throw.performed += Throw_performed;
+            playerInput.Player.Throw.canceled += Throw_canceled;
+
+        }
+
+        private void Throw_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+        {
+            OnCancelThrowed?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void Throw_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+        {
+            OnThrowed?.Invoke(this, EventArgs.Empty);
         }
 
         private void Aim_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)

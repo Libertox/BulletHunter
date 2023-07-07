@@ -6,11 +6,13 @@ using UnityEngine.UI;
 
 namespace Shooter.UI
 {
-    public class InventoryUI:MonoBehaviour
+    public class InventoryUI : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI ammoAmountText;
         [SerializeField] private Image weaponIcon;
         [SerializeField] private BarUI weaponReloadBar;
+
+        [SerializeField] private GameObject[] grenadeAmountIcon;
 
         private void Start()
         {
@@ -19,15 +21,26 @@ namespace Shooter.UI
             Inventory.Instance.OnReloaded += Inventory_OnReloaded;
             Inventory.Instance.OnCanelReloaded += Inventory_OnCanelReloaded;
             Inventory.Instance.OnSelectedWeaponDroped += Inventory_OnSelectedWeaponDroped;
+
+            Inventory.Instance.OnGrenadeAdded += Inventory_OnGrenadeAmountChanged;
+            Inventory.Instance.OnGrenadeSubstracted += Inventory_OnGrenadeSubstracted;
+
             Hide();
         }
 
-        private void Inventory_OnSelectedWeaponDroped(object sender, Inventory.OnSelectedWeaponChangedEventArgs e) => Hide();
-       
-        private void Inventory_OnCanelReloaded(object sender, EventArgs e)
+        private void Inventory_OnGrenadeSubstracted(object sender, Inventory.OnGrenadeAmountChangedEventArgs e)
         {
-            weaponReloadBar.Hide();
+            grenadeAmountIcon[e.grenadeAmount].SetActive(false);
         }
+
+        private void Inventory_OnGrenadeAmountChanged(object sender, Inventory.OnGrenadeAmountChangedEventArgs e)
+        {
+            grenadeAmountIcon[e.grenadeAmount].SetActive(true);
+        }
+
+        private void Inventory_OnSelectedWeaponDroped(object sender, Inventory.OnSelectedWeaponChangedEventArgs e) => Hide();
+
+        private void Inventory_OnCanelReloaded(object sender, EventArgs e) => weaponReloadBar.Hide();
 
         private void Inventory_OnReloaded(object sender, Inventory.OnReloadedEventArgs e)
         {
@@ -54,13 +67,20 @@ namespace Shooter.UI
 
             if (!inventory.UseWeapon) return;
 
-            ChangeAmmoValueText(inventory);  
+            ChangeAmmoValueText(inventory);
         }
 
         private void ChangeAmmoValueText(Inventory inventory) => ammoAmountText.SetText($"{inventory.GetUseAmmo()} / {inventory.GetUseMagazine()}");
 
-        private void Hide() => gameObject.SetActive(false);
-
-        private void Show() => gameObject.SetActive(true);
+        private void Hide()
+        {
+            ammoAmountText.gameObject.SetActive(false);
+            weaponIcon.gameObject.SetActive(false);
+        } 
+        private void Show()
+        {
+            ammoAmountText.gameObject.SetActive(true);
+            weaponIcon.gameObject.SetActive(true);
+        }
     }
 }

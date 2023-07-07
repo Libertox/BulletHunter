@@ -47,6 +47,7 @@ GameObject:
   - component: {fileID: 8011574742546082726}
   - component: {fileID: 3682864113211051954}
   - component: {fileID: 6879063285447923455}
+  - component: {fileID: 6095002107794708781}
   m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
@@ -206,6 +207,23 @@ MonoBehaviour:
     m_Bits: 64
   squatColider: {fileID: 8011574742546082726}
   uprightColider: {fileID: 1160402203467028410}
+--- !u!114 &6095002107794708781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 816405233164241536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6655773512b2b984f840b878fe44008f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lineRenderer: {fileID: 0}
+  throwTransform: {fileID: 6970721620267326309}
+  orientationPoint: {fileID: 0}
+  LinePoints: 25
+  TimeBetweenPoints: 0.1
 --- !u!1 &1763912091008192566
 GameObject:
   m_ObjectHideFlags: 0
@@ -383,7 +401,7 @@ PositionConstraint:
   serializedVersion: 2
   m_Weight: 1
   m_TranslationAtRest: {x: 0, y: -0.141, z: 0}
-  m_TranslationOffset: {x: -0.05000019, y: -1.141, z: 0}
+  m_TranslationOffset: {x: -0.05, y: -1.141, z: 0}
   m_AffectTranslationX: 1
   m_AffectTranslationY: 1
   m_AffectTranslationZ: 1
@@ -525,7 +543,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5107425546697337790
 Transform:
   m_ObjectHideFlags: 0

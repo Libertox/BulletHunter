@@ -12,16 +12,20 @@ namespace Shooter
         private const int maxShoutgunMagazine = 48;
         private const int maxRifleMagazine = 192;
         private const int maxSniperMagazine = 32;
-        private const int maxGranadeMagazine = 5;
+        private const int maxGrenadeMagazine = 5;
 
         public static Inventory Instance { get; private set; }
 
         public event EventHandler OnAmmoChanged;
         public event EventHandler<OnReloadedEventArgs> OnReloaded;
         public event EventHandler OnCanelReloaded;
+        public event EventHandler<OnGrenadeAmountChangedEventArgs> OnGrenadeAdded;
+        public event EventHandler<OnGrenadeAmountChangedEventArgs> OnGrenadeSubstracted;
+
         public event EventHandler<OnSelectedWeaponChangedEventArgs> OnSelectedWeaponChanged; 
         public event EventHandler<OnSelectedWeaponChangedEventArgs> OnSelectedWeaponDroped;
         public class OnSelectedWeaponChangedEventArgs : EventArgs { public WeaponSO selectedWeapon; }
+        public class OnGrenadeAmountChangedEventArgs: EventArgs { public int grenadeAmount; }
 
         public class OnReloadedEventArgs: EventArgs { public float reloadTime; }
 
@@ -31,13 +35,14 @@ namespace Shooter
         private WeaponSO[] ownedWeapon;
         private int useWeaponIndex;
 
+        public int GrenadeAmount { get; private set; }
+
         public Dictionary<WeaponType, int> AmmoAmount { get; private set; } = new Dictionary<WeaponType, int>
         {
                 {WeaponType.Gun,0 },
                 {WeaponType.Rifle,0 },
                 {WeaponType.Sniper,0 },
                 {WeaponType.Shoutgun,0 },
-                {WeaponType.Grenade,0 }
         };
 
         public Dictionary<WeaponType, int> MagazineAmount { get; private set; } = new Dictionary<WeaponType, int>
@@ -46,7 +51,6 @@ namespace Shooter
             {WeaponType.Rifle,0 },
             {WeaponType.Sniper,0 },
             {WeaponType.Shoutgun,0 },
-            {WeaponType.Grenade,0 }
         };
 
         private Dictionary<WeaponType, int> maxAmmoMagazine = new Dictionary<WeaponType, int> 
@@ -55,7 +59,6 @@ namespace Shooter
                 {WeaponType.Rifle,maxRifleMagazine},
                 {WeaponType.Shoutgun,maxShoutgunMagazine},
                 {WeaponType.Sniper,maxSniperMagazine },
-                {WeaponType.Grenade,maxGranadeMagazine }
         };
 
         private bool isReload;
@@ -78,7 +81,11 @@ namespace Shooter
             GameInput.Instance.OnReloaded += GameInput_OnReloaded;
         }
 
-        private void GameInput_OnReloaded(object sender, EventArgs e) => isReload = true;
+        private void GameInput_OnReloaded(object sender, EventArgs e) 
+        { 
+            if(UseWeapon)
+                isReload = true; 
+        } 
        
         private void GameInput_OnWeaponDroped(object sender, EventArgs e) => DropUseWeapon();
      
@@ -107,7 +114,6 @@ namespace Shooter
                 Reload();
                 CancelReload();
             }  
-
         }
 
         public bool AddWeapon(Weapon weaponToAdd)
@@ -147,6 +153,7 @@ namespace Shooter
 
             OnAmmoChanged?.Invoke(this, EventArgs.Empty);
         }
+
         public void SubstractAmmo()
         {
             if (GetUseAmmo() > 0)
@@ -155,6 +162,32 @@ namespace Shooter
             OnAmmoChanged?.Invoke(this, EventArgs.Empty);
         }
 
+        public bool AddOneGranade()
+        {
+            if(GrenadeAmount < maxGrenadeMagazine)
+            {
+                OnGrenadeAdded?.Invoke(this, new OnGrenadeAmountChangedEventArgs
+                {
+                    grenadeAmount = GrenadeAmount
+                });
+                GrenadeAmount++;
+                return true;
+            }
+            return false;
+        }
+
+        public void SubstractGranade()
+        {
+            if (GrenadeAmount > 0)
+            {
+                GrenadeAmount--;
+                OnGrenadeSubstracted?.Invoke(this, new OnGrenadeAmountChangedEventArgs
+                {
+                    grenadeAmount = GrenadeAmount
+                });
+
+            }            
+        }
 
         private void DropUseWeapon()
         {
@@ -182,6 +215,8 @@ namespace Shooter
 
             return true;
         }
+
+        public bool CanThrowGrenade() => GrenadeAmount > 0;
 
         private bool CanReload() => isReload && UseWeapon && GetUseMagazine() > 0;
 

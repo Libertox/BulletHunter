@@ -74,12 +74,9 @@ namespace Shooter
 
             float speed = GetMoveSpeed();
 
-            if (inputVector.y != 0)
-                moveDirection =  (orientationPoint.forward.normalized) * (inputVector.y * speed * Time.deltaTime);
-           else if(inputVector.x != 0)
-                moveDirection = (orientationPoint.right.normalized) * (inputVector.x  * speed * Time.deltaTime);
+            moveDirection = (orientationPoint.forward.normalized * inputVector.y + orientationPoint.right.normalized * inputVector.x) * speed;
 
-             rgb.velocity = new Vector3(moveDirection.x, rgb.velocity.y, moveDirection.z);
+            rgb.velocity = new Vector3(moveDirection.x, rgb.velocity.y, moveDirection.z);
         }
 
         private float GetMoveSpeed()

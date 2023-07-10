@@ -8,6 +8,8 @@ namespace Shooter
     {
         [SerializeField] private LayerMask damageableLayerMask;
 
+        [SerializeField] private Transform shootEffectTransform;
+
         private void Start()
         {
             GameInput.Instance.OnShooted += GameInput_OnShooted;
@@ -19,13 +21,18 @@ namespace Shooter
 
             Inventory.Instance.SubstractAmmo();
 
+
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit raycastHit;
-            if(Physics.Raycast(ray, out raycastHit, Inventory.Instance.UseWeapon.WeaponRange, damageableLayerMask))
+            if(Physics.Raycast(ray, out RaycastHit raycastHit, Inventory.Instance.UseWeapon.WeaponRange))
             {
-                if(raycastHit.transform.TryGetComponent(out IDamageable damageable))
+                if (raycastHit.transform.TryGetComponent(out IDamageable damageable))
                 {                
                     damageable.TakeDamage();
+                }
+                else
+                {
+                    ObjectPoolingManager.Instance.BulletTrackPool.Get().Init(raycastHit.point, ObjectPoolingManager.Instance.BulletTrackPool);
+                    ObjectPoolingManager.Instance.ShootEffectPool.Get().Init(raycastHit.point, ObjectPoolingManager.Instance.ShootEffectPool);
                 }
             }
         }

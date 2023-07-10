@@ -35,8 +35,7 @@ namespace Shooter
         private IEnumerator Explosion()
         {
             yield return new WaitForSeconds(baseThrowTime);
-            ParticleEffect explosion = ObjectPoolingManager.Instance.GrenadeExplosionPool.Get();
-            explosion.Init(transform.position, ObjectPoolingManager.Instance.GrenadeExplosionPool);
+            ObjectPoolingManager.Instance.GrenadeExplosionPool.Get().Init(transform.position, ObjectPoolingManager.Instance.GrenadeExplosionPool);
             gameObject.SetActive(false);
             ObjectPoolingManager.Instance.GrenadePool.Release(this);
 

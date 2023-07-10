@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4587651611338842}
   m_Layer: 0
-  m_Name: P_IMP_Concrete
+  m_Name: Shoot_VFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4881,7 +4881,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a526e256d337dbf4288e13f1a96e4461, type: 2}
+  - {fileID: 2100000, guid: 319a120a9c8d0944fa05ba39cf867862, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9779,7 +9779,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: b1c68c048883aa04e98206611bbd70f7, type: 2}
+  - {fileID: 2100000, guid: 828c4c5b81162f94c9c1825cb9c3423e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9847,7 +9847,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4875484846783468
 Transform:
   m_ObjectHideFlags: 0

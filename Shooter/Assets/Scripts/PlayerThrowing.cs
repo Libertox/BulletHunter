@@ -32,7 +32,7 @@ namespace Shooter
 
         private void GameInput_OnCancelThrowed(object sender, EventArgs e)
         {
-            if (Inventory.Instance.CanThrowGrenade() || true)
+            if (Inventory.Instance.CanThrowGrenade())
             {
                 isThrowed = false;
                 trajectoryLine.Hide();
@@ -45,7 +45,7 @@ namespace Shooter
 
         private void GameInput_OnThrowed(object sender, EventArgs e)
         {
-            if(Inventory.Instance.CanThrowGrenade() || true)
+            if(Inventory.Instance.CanThrowGrenade())
                    isThrowed = true;
         }
     }

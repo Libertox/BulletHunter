@@ -57,6 +57,8 @@ namespace Shooter
 
         private void HandleMovement()
         {
+            if (!playerInteract.GroundCheck()) return;
+
             Vector2 inputVector = GameInput.Instance.GetMovementVectorNormalized();
 
             if (GameInput.Instance.GetSprintValue() == 0 || inputVector == Vector2.zero)

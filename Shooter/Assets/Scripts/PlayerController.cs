@@ -9,9 +9,15 @@ namespace Shooter
     {
         public static event EventHandler<OnSquatedEventArgs> OnSquated;
         public static event EventHandler<OnSprintedEventArgs> OnSprinted;
+        public static event EventHandler<OnWalkedEventArgs> OnWalked;
+        public static event EventHandler<OnJumpedEventArgs> OnJumped;
+        public static event EventHandler<OnFalledEventArgs> OnFalled;
 
         public class OnSquatedEventArgs : EventArgs { public bool isSquat; }
         public class OnSprintedEventArgs: EventArgs { public bool isSprint, isSquat; }
+        public class OnWalkedEventArgs: EventArgs { public bool isWalk; }
+        public class OnJumpedEventArgs : EventArgs { public bool isJump; }
+        public class OnFalledEventArgs: EventArgs { public bool isFall; }
 
         public PlayerStats PlayerStats { get; private set; }
 
@@ -30,6 +36,7 @@ namespace Shooter
 
         private Vector3 moveDirection;
         private bool isSquat;
+        private bool isClimb;
 
       
         private void Awake()
@@ -50,15 +57,29 @@ namespace Shooter
         private void GameInput_OnSquat(object sender, System.EventArgs e) => HandleSquat();
        
         private void GameInput_OnJumped(object sender, System.EventArgs e) => HandleJump();
-      
-        private void Update() => HandleRotate();
+
+        private void Update() 
+        {
+            HandleRotate();
+            if (!playerInteract.GroundCheck() && rgb.velocity.y < 0)
+            {
+                OnFalled?.Invoke(this, new OnFalledEventArgs { isFall = true });
+                OnJumped?.Invoke(this, new OnJumpedEventArgs { isJump = false });
+            }
+            else
+            {
+                OnFalled?.Invoke(this, new OnFalledEventArgs { isFall = false });
+            }
+        }
       
         private void FixedUpdate() => HandleMovement();
 
         private void HandleMovement()
         {
-            if (!playerInteract.GroundCheck()) return;
+            //if (!playerInteract.GroundCheck()) return;
 
+            if (isClimb) return;
+       
             Vector2 inputVector = GameInput.Instance.GetMovementVectorNormalized();
 
             if (GameInput.Instance.GetSprintValue() == 0 || inputVector == Vector2.zero)
@@ -66,8 +87,14 @@ namespace Shooter
                 PlayerStats.IncreaseStamina(Time.deltaTime);
                 InvokeSprintEvent(false);
             }
-                
-            if (inputVector == Vector2.zero) return;  
+
+            if (inputVector == Vector2.zero)
+            {
+                OnWalked?.Invoke(this, new OnWalkedEventArgs { isWalk = false });
+                return;
+            }
+
+            OnWalked?.Invoke(this, new OnWalkedEventArgs { isWalk = true }) ;
 
             if(GameInput.Instance.GetSprintValue() == 1)
                 PlayerStats.DecreaseStamina(Time.deltaTime);
@@ -112,7 +139,11 @@ namespace Shooter
             Vector3 jumpDirection = new Vector3(rgb.velocity.x, jumpForce, rgb.velocity.z);
 
             if (playerInteract.GroundCheck())
-                rgb.AddForce(jumpDirection, ForceMode.Impulse);            
+            {
+                rgb.AddForce(jumpDirection, ForceMode.Impulse);
+                OnJumped?.Invoke(this, new OnJumpedEventArgs { isJump = true });
+            }
+                         
         }
 
         private void HandleRotate()
@@ -130,6 +161,28 @@ namespace Shooter
             });
 
         }
+
+        public void ClimbOnLadder()
+        {
+            rgb.useGravity = false;
+            isClimb = true;
+
+            Vector2 inputVector = GameInput.Instance.GetMovementVectorNormalized();
+
+            moveDirection = (orientationPoint.right.normalized * inputVector.x) * 3f;
+
+            if (!playerInteract.GroundCheck() || inputVector.y >= 0)
+                rgb.velocity = new Vector3(moveDirection.x, inputVector.y, 0);
+            else
+                rgb.velocity = new Vector3(moveDirection.x, 0, inputVector.y);
+        }
+
+        public void DropLadder()
+        {
+            rgb.useGravity = true;
+            isClimb = false;
+        }
+
     }
 
 }

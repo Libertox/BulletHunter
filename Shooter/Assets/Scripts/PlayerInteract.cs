@@ -55,9 +55,15 @@ namespace Shooter
                 interactableObject.Interact(playerController);
         }
 
+        private void OnTriggerExit(Collider collider)
+        {
+            if (collider.GetComponent<Ladder>())
+                playerController.DropLadder();      
+        }
+
         public bool GroundCheck()
         {
-            Vector3 boxSize = new Vector3(0.6f, 0.6f, 0.6f);
+            Vector3 boxSize = new Vector3(0.1f, 0.1f, 0.1f);
             if (Physics.CheckBox(transform.position, boxSize, Quaternion.identity, groundLayerMask))
                 return true;
 

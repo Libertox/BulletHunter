@@ -4,12 +4,16 @@ using UnityEngine;
 
 namespace Shooter
 {
-    public class PickupGrenade : MonoBehaviour, IInteractable
+    public class PickupGrenade : PickupObject, IInteractable
     {
-        public void Interact(PlayerController playerController)
+        public override void Interact(PlayerController playerController)
         {
             if (Inventory.Instance.AddOneGranade())
-                Destroy(gameObject);
+            {
+                pickupObjectSpawner.SpawnNewObject();
+                gameObject.SetActive(false);
+            }
+                
         }
     }
 }

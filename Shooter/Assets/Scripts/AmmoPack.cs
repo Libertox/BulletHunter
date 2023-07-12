@@ -4,16 +4,17 @@ using UnityEngine;
 
 namespace Shooter
 {
-    public class AmmoPack:MonoBehaviour, IInteractable
+    public class AmmoPack:PickupObject, IInteractable
     {
         [SerializeField] private WeaponType weaponType;
         [SerializeField] private int amount;
 
       
-        public void Interact(PlayerController playerController)
+        public override void Interact(PlayerController playerController)
         {
             Inventory.Instance.AddMagazine(weaponType, amount);
-            Destroy(gameObject);
+            pickupObjectSpawner.SpawnNewObject();
+            gameObject.SetActive(false);
         }
 
     }

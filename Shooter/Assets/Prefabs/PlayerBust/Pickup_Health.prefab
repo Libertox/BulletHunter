@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 2620131183356007192}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1.2}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4508236271983282889}
@@ -54,8 +54,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0.5, z: 0}
+  m_Size: {x: 0.7740272, y: 1, z: 0.60554117}
+  m_Center: {x: 0.017926196, y: 0.5, z: 0.10407103}
 --- !u!114 &5858868993162831045
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -82,6 +82,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcc386e65a6eca34cb376eb83809531a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pickupObjectSpawner: {fileID: 0}
   healValue: 5
 --- !u!1 &7296493021711450243
 GameObject:

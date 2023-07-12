@@ -4,14 +4,16 @@ using UnityEngine;
 
 namespace Shooter
 {
-    public class HealthPack : MonoBehaviour, IInteractable
+    public class HealthPack : PickupObject, IInteractable
     {
         [SerializeField] private float healValue;
 
-        public void Interact(PlayerController playerController)
+        public override void Interact(PlayerController playerController)
         {
             playerController.PlayerStats.IncreaseHealth(healValue);
-            Destroy(gameObject);
+            pickupObjectSpawner.SpawnNewObject();
+            gameObject.SetActive(false);
+            
         }
     }
 }

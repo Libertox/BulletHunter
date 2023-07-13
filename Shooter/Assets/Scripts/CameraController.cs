@@ -28,7 +28,7 @@ namespace Shooter
 
         private void GameInput_OnAimed(object sender, EventArgs e)
         {
-            if (Inventory.Instance.UseWeapon)
+            if (Inventory.Instance.UseWeapon != null)
                 Zoom();
         }
 
@@ -46,7 +46,7 @@ namespace Shooter
 
         private void Zoom() 
         {
-            cameraToControl.fieldOfView = Inventory.Instance.UseWeapon.WeaponZoom;
+            cameraToControl.fieldOfView = Inventory.Instance.UseWeapon.WeaponSO.WeaponZoom;
         }
 
 

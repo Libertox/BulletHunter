@@ -19,11 +19,11 @@ namespace Shooter
         {
             if (!Inventory.Instance.CanShoot()) return;
 
-            Inventory.Instance.SubstractAmmo();
+            Inventory.Instance.UseWeapon.SubstractAmmo();
 
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if(Physics.Raycast(ray, out RaycastHit raycastHit, Inventory.Instance.UseWeapon.WeaponRange))
+            if(Physics.Raycast(ray, out RaycastHit raycastHit, Inventory.Instance.UseWeapon.WeaponSO.WeaponRange))
             {
                 if (raycastHit.transform.TryGetComponent(out IDamageable damageable))
                 {                

@@ -48,7 +48,8 @@ namespace Shooter
        
         private void Inventory_OnSelectedWeaponDroped(object sender, Inventory.OnSelectedWeaponChangedEventArgs e)
         {
-            Weapon weapon = Instantiate(e.selectedWeapon.WeaponPrefab, transform.position, Quaternion.identity);
+            Weapon weapon = Instantiate(e.selectedWeapon.WeaponSO.WeaponPrefab, transform.position, Quaternion.identity);
+            weapon.SetAmmoAmount(e.selectedWeapon.AmmoAmount);
             weapon.Drop();
             SwapWeaponModel(null);
         }
@@ -86,7 +87,7 @@ namespace Shooter
                     transform.position = Vector3.Lerp(transform.position, downPointTransform.position, Time.deltaTime * swapModelSpeed);
                     if (transform.position == downPointTransform.position)
                     {
-                        SwapWeaponModel(Inventory.Instance.UseWeapon);
+                        SwapWeaponModel(Inventory.Instance.UseWeapon?.WeaponSO);
                         swapModleState = SwapModleState.MoveUp;
                     }
                     break;

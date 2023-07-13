@@ -8,10 +8,10 @@ namespace Shooter
 {
     public class Inventory : MonoBehaviour
     {
-        private const int maxGunMagazine = 64;
-        private const int maxShoutgunMagazine = 48;
-        private const int maxRifleMagazine = 192;
-        private const int maxSniperMagazine = 32;
+        private const int maxGunMagazine = 4;
+        private const int maxShoutgunMagazine = 2;
+        private const int maxRifleMagazine = 6;
+        private const int maxSniperMagazine = 3;
         private const int maxGrenadeMagazine = 5;
 
         public static Inventory Instance { get; private set; }
@@ -24,26 +24,18 @@ namespace Shooter
 
         public event EventHandler<OnSelectedWeaponChangedEventArgs> OnSelectedWeaponChanged; 
         public event EventHandler<OnSelectedWeaponChangedEventArgs> OnSelectedWeaponDroped;
-        public class OnSelectedWeaponChangedEventArgs : EventArgs { public WeaponSO selectedWeapon; }
+        public class OnSelectedWeaponChangedEventArgs : EventArgs { public WeaponInstance selectedWeapon; }
         public class OnGrenadeAmountChangedEventArgs: EventArgs { public int grenadeAmount; }
 
         public class OnReloadedEventArgs: EventArgs { public float reloadTime; }
 
         public static int MaxNumberWeapon { get; private set; } = 4;
-        public WeaponSO UseWeapon { get; private set; }
+        public WeaponInstance UseWeapon { get; private set; }
 
-        private WeaponSO[] ownedWeapon;
+        private WeaponInstance[] ownedWeapon;
         private int useWeaponIndex;
 
         public int GrenadeAmount { get; private set; }
-
-        public Dictionary<WeaponType, int> AmmoAmount { get; private set; } = new Dictionary<WeaponType, int>
-        {
-                {WeaponType.Gun,0 },
-                {WeaponType.Rifle,0 },
-                {WeaponType.Sniper,0 },
-                {WeaponType.Shoutgun,0 },
-        };
 
         public Dictionary<WeaponType, int> MagazineAmount { get; private set; } = new Dictionary<WeaponType, int>
         {
@@ -52,6 +44,7 @@ namespace Shooter
             {WeaponType.Sniper,0 },
             {WeaponType.Shoutgun,0 },
         };
+
 
         private Dictionary<WeaponType, int> maxAmmoMagazine = new Dictionary<WeaponType, int> 
         {
@@ -71,7 +64,7 @@ namespace Shooter
             else
                 Destroy(gameObject);
 
-            ownedWeapon = new WeaponSO[MaxNumberWeapon];
+            ownedWeapon = new WeaponInstance[MaxNumberWeapon];
          
         }
         private void Start()
@@ -83,7 +76,7 @@ namespace Shooter
 
         private void GameInput_OnReloaded(object sender, EventArgs e) 
         { 
-            if(UseWeapon)
+            if(UseWeapon != null)
                 isReload = true; 
         } 
        
@@ -107,24 +100,24 @@ namespace Shooter
             time += Time.deltaTime;
             OnReloaded?.Invoke(this, new OnReloadedEventArgs
             {
-                reloadTime = time / UseWeapon.ReloadTime
+                reloadTime = time / UseWeapon.WeaponSO.ReloadTime
             });
-            if(time > UseWeapon.ReloadTime)
+            if(time > UseWeapon.WeaponSO.ReloadTime)
             {
                 Reload();
                 CancelReload();
             }  
         }
 
-        public bool AddWeapon(Weapon weaponToAdd)
+        public bool AddWeapon(WeaponInstance weaponToAdd)
         {
             for (int i = 0; i < ownedWeapon.Length; i++)
             {
-                if (!ownedWeapon[i])
+                if (ownedWeapon[i] == null)
                 {
-                    ownedWeapon[i] = weaponToAdd.WeaponSO;
+                    ownedWeapon[i] = weaponToAdd;
 
-                    if (!UseWeapon)
+                    if (UseWeapon  == null)
                     {
                         UseWeapon = ownedWeapon[useWeaponIndex];
                         OnSelectedWeaponChanged?.Invoke(this, new OnSelectedWeaponChangedEventArgs
@@ -133,16 +126,14 @@ namespace Shooter
                         });
                     }
 
-                    AddMagazine(weaponToAdd.WeaponSO.WeaponType,weaponToAdd.NumberOfMagazine);
+                    AddMagazine(weaponToAdd.WeaponSO.WeaponType,weaponToAdd.MagazineAmount);
                     return true;
                 }               
             }
             return false;
         }
 
-        public int GetUseAmmo() => AmmoAmount[UseWeapon.WeaponType];
-
-        public int GetUseMagazine() => MagazineAmount[UseWeapon.WeaponType];
+        public int GetUseMagazine() => MagazineAmount[UseWeapon.WeaponSO.WeaponType];
 
         public void AddMagazine(WeaponType typeOfWeapon , int magazineNumber)
         {
@@ -154,11 +145,8 @@ namespace Shooter
             OnAmmoChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        public void SubstractAmmo()
+        public void AmmoChanged()
         {
-            if (GetUseAmmo() > 0)
-                AmmoAmount[UseWeapon.WeaponType]--;
-
             OnAmmoChanged?.Invoke(this, EventArgs.Empty);
         }
 
@@ -191,7 +179,7 @@ namespace Shooter
 
         private void DropUseWeapon()
         {
-            if (!UseWeapon) return;
+            if (UseWeapon == null) return;
 
             OnSelectedWeaponDroped?.Invoke(this, new OnSelectedWeaponChangedEventArgs
             {
@@ -205,9 +193,9 @@ namespace Shooter
 
         public bool CanShoot()
         {
-            if (!UseWeapon) return false;
+            if (UseWeapon == null) return false;
 
-            if (GetUseAmmo() <= 0)
+            if (UseWeapon.AmmoAmount <= 0)
             {
                 isReload = true;
                 return false;
@@ -218,13 +206,12 @@ namespace Shooter
 
         public bool CanThrowGrenade() => GrenadeAmount > 0;
 
-        private bool CanReload() => isReload && UseWeapon && GetUseMagazine() > 0;
+        private bool CanReload() => isReload && UseWeapon != null && GetUseMagazine() > 0;
 
         private void Reload()
         {
-          
-           MagazineAmount[UseWeapon.WeaponType]--;
-           AmmoAmount[UseWeapon.WeaponType] = UseWeapon.AmmoInMagazine;
+           MagazineAmount[UseWeapon.WeaponSO.WeaponType]--;
+           UseWeapon.FillAmmo();
             
            OnAmmoChanged?.Invoke(this, EventArgs.Empty);
         }

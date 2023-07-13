@@ -51,13 +51,13 @@ namespace Shooter.UI
         private void Inventory_OnSelectedWeaponChanged(object sender, EventArgs e)
         {
             Inventory inventory = sender as Inventory;
-            if (!inventory.UseWeapon)
+            if (inventory.UseWeapon == null)
             {
                 Hide();
                 return;
             }
             Show();
-            weaponIcon.sprite = inventory.UseWeapon.WeaponIcon;
+            weaponIcon.sprite = inventory.UseWeapon.WeaponSO.WeaponIcon;
             ChangeAmmoValueText(inventory);
         }
 
@@ -65,12 +65,12 @@ namespace Shooter.UI
         {
             Inventory inventory = sender as Inventory;
 
-            if (!inventory.UseWeapon) return;
+            if (inventory.UseWeapon == null) return;
 
             ChangeAmmoValueText(inventory);
         }
 
-        private void ChangeAmmoValueText(Inventory inventory) => ammoAmountText.SetText($"{inventory.GetUseAmmo()} / {inventory.GetUseMagazine()}");
+        private void ChangeAmmoValueText(Inventory inventory) => ammoAmountText.SetText($"{inventory.UseWeapon.AmmoAmount} / {inventory.GetUseMagazine()}");
 
         private void Hide()
         {

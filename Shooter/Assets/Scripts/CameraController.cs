@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Shooter
@@ -8,15 +7,14 @@ namespace Shooter
     {
         [SerializeField] private float maxAngleY;
         [SerializeField] private float unzoomValue;
+        [SerializeField] private PlayerController playerController;
 
         private readonly float sensitivity = .5f;
         private float rotationY;
+        private float rotationX;
         private Camera cameraToControl;
-        float rotationX;
-        private void Awake()
-        {
-            cameraToControl = GetComponent<Camera>();
-        }
+
+        private void Awake() => cameraToControl = GetComponent<Camera>();
 
         private void Start()
         {
@@ -25,41 +23,37 @@ namespace Shooter
             GameInput.Instance.OnWeaponDroped += GameInput_OnCancelAimed;
         }
 
-        private void GameInput_OnCancelAimed(object sender, EventArgs e)
-        {
-            Unzoom();
-        }
+        private void GameInput_OnCancelAimed(object sender, EventArgs e) => Unzoom();
+
 
         private void GameInput_OnAimed(object sender, EventArgs e)
         {
             if (Inventory.Instance.UseWeapon)
                 Zoom();
         }
-       
 
-        private void Update()
-        {
-            Rotate();
-        }
+        private void Update() => Rotate();
 
         private void Rotate()
         {
             rotationY += GameInput.Instance.GetMouseYAxis() * sensitivity;
-            rotationX += GameInput.Instance.GetMouseXAxis();
+            rotationX += GameInput.Instance.GetMouseXAxis() * sensitivity;
+
             rotationY = Mathf.Clamp(rotationY, -maxAngleY, maxAngleY);
-            //rotationX = Mathf.Clamp(rotationX, -360, 360);
             transform.localEulerAngles = new Vector3(-rotationY, 0, 0);
+            playerController.HandleRotate(new Vector3(0, rotationX, 0));
         }
 
-        private void Zoom()
+        private void Zoom() 
         {
             cameraToControl.fieldOfView = Inventory.Instance.UseWeapon.WeaponZoom;
         }
 
-        private void Unzoom()
+
+        private void Unzoom() 
         {
             cameraToControl.fieldOfView = unzoomValue;
-        }
-        
+        } 
+
     }
 }

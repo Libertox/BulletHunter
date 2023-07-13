@@ -50,7 +50,7 @@ MonoBehaviour:
   rgb: {fileID: 2189764758709901734}
   explosionParticleEffect: {fileID: 0}
   rotationForce: 0.01
-  baseThrowTime: 3
+  explosionTime: 3
   <ThrowForce>k__BackingField: 15
 --- !u!54 &2189764758709901734
 Rigidbody:

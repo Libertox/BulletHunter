@@ -32,13 +32,12 @@ namespace Shooter
         private PlayerInteract playerInteract;
 
         private float jumpForce;
-        private float rotationX;
 
         private Vector3 moveDirection;
         private bool isSquat;
         private bool isClimb;
 
-      
+
         private void Awake()
         {
             rgb = GetComponent<Rigidbody>();
@@ -60,7 +59,6 @@ namespace Shooter
 
         private void Update() 
         {
-            HandleRotate();
             if (!playerInteract.GroundCheck() && rgb.velocity.y < 0)
             {
                 OnFalled?.Invoke(this, new OnFalledEventArgs { isFall = true });
@@ -76,9 +74,7 @@ namespace Shooter
 
         private void HandleMovement()
         {
-            //if (!playerInteract.GroundCheck()) return;
-
-            if (isClimb) return;
+            if (isClimb || !playerInteract.GroundCheck()) return;
        
             Vector2 inputVector = GameInput.Instance.GetMovementVectorNormalized();
 
@@ -136,7 +132,10 @@ namespace Shooter
         {
             if (isSquat) return;
 
-            Vector3 jumpDirection = new Vector3(rgb.velocity.x, jumpForce, rgb.velocity.z);
+            Vector2 inputVector = GameInput.Instance.GetMovementVectorNormalized();
+            float speed = GetMoveSpeed();
+            moveDirection = (orientationPoint.forward.normalized * inputVector.y + orientationPoint.right.normalized * inputVector.x) * speed;
+            Vector3 jumpDirection = new Vector3(moveDirection.x, jumpForce, moveDirection.z);
 
             if (playerInteract.GroundCheck())
             {
@@ -146,12 +145,8 @@ namespace Shooter
                          
         }
 
-        private void HandleRotate()
-        {
-            rotationX += GameInput.Instance.GetMouseXAxis();
-            transform.eulerAngles = new Vector3(transform.rotation.x, rotationX, transform.rotation.z);
-        }
-
+        public void HandleRotate(Vector3 angle) => transform.eulerAngles = angle;
+     
         private void HandleSquat()
         {
             isSquat = !isSquat;
@@ -165,22 +160,29 @@ namespace Shooter
         public void ClimbOnLadder()
         {
             rgb.useGravity = false;
-            isClimb = true;
+            
 
             Vector2 inputVector = GameInput.Instance.GetMovementVectorNormalized();
 
             moveDirection = (orientationPoint.right.normalized * inputVector.x) * 3f;
 
+            rgb.velocity = new Vector3(moveDirection.x, inputVector.y, 0);
             if (!playerInteract.GroundCheck() || inputVector.y >= 0)
-                rgb.velocity = new Vector3(moveDirection.x, inputVector.y, 0);
+                isClimb = true;
             else
-                rgb.velocity = new Vector3(moveDirection.x, 0, inputVector.y);
+                isClimb = false;
         }
 
         public void DropLadder()
         {
             rgb.useGravity = true;
             isClimb = false;
+
+            if (!playerInteract.GroundCheck())
+            {
+                rgb.velocity = (Vector3.up  + orientationPoint.forward) * 2f;
+            }
+       
         }
 
     }

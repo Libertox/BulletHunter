@@ -63,7 +63,7 @@ namespace Shooter
 
         public bool GroundCheck()
         {
-            Vector3 boxSize = new Vector3(0.1f, 0.1f, 0.1f);
+            Vector3 boxSize = new Vector3(1f, 0.1f, 1f);
             if (Physics.CheckBox(transform.position, boxSize, Quaternion.identity, groundLayerMask))
                 return true;
 

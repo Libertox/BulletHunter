@@ -24,13 +24,30 @@ namespace Shooter
             if (!Instance)
                 Instance = this;
 
-            GrenadePool = new ObjectPool<Grenade>(() => Instantiate(grenadePrefab));
-            GrenadeExplosionPool = new ObjectPool<ParticleEffect>(() => Instantiate(grenadeExplosionPrefab));
-            BulletTrackPool = new ObjectPool<ParticleEffect>(() => Instantiate(bulletTrackPrefab));
-            ShootEffectPool = new ObjectPool<ParticleEffect>(() => Instantiate(shootEffectPrefab));
-        }
+            GrenadePool = new ObjectPool<Grenade>(
+                () => Instantiate(grenadePrefab), 
+                (grenade) => grenade.gameObject.SetActive(true),
+                (grenade) => grenade.gameObject.SetActive(false)
+                );
 
+            GrenadeExplosionPool = new ObjectPool<ParticleEffect>(
+                () => Instantiate(grenadeExplosionPrefab),
+                (effect) => effect.gameObject.SetActive(true),
+                (effect) => effect.gameObject.SetActive(false)
+                );
 
-     
+            BulletTrackPool = new ObjectPool<ParticleEffect>(
+                () => Instantiate(bulletTrackPrefab),
+                (effect) => effect.gameObject.SetActive(true),
+                (effect) => effect.gameObject.SetActive(false)
+                );
+
+            ShootEffectPool = new ObjectPool<ParticleEffect>(
+                () => Instantiate(shootEffectPrefab),
+                (effect) => effect.gameObject.SetActive(true),
+                (effect) => effect.gameObject.SetActive(false)
+                );
+
+        } 
     }
 }

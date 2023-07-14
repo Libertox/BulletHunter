@@ -18,8 +18,9 @@ namespace Shooter.UI
         {
             Inventory.Instance.OnAmmoChanged += Inventory_OnAmmoChanged;
             Inventory.Instance.OnSelectedWeaponChanged += Inventory_OnSelectedWeaponChanged;
-            Inventory.Instance.OnReloaded += Inventory_OnReloaded;
-            Inventory.Instance.OnCanelReloaded += Inventory_OnCanelReloaded;
+
+            WeaponReloading.OnReloaded += WeaponReloading_OnReloaded;
+            WeaponReloading.OnCanelReloaded += WeaponReloading_OnCanelReloaded;
             Inventory.Instance.OnSelectedWeaponDroped += Inventory_OnSelectedWeaponDroped;
 
             Inventory.Instance.OnGrenadeAdded += Inventory_OnGrenadeAmountChanged;
@@ -40,9 +41,9 @@ namespace Shooter.UI
 
         private void Inventory_OnSelectedWeaponDroped(object sender, Inventory.OnSelectedWeaponChangedEventArgs e) => Hide();
 
-        private void Inventory_OnCanelReloaded(object sender, EventArgs e) => weaponReloadBar.Hide();
+        private void WeaponReloading_OnCanelReloaded(object sender, EventArgs e) => weaponReloadBar.Hide();
 
-        private void Inventory_OnReloaded(object sender, Inventory.OnReloadedEventArgs e)
+        private void WeaponReloading_OnReloaded(object sender, WeaponReloading.OnReloadedEventArgs e)
         {
             weaponReloadBar.ChangeFillAmount(e.reloadTime);
             weaponReloadBar.Show();

@@ -32,9 +32,9 @@ namespace Shooter.UI
 
         }
 
-        private void PlayerController_OnSquated(object sender, PlayerController.OnSquatedEventArgs e)
+        private void PlayerController_OnSquated(object sender, PlayerController.OnStateChangedEventArgs e)
         {
-            if (e.isSquat)
+            if (e.state)
                 playerPositionImage.sprite = playerPositionImageSO.SquatPositionImage;
             else
                 playerPositionImage.sprite = playerPositionImageSO.UprightPositionImage;

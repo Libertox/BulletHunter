@@ -7,26 +7,27 @@ namespace Shooter
 {
     public class PlayerController : MonoBehaviour
     {
-        public static event EventHandler<OnSquatedEventArgs> OnSquated;
+        public static event EventHandler<OnStateChangedEventArgs> OnSquated;
         public static event EventHandler<OnSprintedEventArgs> OnSprinted;
-        public static event EventHandler<OnWalkedEventArgs> OnWalked;
-        public static event EventHandler<OnJumpedEventArgs> OnJumped;
-        public static event EventHandler<OnFalledEventArgs> OnFalled;
+        public static event EventHandler<OnStateChangedEventArgs> OnWalked;
+        public static event EventHandler<OnStateChangedEventArgs> OnJumped;
+        public static event EventHandler<OnStateChangedEventArgs> OnFalled;
 
-        public class OnSquatedEventArgs : EventArgs { public bool isSquat; }
         public class OnSprintedEventArgs: EventArgs { public bool isSprint, isSquat; }
-        public class OnWalkedEventArgs: EventArgs { public bool isWalk; }
-        public class OnJumpedEventArgs : EventArgs { public bool isJump; }
-        public class OnFalledEventArgs: EventArgs { public bool isFall; }
+
+        public class OnStateChangedEventArgs : EventArgs { public bool state;};
 
         public PlayerStats PlayerStats { get; private set; }
 
-        [SerializeField] private float movementSpeed;
+        [SerializeField] private float baseSpeed;
         [SerializeField] private float sprintBust;
         [SerializeField] private float jumpHeight;
         [SerializeField] private Transform orientationPoint;
 
         private readonly float gravityScale = 10f;
+
+        private OnStateChangedEventArgs trueState;
+        private OnStateChangedEventArgs falseState;
 
         private Rigidbody rgb;
         private PlayerInteract playerInteract;
@@ -43,7 +44,10 @@ namespace Shooter
             rgb = GetComponent<Rigidbody>();
             PlayerStats = GetComponent<PlayerStats>();
             playerInteract = GetComponent<PlayerInteract>();
-            jumpForce = Mathf.Sqrt(jumpHeight * -2 * (Physics.gravity.y * gravityScale));   
+            jumpForce = Mathf.Sqrt(jumpHeight * -2 * (Physics.gravity.y * gravityScale));
+
+            trueState = new OnStateChangedEventArgs { state = true };
+            falseState = new OnStateChangedEventArgs { state = false };
         }
 
         private void Start()
@@ -61,12 +65,12 @@ namespace Shooter
         {
             if (!playerInteract.GroundCheck() && rgb.velocity.y < 0)
             {
-                OnFalled?.Invoke(this, new OnFalledEventArgs { isFall = true });
-                OnJumped?.Invoke(this, new OnJumpedEventArgs { isJump = false });
+                OnFalled?.Invoke(this, trueState);
+                OnJumped?.Invoke(this, falseState);
             }
             else
             {
-                OnFalled?.Invoke(this, new OnFalledEventArgs { isFall = false });
+                OnFalled?.Invoke(this, falseState);
             }
         }
       
@@ -86,35 +90,35 @@ namespace Shooter
 
             if (inputVector == Vector2.zero)
             {
-                OnWalked?.Invoke(this, new OnWalkedEventArgs { isWalk = false });
+                OnWalked?.Invoke(this, falseState);
                 return;
             }
 
-            OnWalked?.Invoke(this, new OnWalkedEventArgs { isWalk = true }) ;
+            OnWalked?.Invoke(this, trueState) ;
 
             if(GameInput.Instance.GetSprintValue() == 1)
                 PlayerStats.DecreaseStamina(Time.deltaTime);
 
-            float speed = GetMoveSpeed();
+            float movementSpeed = GetMovementSpeed();
 
-            moveDirection = (orientationPoint.forward.normalized * inputVector.y + orientationPoint.right.normalized * inputVector.x) * speed;
+            moveDirection = (orientationPoint.forward.normalized * inputVector.y + orientationPoint.right.normalized * inputVector.x) * movementSpeed;
 
             rgb.velocity = new Vector3(moveDirection.x, rgb.velocity.y, moveDirection.z);
         }
 
-        private float GetMoveSpeed()
+        private float GetMovementSpeed()
         {
             if (PlayerStats.Stamina > 0)
             {
                 if(GameInput.Instance.GetSprintValue() == 1)
                     InvokeSprintEvent(true);
 
-                return GameInput.Instance.GetSprintValue() * sprintBust + movementSpeed;
+                return GameInput.Instance.GetSprintValue() * sprintBust + baseSpeed;
             }
             else
             {
                 InvokeSprintEvent(false);
-                return movementSpeed;
+                return baseSpeed;
             }
                 
         }
@@ -133,14 +137,13 @@ namespace Shooter
             if (isSquat) return;
 
             Vector2 inputVector = GameInput.Instance.GetMovementVectorNormalized();
-            float speed = GetMoveSpeed();
-            moveDirection = (orientationPoint.forward.normalized * inputVector.y + orientationPoint.right.normalized * inputVector.x) * speed;
+            moveDirection = (orientationPoint.forward.normalized * inputVector.y + orientationPoint.right.normalized * inputVector.x) * baseSpeed;
             Vector3 jumpDirection = new Vector3(moveDirection.x, jumpForce, moveDirection.z);
 
             if (playerInteract.GroundCheck())
             {
                 rgb.AddForce(jumpDirection, ForceMode.Impulse);
-                OnJumped?.Invoke(this, new OnJumpedEventArgs { isJump = true });
+                OnJumped?.Invoke(this, trueState);
             }
                          
         }
@@ -150,9 +153,9 @@ namespace Shooter
         private void HandleSquat()
         {
             isSquat = !isSquat;
-            OnSquated?.Invoke(this, new OnSquatedEventArgs
+            OnSquated?.Invoke(this, new OnStateChangedEventArgs
             {
-                isSquat = this.isSquat
+                state = isSquat
             });
 
         }
@@ -164,7 +167,7 @@ namespace Shooter
 
             Vector2 inputVector = GameInput.Instance.GetMovementVectorNormalized();
 
-            moveDirection = (orientationPoint.right.normalized * inputVector.x) * 3f;
+            moveDirection = (orientationPoint.right.normalized * inputVector.x) * baseSpeed;
 
             rgb.velocity = new Vector3(moveDirection.x, inputVector.y, 0);
             if (!playerInteract.GroundCheck() || inputVector.y >= 0)

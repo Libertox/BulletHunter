@@ -23,9 +23,9 @@ namespace Shooter
             PlayerController.OnSquated += PlayerController_OnSquated;
         }
 
-        private void PlayerController_OnSquated(object sender, PlayerController.OnSquatedEventArgs e)
+        private void PlayerController_OnSquated(object sender, PlayerController.OnStateChangedEventArgs e)
         {
-            if (e.isSquat)
+            if (e.state)
             {
                 uprightColider.enabled = false;
                 squatColider.enabled = true;

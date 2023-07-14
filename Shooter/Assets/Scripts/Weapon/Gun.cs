@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Shooter
 {
-    public class Weapon: MonoBehaviour, IInteractable
+    public class Gun: MonoBehaviour, IInteractable
     {
         [SerializeField] private Rigidbody rgb;
         [field: SerializeField] public WeaponSO WeaponSO { get; private set; }
@@ -22,7 +22,7 @@ namespace Shooter
 
         public void Interact(PlayerController playerController)
         {
-            if (Inventory.Instance.AddWeapon(new WeaponInstance(WeaponSO, NumberOfMagazine, AmmoAmount)))
+            if (InventoryManager.Instance.AddWeapon(new WeaponInstance(WeaponSO, NumberOfMagazine, AmmoAmount)))
             {
                 Destroy(gameObject);
             }

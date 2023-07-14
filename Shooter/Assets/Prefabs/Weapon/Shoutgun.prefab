@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3789398411290565580}
-  - component: {fileID: 4732866247398566998}
   - component: {fileID: 5484422178723424606}
   - component: {fileID: 3855691600191856035}
+  - component: {fileID: 111009500801563310}
   m_Layer: 9
   m_Name: Shoutgun
   m_TagString: Untagged
@@ -35,22 +35,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4732866247398566998
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8695509805180829595}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 80fdf02c84572044d856527903e69795, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rgb: {fileID: 5484422178723424606}
-  <WeaponSO>k__BackingField: {fileID: 11400000, guid: 21fe374e25b5b344a8105877d9562497,
-    type: 2}
-  <NumberOfMagazine>k__BackingField: 0
 --- !u!54 &5484422178723424606
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -99,6 +83,23 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.01782851, y: 0.040572386, z: 0.09448462}
   m_Center: {x: 0.0005992763, y: 0.00014480452, z: -0.0001522551}
+--- !u!114 &111009500801563310
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8695509805180829595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 433f4cdbef652194c9d87d05d888607f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rgb: {fileID: 5484422178723424606}
+  <WeaponSO>k__BackingField: {fileID: 11400000, guid: 21fe374e25b5b344a8105877d9562497,
+    type: 2}
+  <NumberOfMagazine>k__BackingField: 0
+  <AmmoAmount>k__BackingField: 0
 --- !u!1001 &2250746500318601914
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -14,11 +14,11 @@ namespace Shooter
         private bool isReload;
         private float time;
 
-        private Inventory inventory;
+        private InventoryManager inventory;
 
         private void Awake()
         {
-            inventory = GetComponent<Inventory>();
+            inventory = GetComponent<InventoryManager>();
         }
 
         private void Start()
@@ -37,7 +37,7 @@ namespace Shooter
 
         private void GameInput_OnWeaponDroped(object sender, EventArgs e)
         {
-            if (Inventory.Instance.UseWeapon != null)
+            if (InventoryManager.Instance.UseWeapon != null)
                 CancelReload();
         }
 

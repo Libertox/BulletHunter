@@ -17,13 +17,13 @@ namespace Shooter
 
         private void GameInput_OnShooted(object sender, EventArgs e)
         {
-            if (!Inventory.Instance.CanShoot()) return;
+            if (!InventoryManager.Instance.CanShoot()) return;
 
-            Inventory.Instance.UseWeapon.SubstractAmmo();
+            InventoryManager.Instance.UseWeapon.SubstractAmmo();
 
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if(Physics.Raycast(ray, out RaycastHit raycastHit, Inventory.Instance.UseWeapon.WeaponSO.WeaponRange))
+            if(Physics.Raycast(ray, out RaycastHit raycastHit, InventoryManager.Instance.UseWeapon.WeaponSO.WeaponRange))
             {
                 if (raycastHit.transform.TryGetComponent(out IDamageable damageable))
                 {                

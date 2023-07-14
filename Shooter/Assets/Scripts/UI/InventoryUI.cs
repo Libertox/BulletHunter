@@ -16,30 +16,30 @@ namespace Shooter.UI
 
         private void Start()
         {
-            Inventory.Instance.OnAmmoChanged += Inventory_OnAmmoChanged;
-            Inventory.Instance.OnSelectedWeaponChanged += Inventory_OnSelectedWeaponChanged;
+            InventoryManager.Instance.OnAmmoChanged += Inventory_OnAmmoChanged;
+            InventoryManager.Instance.OnSelectedWeaponChanged += Inventory_OnSelectedWeaponChanged;
 
             WeaponReloading.OnReloaded += WeaponReloading_OnReloaded;
             WeaponReloading.OnCanelReloaded += WeaponReloading_OnCanelReloaded;
-            Inventory.Instance.OnSelectedWeaponDroped += Inventory_OnSelectedWeaponDroped;
+            InventoryManager.Instance.OnSelectedWeaponDroped += Inventory_OnSelectedWeaponDroped;
 
-            Inventory.Instance.OnGrenadeAdded += Inventory_OnGrenadeAmountChanged;
-            Inventory.Instance.OnGrenadeSubstracted += Inventory_OnGrenadeSubstracted;
+            InventoryManager.Instance.OnGrenadeAdded += Inventory_OnGrenadeAmountChanged;
+            InventoryManager.Instance.OnGrenadeSubstracted += Inventory_OnGrenadeSubstracted;
 
             Hide();
         }
 
-        private void Inventory_OnGrenadeSubstracted(object sender, Inventory.OnGrenadeAmountChangedEventArgs e)
+        private void Inventory_OnGrenadeSubstracted(object sender, InventoryManager.OnGrenadeAmountChangedEventArgs e)
         {
             grenadeAmountIcon[e.grenadeAmount].SetActive(false);
         }
 
-        private void Inventory_OnGrenadeAmountChanged(object sender, Inventory.OnGrenadeAmountChangedEventArgs e)
+        private void Inventory_OnGrenadeAmountChanged(object sender, InventoryManager.OnGrenadeAmountChangedEventArgs e)
         {
             grenadeAmountIcon[e.grenadeAmount].SetActive(true);
         }
 
-        private void Inventory_OnSelectedWeaponDroped(object sender, Inventory.OnSelectedWeaponChangedEventArgs e) => Hide();
+        private void Inventory_OnSelectedWeaponDroped(object sender, InventoryManager.OnSelectedWeaponChangedEventArgs e) => Hide();
 
         private void WeaponReloading_OnCanelReloaded(object sender, EventArgs e) => weaponReloadBar.Hide();
 
@@ -51,7 +51,7 @@ namespace Shooter.UI
 
         private void Inventory_OnSelectedWeaponChanged(object sender, EventArgs e)
         {
-            Inventory inventory = sender as Inventory;
+            InventoryManager inventory = sender as InventoryManager;
             if (inventory.UseWeapon == null)
             {
                 Hide();
@@ -64,14 +64,14 @@ namespace Shooter.UI
 
         private void Inventory_OnAmmoChanged(object sender, EventArgs e)
         {
-            Inventory inventory = sender as Inventory;
+            InventoryManager inventory = sender as InventoryManager;
 
             if (inventory.UseWeapon == null) return;
 
             ChangeAmmoValueText(inventory);
         }
 
-        private void ChangeAmmoValueText(Inventory inventory) => ammoAmountText.SetText($"{inventory.UseWeapon.AmmoAmount} / {inventory.GetUseMagazine()}");
+        private void ChangeAmmoValueText(InventoryManager inventory) => ammoAmountText.SetText($"{inventory.UseWeapon.AmmoAmount} / {inventory.GetUseMagazine()}");
 
         private void Hide()
         {

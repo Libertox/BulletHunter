@@ -8,7 +8,7 @@ namespace Shooter
     {
         public override void Interact(PlayerController playerController)
         {
-            if (Inventory.Instance.AddOneGranade())
+            if (InventoryManager.Instance.AddOneGranade())
             {
                 pickupObjectSpawner.SpawnNewObject();
                 gameObject.SetActive(false);

@@ -6,7 +6,7 @@ using UnityEngine.Events;
 
 namespace Shooter
 {
-    public class Inventory : MonoBehaviour
+    public class InventoryManager : MonoBehaviour
     {
         private const int maxGunMagazine = 4;
         private const int maxShoutgunMagazine = 2;
@@ -14,7 +14,7 @@ namespace Shooter
         private const int maxSniperMagazine = 3;
         private const int maxGrenadeMagazine = 5;
 
-        public static Inventory Instance { get; private set; }
+        public static InventoryManager Instance { get; private set; }
 
         public event EventHandler OnAmmoChanged;
         public event EventHandler<OnGrenadeAmountChangedEventArgs> OnGrenadeAdded;

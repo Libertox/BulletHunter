@@ -12,7 +12,7 @@ namespace Shooter
         [field: SerializeField] public Mesh WeaponMesh { get; private set; }
         [field: SerializeField] public Material[] WeaponPartMaterials { get; private set; }
         [field: SerializeField] public Sprite WeaponIcon { get; private set; }
-        [field: SerializeField] public Weapon WeaponPrefab { get; private set; }
+        [field: SerializeField] public Gun WeaponPrefab { get; private set; }
         [field: SerializeField] public WeaponType WeaponType { get; private set; }
         [field: SerializeField] public int AmmoInMagazine { get; private set; }
         [field: SerializeField] public float WeaponRange { get; private set; }

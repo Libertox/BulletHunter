@@ -28,13 +28,13 @@ namespace Shooter
         }
         private void Start()
         {
-            Inventory.Instance.OnSelectedWeaponChanged += Inventory_OnSelectedWeaponChanged;
+            InventoryManager.Instance.OnSelectedWeaponChanged += Inventory_OnSelectedWeaponChanged;
 
             GameInput.Instance.OnAimed += GameInput_OnAimed;
             GameInput.Instance.OnCancelAimed += GameInput_OnCancelAimed;
         }
 
-        private void Inventory_OnSelectedWeaponChanged(object sender, Inventory.OnSelectedWeaponChangedEventArgs e)
+        private void Inventory_OnSelectedWeaponChanged(object sender, InventoryManager.OnSelectedWeaponChangedEventArgs e)
         {
             isChangePosition = true;
             swapModleState = PositionState.Down;
@@ -60,7 +60,7 @@ namespace Shooter
                 case PositionState.Down:
                     if (MoveDown())
                     {
-                        weaponVisual.SwapWeaponModel(Inventory.Instance.UseWeapon?.WeaponSO);
+                        weaponVisual.SwapWeaponModel(InventoryManager.Instance.UseWeapon?.WeaponSO);
                         swapModleState = PositionState.Up;
                     }
                     break;

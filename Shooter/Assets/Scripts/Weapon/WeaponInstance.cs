@@ -24,7 +24,7 @@ namespace Shooter
             if (AmmoAmount > 0)
                 AmmoAmount--;
 
-            Inventory.Instance.AmmoChanged();
+            InventoryManager.Instance.AmmoChanged();
         }
 
         public void FillAmmo() => AmmoAmount = WeaponSO.AmmoInMagazine;

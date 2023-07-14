@@ -8,7 +8,7 @@ namespace Shooter.UI
     public class PlayerPositionUI: MonoBehaviour
     {
         [SerializeField] private Image playerPositionImage;
-        [SerializeField] private PlayerPositionImageSO playerPositionImageSO;
+        [SerializeField] private PlayerPositionUIImageSO playerPositionImageSO;
 
         private void Start()
         {

@@ -32,20 +32,20 @@ namespace Shooter
 
         private void GameInput_OnCancelThrowed(object sender, EventArgs e)
         {
-            if (Inventory.Instance.CanThrowGrenade())
+            if (InventoryManager.Instance.CanThrowGrenade())
             {
                 isThrowed = false;
                 trajectoryLine.Hide();
                 Grenade grenade = ObjectPoolingManager.Instance.GrenadePool.Get();
                 grenade.Init(throwTransform.position);
                 grenade.Throw(Camera.main.transform.forward);
-                Inventory.Instance.SubstractGranade();
+                InventoryManager.Instance.SubstractGranade();
             }
         }
 
         private void GameInput_OnThrowed(object sender, EventArgs e)
         {
-            if(Inventory.Instance.CanThrowGrenade())
+            if(InventoryManager.Instance.CanThrowGrenade())
                    isThrowed = true;
         }
     }

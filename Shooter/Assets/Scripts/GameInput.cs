@@ -100,7 +100,7 @@ namespace Shooter
         private void SelectWeaponByScroll_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
         {
             var readValue = obj.ReadValue<float>();
-            int inventorySize = Inventory.MaxNumberWeapon - 1;
+            int inventorySize = InventoryManager.MaxNumberWeapon - 1;
             if(readValue > 0)
             {
                 if(selectedWeapon.selectWeaponIndex < inventorySize)

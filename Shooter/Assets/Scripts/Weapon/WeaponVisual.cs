@@ -15,12 +15,12 @@ namespace Shooter
 
         private void Start()
         {
-            Inventory.Instance.OnSelectedWeaponDroped += Inventory_OnSelectedWeaponDroped;
+            InventoryManager.Instance.OnSelectedWeaponDroped += Inventory_OnSelectedWeaponDroped;
         }
 
-        private void Inventory_OnSelectedWeaponDroped(object sender, Inventory.OnSelectedWeaponChangedEventArgs e)
+        private void Inventory_OnSelectedWeaponDroped(object sender, InventoryManager.OnSelectedWeaponChangedEventArgs e)
         {
-            Weapon weapon = Instantiate(e.selectedWeapon.WeaponSO.WeaponPrefab, transform.position, Quaternion.identity);
+            Gun weapon = Instantiate(e.selectedWeapon.WeaponSO.WeaponPrefab, transform.position, Quaternion.identity);
             weapon.SetAmmoAmount(e.selectedWeapon.AmmoAmount);
             weapon.Drop();
             SwapWeaponModel(null);

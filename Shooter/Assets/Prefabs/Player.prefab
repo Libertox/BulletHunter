@@ -158,7 +158,7 @@ Transform:
   m_GameObject: {fileID: 816405233164241536}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5840581907007212409}
@@ -166,7 +166,7 @@ Transform:
   - {fileID: 4530286485117217899}
   - {fileID: 1106307530477697770}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4268489549942046435
 MonoBehaviour:
@@ -180,7 +180,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b2f56f80665e1942a9fd8df05f0a49f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 5
+  baseSpeed: 3.5
   sprintBust: 3
   jumpHeight: 4
   orientationPoint: {fileID: 1106307530477697770}
@@ -243,8 +243,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.3212252, y: 2.8254302, z: 1.1016693}
-  m_Center: {x: 0.029024739, y: 1.4598774, z: 0.3607292}
+  m_Size: {x: 1.0677592, y: 2.751733, z: 1.0467243}
+  m_Center: {x: 0.0004466176, y: 1.4967247, z: 0.33325672}
 --- !u!65 &8011574742546082726
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -264,8 +264,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 0.99874437, y: 2.5416052, z: 1.6240712}
-  m_Center: {x: 0.00062730414, y: 1.2718791, z: 0.7451175}
+  m_Size: {x: 0.99874437, y: 2.4285402, z: 1.6240712}
+  m_Center: {x: 0.0006273091, y: 1.3284116, z: 0.7451175}
 --- !u!114 &6879063285447923455
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1007,7 +1007,7 @@ PositionConstraint:
   serializedVersion: 2
   m_Weight: 1
   m_TranslationAtRest: {x: 0, y: 0, z: 0}
-  m_TranslationOffset: {x: -0.092000276, y: -1.0349874, z: -0.19000052}
+  m_TranslationOffset: {x: -0.091999054, y: -1.0349874, z: -0.19000006}
   m_AffectTranslationX: 1
   m_AffectTranslationY: 1
   m_AffectTranslationZ: 1
@@ -1498,6 +1498,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxAngleY: 80
   unzoomValue: 60
+  playerController: {fileID: 4268489549942046435}
 --- !u!1818360608 &6347854547074483092
 PositionConstraint:
   m_ObjectHideFlags: 0
@@ -1509,7 +1510,7 @@ PositionConstraint:
   serializedVersion: 2
   m_Weight: 1
   m_TranslationAtRest: {x: -0.04199981, y: 2.4039996, z: 0.5500007}
-  m_TranslationOffset: {x: -0.042000085, y: 1.3590121, z: 0.5500002}
+  m_TranslationOffset: {x: -0.041998863, y: 1.3590121, z: 0.55000067}
   m_AffectTranslationX: 1
   m_AffectTranslationY: 1
   m_AffectTranslationZ: 1
@@ -1670,6 +1671,7 @@ GameObject:
   - component: {fileID: 2345963904465752408}
   - component: {fileID: 2120435405623452231}
   - component: {fileID: 1581336304063825071}
+  - component: {fileID: 1943400547126580994}
   m_Layer: 10
   m_Name: Model
   m_TagString: Untagged
@@ -1685,7 +1687,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5770575723795564057}
   m_LocalRotation: {x: 1.1653028e-17, y: -1.4535621e-16, z: -0, w: 1}
-  m_LocalPosition: {x: 0.429, y: 1.442, z: 0.705}
+  m_LocalPosition: {x: 0.42900002, y: 1.442, z: 0.705}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1710,12 +1712,6 @@ MonoBehaviour:
   scopeMeshRender: {fileID: 7868509599070034464}
   weaponMeshFiler: {fileID: 7280471498837820090}
   weaponMeshRender: {fileID: 2675576939832294043}
-  upPointTransform: {fileID: 3075794256648767788}
-  downPointTransform: {fileID: 767195015574170018}
-  aimPointTransform: {fileID: 5091378591179491099}
-  normalPointTransform: {fileID: 8270714555974533191}
-  swapModelSpeed: 24
-  aimSpeed: 12
 --- !u!114 &1581336304063825071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1732,6 +1728,25 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   shootEffectTransform: {fileID: 8710335544774598081}
+--- !u!114 &1943400547126580994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5770575723795564057}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52566d853619cc34e9db686650d8080d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  upPointTransform: {fileID: 3075794256648767788}
+  downPointTransform: {fileID: 767195015574170018}
+  aimPointTransform: {fileID: 5091378591179491099}
+  normalPointTransform: {fileID: 8270714555974533191}
+  swapModelSpeed: 24
+  aimSpeed: 12
+  weaponVisual: {fileID: 2120435405623452231}
 --- !u!1 &6266491095600178608
 GameObject:
   m_ObjectHideFlags: 0

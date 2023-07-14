@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,25 +8,27 @@ namespace Shooter
     public class Gun: MonoBehaviour, IInteractable
     {
         [SerializeField] private Rigidbody rgb;
-        [field: SerializeField] public WeaponSO WeaponSO { get; private set; }
-        [field: SerializeField] public int NumberOfMagazine { get; private set; }
+        [SerializeField] private WeaponSO weaponSO;
+        [SerializeField] private int numberOfMagazine;
+        [SerializeField] private int ammoAmount;
 
-        [field: SerializeField] public int AmmoAmount { get; private set; }
-
+        private float lifeTime = 48;
 
         public void Drop()
         {
-            rgb.AddForce(Vector3.down, ForceMode.Impulse);
+            rgb.AddForce(Vector3.down * 2f, ForceMode.Impulse);
+            Destroy(gameObject, lifeTime);
         }
 
-        public void SetAmmoAmount(int ammoAmount) => AmmoAmount = ammoAmount;
+        public void SetAmmoAmount(int ammoAmount) => this.ammoAmount = ammoAmount;
 
         public void Interact(PlayerController playerController)
         {
-            if (InventoryManager.Instance.AddWeapon(new WeaponInstance(WeaponSO, NumberOfMagazine, AmmoAmount)))
+            if (InventoryManager.Instance.AddWeapon(new WeaponInstance(weaponSO, numberOfMagazine, ammoAmount)))
             {
                 Destroy(gameObject);
             }
         }
+
     }
 }

@@ -26,7 +26,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 1aa329960fc39aa4490b3a9e7e965fa8, type: 2}
   <WeaponIcon>k__BackingField: {fileID: 21300000, guid: 1db67ddcdf1d2834ba9aa83075cca57d,
     type: 3}
-  <WeaponPrefab>k__BackingField: {fileID: 4732866247398566998, guid: b13be445f998c994690c10394845933f,
+  <WeaponPrefab>k__BackingField: {fileID: 6329361244286543859, guid: b13be445f998c994690c10394845933f,
     type: 3}
   <WeaponType>k__BackingField: 2
   <AmmoInMagazine>k__BackingField: 9

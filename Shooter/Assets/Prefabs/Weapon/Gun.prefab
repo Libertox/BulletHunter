@@ -96,10 +96,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rgb: {fileID: 1325451331990322147}
-  <WeaponSO>k__BackingField: {fileID: 11400000, guid: 64577ec0dda76954fbdc2e2b09b66d90,
-    type: 2}
-  <NumberOfMagazine>k__BackingField: 0
-  <AmmoAmount>k__BackingField: 0
+  weaponSO: {fileID: 11400000, guid: 64577ec0dda76954fbdc2e2b09b66d90, type: 2}
+  numberOfMagazine: 0
+  ammoAmount: 0
 --- !u!1001 &5608813322805278316
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -74,8 +74,6 @@ namespace Shooter
             ChnageHealthValue();
         }
 
-
-
         private void ChangeStaminaValue()
         {
             OnStaminaChanged?.Invoke(this, new OnStatsChangedEventArgs
@@ -90,6 +88,12 @@ namespace Shooter
             {
                 stats = Health / playerStatsSO.MaxHealth
             });
+        }
+
+        public static void ResetStaticData()
+        {
+            OnHealthChanged = null;
+            OnStaminaChanged = null;
         }
 
     }

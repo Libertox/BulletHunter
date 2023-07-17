@@ -78,5 +78,11 @@ namespace Shooter
             OnCanelReloaded?.Invoke(this, EventArgs.Empty);
         }
 
+        public static void ResetStaticData()
+        {
+            OnReloaded = null;
+            OnCanelReloaded = null;
+        }
+
     }
 }

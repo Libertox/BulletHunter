@@ -22,6 +22,8 @@ namespace Shooter
         public event EventHandler OnThrowed;
         public event EventHandler OnCancelThrowed;
 
+        public event EventHandler OnPaused;
+
         public event EventHandler<OnWeaponSelectedEventArgs> OnWeaponSelected;
 
         public class OnWeaponSelectedEventArgs: EventArgs { public int selectWeaponIndex; }
@@ -56,36 +58,89 @@ namespace Shooter
             playerInput.Player.Throw.performed += Throw_performed;
             playerInput.Player.Throw.canceled += Throw_canceled;
 
+            playerInput.UI.Pause.performed += Pause_performed;
+
+        }
+
+        private void OnDestroy()
+        {
+            playerInput.Player.Jump.performed -= Jump_performed;
+            playerInput.Player.Squat.performed -= Squat_performed;
+            playerInput.Player.Interact.performed -= Interact_performed;
+            playerInput.Player.SelectWeaponByScroll.performed -= SelectWeaponByScroll_performed;
+            playerInput.Player.SelectWeapon.performed -= SelectWeapon_performed;
+            playerInput.Player.DropWeapon.performed -= DropWeapon_performed;
+            playerInput.Player.Shoot.performed -= Shoot_performed;
+            playerInput.Player.Reload.performed -= Reload_performed;
+
+            playerInput.Player.Aim.performed -= Aim_performed;
+            playerInput.Player.Aim.canceled -= Aim_canceled;
+
+            playerInput.Player.Throw.performed -= Throw_performed;
+            playerInput.Player.Throw.canceled -= Throw_canceled;
+
+            playerInput.UI.Pause.performed -= Pause_performed;
+
+            playerInput.Dispose();
+        }
+
+        private void Pause_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+        {
+            OnPaused?.Invoke(this, EventArgs.Empty);
         }
 
         private void Throw_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
         {
+            if(GameManager.Instance.IsPauseState()) return;
+
             OnCancelThrowed?.Invoke(this, EventArgs.Empty);
         }
 
         private void Throw_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
         {
+            if (GameManager.Instance.IsPauseState()) return;
+
             OnThrowed?.Invoke(this, EventArgs.Empty);
         }
 
         private void Aim_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
         {
+            if (GameManager.Instance.IsPauseState()) return;
+
             OnCancelAimed?.Invoke(this, EventArgs.Empty);
         }
 
         private void Aim_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
         {
+            if (GameManager.Instance.IsPauseState()) return;
+
             OnAimed?.Invoke(this, EventArgs.Empty);
         }
 
-        private void Reload_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) => OnReloaded?.Invoke(this, EventArgs.Empty);
-       
-        private void Shoot_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) => OnShooted?.Invoke(this, EventArgs.Empty);
-      
-        private void DropWeapon_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) => OnWeaponDroped?.Invoke(this, EventArgs.Empty);
-     
+        private void Reload_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) 
+        {
+            if (GameManager.Instance.IsPauseState()) return;
+
+            OnReloaded?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void Shoot_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) 
+        {
+            if (GameManager.Instance.IsPauseState()) return;
+
+            OnShooted?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void DropWeapon_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+        {
+            if (GameManager.Instance.IsPauseState()) return;
+
+            OnWeaponDroped?.Invoke(this, EventArgs.Empty);
+        }
         private void SelectWeapon_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
         {
+            if (GameManager.Instance.IsPauseState()) return;
+
             for (int i = 0; i < playerInput.Player.SelectWeapon.bindings.Count; i++)
             {
                 if (playerInput.Player.SelectWeapon.bindings[i].ToDisplayString() == obj.action.activeControl.displayName)
@@ -99,6 +154,8 @@ namespace Shooter
 
         private void SelectWeaponByScroll_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
         {
+            if (GameManager.Instance.IsPauseState()) return;
+
             var readValue = obj.ReadValue<float>();
             int inventorySize = InventoryManager.MaxNumberWeapon - 1;
             if(readValue > 0)
@@ -120,12 +177,24 @@ namespace Shooter
             OnWeaponSelected?.Invoke(this, selectedWeapon);
         }
 
-        private void Interact_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) => OnInteract?.Invoke(this, EventArgs.Empty);
-        
-        private void Squat_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) => OnSquat?.Invoke(this, EventArgs.Empty);
-      
-        private void Jump_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) => OnJumped?.Invoke(this, EventArgs.Empty);
-       
+        private void Interact_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+        {
+            if (GameManager.Instance.IsPauseState()) return;
+
+            OnInteract?.Invoke(this, EventArgs.Empty);
+        }
+        private void Squat_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+        {
+            if (GameManager.Instance.IsPauseState()) return;
+
+            OnSquat?.Invoke(this, EventArgs.Empty);
+        }
+        private void Jump_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+        {
+            if (GameManager.Instance.IsPauseState()) return;
+
+            OnJumped?.Invoke(this, EventArgs.Empty);
+        }
         public Vector2 GetMovementVectorNormalized()
         {
             Vector2 movment = playerInput.Player.Move.ReadValue<Vector2>();

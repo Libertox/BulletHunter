@@ -188,6 +188,16 @@ namespace Shooter
        
         }
 
+        public static void ResetStaticData()
+        {
+            OnSquated = null;
+            OnSprinted = null;
+            OnWalked = null;
+            OnJumped = null;
+            OnFalled = null;
+        }
+
+
     }
 
 }

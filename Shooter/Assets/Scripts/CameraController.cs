@@ -9,7 +9,6 @@ namespace Shooter
         [SerializeField] private float unzoomValue;
         [SerializeField] private PlayerController playerController;
 
-        private readonly float sensitivity = 50f;
         private float rotationY;
         private float rotationX;
         private Camera cameraToControl;
@@ -36,8 +35,8 @@ namespace Shooter
 
         private void Rotate()
         {
-            rotationY += GameInput.Instance.GetMouseYAxis() * sensitivity * Time.deltaTime;
-            rotationX += GameInput.Instance.GetMouseXAxis() * sensitivity * Time.deltaTime;
+            rotationY += GameInput.Instance.GetMouseYAxis() * Time.deltaTime;
+            rotationX += GameInput.Instance.GetMouseXAxis() * Time.deltaTime;
 
             rotationY = Mathf.Clamp(rotationY, -maxAngleY, maxAngleY);
             transform.localEulerAngles = new Vector3(-rotationY, 0, 0);

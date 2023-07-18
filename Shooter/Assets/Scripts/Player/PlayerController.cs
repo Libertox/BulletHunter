@@ -55,6 +55,8 @@ namespace Shooter
             GameInput.Instance.OnJumped += GameInput_OnJumped;
             GameInput.Instance.OnSquat += GameInput_OnSquat;
 
+            transform.position = GameManager.Instance.GetRandomPosition();
+
         }
     
         private void GameInput_OnSquat(object sender, System.EventArgs e) => HandleSquat();
@@ -72,6 +74,10 @@ namespace Shooter
             {
                 OnFalled?.Invoke(this, falseState);
             }
+
+
+            if (Input.GetKeyDown(KeyCode.M))
+                transform.position = GameManager.Instance.GetRandomPosition();
         }
       
         private void FixedUpdate() => HandleMovement();

@@ -11,12 +11,14 @@ namespace Shooter.UI
         [SerializeField] private Button settingsButton;
         [SerializeField] private Button exitButton;
 
+        [SerializeField] private SettingsUI settingsUI;
+
         private bool isShow;
 
         private void Awake()
         {
             resumeButton.onClick.AddListener(() => Show());
-            settingsButton.onClick.AddListener(() => { });
+            settingsButton.onClick.AddListener(() => { settingsUI.Show(); });
             exitButton.onClick.AddListener(() => 
             {
                 PlayerController.ResetStaticData();

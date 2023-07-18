@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Shooter
 {
     public class GameInput: MonoBehaviour
     {
         public static GameInput Instance { get; private set; }
+
+        private const string PLAYER_PREFS_MOUSE_SENSITIVITY = "MouseSensitivity";
+        private const string PLAYER_PREFS_BINDING = "Binding";
 
         public event EventHandler OnJumped;
         public event EventHandler OnSquat;
@@ -30,6 +34,10 @@ namespace Shooter
 
         private PlayerInput playerInput;
         private OnWeaponSelectedEventArgs selectedWeapon;
+        
+
+        public float MouseSensitivity { get; private set; }
+        private readonly float defaultMouseSensitivity = 50f;
 
         private void Awake()
         {
@@ -40,6 +48,8 @@ namespace Shooter
 
             playerInput = new PlayerInput();
             selectedWeapon = new OnWeaponSelectedEventArgs();
+
+            MouseSensitivity = PlayerPrefs.GetFloat(PLAYER_PREFS_MOUSE_SENSITIVITY, defaultMouseSensitivity);
 
             playerInput.Enable();
 
@@ -204,9 +214,72 @@ namespace Shooter
 
         public float GetSprintValue() => playerInput.Player.Sprint.ReadValue<float>();
 
-        public float GetMouseXAxis() => playerInput.Player.CameraRotationX.ReadValue<float>();
+        public float GetMouseXAxis() => playerInput.Player.CameraRotationX.ReadValue<float>() * MouseSensitivity;
       
-        public float GetMouseYAxis() => playerInput.Player.CameraRotationY.ReadValue<float>();
+        public float GetMouseYAxis() => playerInput.Player.CameraRotationY.ReadValue<float>() * MouseSensitivity;
+
+        public void SetMouseSensitivity(float mouseSensitivity)
+        {
+            MouseSensitivity = mouseSensitivity;
+            PlayerPrefs.SetFloat(PLAYER_PREFS_MOUSE_SENSITIVITY, mouseSensitivity);
+            PlayerPrefs.Save();
+        }
+
+
+        public void RebindBinding(string inputActionId, int bindingIndex)
+        {
+            InputAction inputAction = playerInput.FindAction(inputActionId);
+            playerInput.Disable();
+            
+            inputAction.PerformInteractiveRebinding(bindingIndex)
+                .WithControlsExcluding("Mouse")
+                .WithCancelingThrough("<Keyboard>/escape")
+                .OnMatchWaitForAnother(0.1f)
+                .OnCancel(callback =>
+                {
+                    callback.Dispose();
+                    playerInput.Enable();
+                })
+                .OnComplete(callback =>
+                {
+                    playerInput.Enable();
+
+                    if (CheckDuplicateBindings(inputAction, bindingIndex))
+                    {
+                        inputAction.RemoveBindingOverride(bindingIndex);
+                        callback.Dispose();
+                        RebindBinding(inputActionId, bindingIndex);
+                        return;
+                    }
+
+                    callback.Dispose();
+
+                    PlayerPrefs.SetString(PLAYER_PREFS_BINDING, playerInput.SaveBindingOverridesAsJson());
+                    PlayerPrefs.Save();
+
+                })
+               .Start();
+        }
+
        
+        private bool CheckDuplicateBindings(InputAction inputAction, int bindingIndex)
+        {
+            InputBinding newInputBinding = inputAction.bindings[bindingIndex];
+            foreach (InputBinding inputBinding in playerInput.bindings)
+            {
+                if (inputBinding.id == newInputBinding.id)
+                    continue;
+
+                if (inputBinding.effectivePath == newInputBinding.effectivePath)
+                    return true;
+            }
+
+            return false;
+        }
+
+        public string GetBindingText(string inputActionId, int bindingIndex)
+        {
+            return playerInput.FindAction(inputActionId).bindings[bindingIndex].ToDisplayString();
+        }
     }
 }

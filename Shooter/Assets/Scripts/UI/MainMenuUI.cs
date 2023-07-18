@@ -11,6 +11,8 @@ namespace Shooter.UI
         [SerializeField] private Button settingsButton;
         [SerializeField] private Button exitButton;
 
+        [SerializeField] private SettingsUI settingsUI;
+
 
         private void Start()
         {
@@ -18,7 +20,7 @@ namespace Shooter.UI
             playButton.Select();
 
             playButton.onClick.AddListener(() => SceneLoader.Load(SceneLoader.GameScene.LoadingScene));
-            settingsButton.onClick.AddListener(() => { } );
+            settingsButton.onClick.AddListener(() => { settingsUI.Show(); } );
             exitButton.onClick.AddListener(() =>
             {
 #if !UNITY_WEBGL

@@ -15,20 +15,32 @@ namespace Shooter
         [SerializeField] private InputActionReference inputActions;
         [SerializeField] private int bindingsIndex;
 
-       
+        [SerializeField] private GameObject rebindMessage;
+        [SerializeField] private TextMeshProUGUI rebindText;
+
         private void Awake()
         {
             rebindButton.onClick.AddListener(() =>
             {
-                GameInput.Instance.RebindBinding(inputActions.action.id.ToString(), bindingsIndex);
-                keyRebindText.SetText(GameInput.Instance.GetBindingText(inputActions.action.id.ToString(), bindingsIndex));
+                rebindText.SetText("PRESS A KEY TO REBIND");
+                ShowRebindMessage();
+
+                GameInput.Instance.RebindBinding(inputActions.action.id.ToString(), bindingsIndex,() =>
+                {
+                    UpdateBindText();
+                    HideRebindMessage();
+
+                },(string message) => rebindText.SetText(message));
             });
         }
 
-        private void Start()
-        {
-            keyRebindText.SetText(GameInput.Instance.GetBindingText(inputActions.action.id.ToString(), bindingsIndex));
-        }
+        private void Start() => UpdateBindText();
+      
+        private void UpdateBindText() => keyRebindText.SetText(GameInput.Instance.GetBindingText(inputActions.action.id.ToString(), bindingsIndex));
 
+        private void ShowRebindMessage() => rebindMessage.SetActive(true);
+
+        private void HideRebindMessage() => rebindMessage.SetActive(false);
+       
     }
 }

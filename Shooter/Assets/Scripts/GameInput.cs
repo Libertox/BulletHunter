@@ -51,6 +51,9 @@ namespace Shooter
 
             MouseSensitivity = PlayerPrefs.GetFloat(PLAYER_PREFS_MOUSE_SENSITIVITY, defaultMouseSensitivity);
 
+            if (PlayerPrefs.HasKey(PLAYER_PREFS_BINDING))
+                playerInput.LoadBindingOverridesFromJson(PlayerPrefs.GetString(PLAYER_PREFS_BINDING));
+
             playerInput.Enable();
 
             playerInput.Player.Jump.performed += Jump_performed;
@@ -226,7 +229,7 @@ namespace Shooter
         }
 
 
-        public void RebindBinding(string inputActionId, int bindingIndex)
+        public void RebindBinding(string inputActionId, int bindingIndex, Action afterBindAction, Action<string> duplicateBindAaction)
         {
             InputAction inputAction = playerInput.FindAction(inputActionId);
             playerInput.Disable();
@@ -239,6 +242,7 @@ namespace Shooter
                 {
                     callback.Dispose();
                     playerInput.Enable();
+                    afterBindAction();
                 })
                 .OnComplete(callback =>
                 {
@@ -248,11 +252,13 @@ namespace Shooter
                     {
                         inputAction.RemoveBindingOverride(bindingIndex);
                         callback.Dispose();
-                        RebindBinding(inputActionId, bindingIndex);
+                        duplicateBindAaction("KEY IS USED");
+                        RebindBinding(inputActionId, bindingIndex, afterBindAction, duplicateBindAaction);
                         return;
                     }
 
                     callback.Dispose();
+                    afterBindAction();
 
                     PlayerPrefs.SetString(PLAYER_PREFS_BINDING, playerInput.SaveBindingOverridesAsJson());
                     PlayerPrefs.Save();

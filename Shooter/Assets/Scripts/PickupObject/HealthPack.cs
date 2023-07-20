@@ -11,8 +11,7 @@ namespace Shooter
         public override void Interact(PlayerController playerController)
         {
             playerController.PlayerStats.IncreaseHealth(healValue);
-            pickupObjectSpawner.SpawnNewObject();
-            gameObject.SetActive(false);
+            Pickup();
             
         }
     }

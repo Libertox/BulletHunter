@@ -13,8 +13,7 @@ namespace Shooter
         {
             if (InventoryManager.Instance.AddWeapon(new WeaponInstance(weaponSO,magazineAmount,0)))
             {
-                gameObject.SetActive(false);
-                pickupObjectSpawner.SpawnNewObject();
+                Pickup();
             }
         }
     }

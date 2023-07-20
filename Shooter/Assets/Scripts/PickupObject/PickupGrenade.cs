@@ -10,8 +10,7 @@ namespace Shooter
         {
             if (InventoryManager.Instance.AddOneGranade())
             {
-                pickupObjectSpawner.SpawnNewObject();
-                gameObject.SetActive(false);
+                Pickup();
             }
                 
         }

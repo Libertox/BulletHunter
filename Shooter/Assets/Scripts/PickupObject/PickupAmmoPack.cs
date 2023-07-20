@@ -12,8 +12,7 @@ namespace Shooter
         public override void Interact(PlayerController playerController)
         {
             InventoryManager.Instance.AddMagazine(weaponType, amount);
-            pickupObjectSpawner.SpawnNewObject();
-            gameObject.SetActive(false);
+            Pickup();
         }
 
     }

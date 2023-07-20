@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Shooter
 {
-    public class Gun: MonoBehaviour, IInteractable
+    public class Gun: NetworkBehaviour, IInteractable
     {
         [SerializeField] private Rigidbody rgb;
         [SerializeField] private WeaponSO weaponSO;
@@ -15,6 +16,18 @@ namespace Shooter
         private float lifeTime = 48;
 
         public void Drop()
+        {
+            DropServerRpc();
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void DropServerRpc()
+        {
+            DropClientRpc();
+        }
+
+        [ClientRpc()]
+        private void DropClientRpc()
         {
             rgb.AddForce(Vector3.down * 2f, ForceMode.Impulse);
             Destroy(gameObject, lifeTime);
@@ -26,8 +39,20 @@ namespace Shooter
         {
             if (InventoryManager.Instance.AddWeapon(new WeaponInstance(weaponSO, numberOfMagazine, ammoAmount)))
             {
-                Destroy(gameObject);
+                DestroyGunServerRpc();
             }
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void DestroyGunServerRpc()
+        {
+            DestroyGunClientRpc();
+        }
+
+        [ClientRpc()]
+        private void DestroyGunClientRpc()
+        {
+            Destroy(gameObject);
         }
 
     }

@@ -3,10 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using Unity.Netcode;
 
 namespace Shooter
 {
-    public class InventoryManager : MonoBehaviour
+    public class InventoryManager : NetworkBehaviour
     {
         private const int maxGunMagazine = 4;
         private const int maxShoutgunMagazine = 2;

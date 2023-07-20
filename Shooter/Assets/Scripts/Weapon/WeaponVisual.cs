@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Shooter
 {
-    public class WeaponVisual : MonoBehaviour
+    public class WeaponVisual : NetworkBehaviour
     {
         [SerializeField] private MeshFilter scopeMeshFilter;
         [SerializeField] private MeshRenderer scopeMeshRender;
@@ -14,20 +14,45 @@ namespace Shooter
         [SerializeField] private MeshRenderer weaponMeshRender;
 
         private void Start()
-        {
-            InventoryManager.Instance.OnSelectedWeaponDroped += Inventory_OnSelectedWeaponDroped;
+        { 
+            if(IsOwner)
+                InventoryManager.Instance.OnSelectedWeaponDroped += Inventory_OnSelectedWeaponDroped;
         }
 
         private void Inventory_OnSelectedWeaponDroped(object sender, InventoryManager.OnSelectedWeaponChangedEventArgs e)
         {
-            Gun weapon = Instantiate(e.selectedWeapon.WeaponSO.WeaponPrefab, transform.position, Quaternion.identity);
-            weapon.SetAmmoAmount(e.selectedWeapon.AmmoAmount);
-            weapon.Drop();
+            DropWeaponServerRpc(GameManager.Instance.GetWeaponSOIndex(e.selectedWeapon.WeaponSO), e.selectedWeapon.AmmoAmount);
             SwapWeaponModel(null);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void DropWeaponServerRpc(int weaponSOIndex , int ammoAmount)
+        {
+            WeaponSO weaponSO = GameManager.Instance.GetWeaponSOFromIndex(weaponSOIndex);
+            Gun gun = Instantiate(weaponSO.WeaponPrefab,transform.position,Quaternion.identity);
+
+            NetworkObject networkObject = gun.GetComponent<NetworkObject>();
+            networkObject.Spawn(true);
+
+            gun.SetAmmoAmount(ammoAmount);
+            gun.Drop();
         }
 
         public void SwapWeaponModel(WeaponSO useWeapon)
         {
+            SwapWeaponModelServerRpc(GameManager.Instance.GetWeaponSOIndex(useWeapon));
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void SwapWeaponModelServerRpc(int weaponSOIndex)
+        {
+            SwapWeaponModelClientRpc(weaponSOIndex);
+        }
+
+        [ClientRpc()]
+        private void SwapWeaponModelClientRpc(int weaponSOIndex)
+        {
+            WeaponSO useWeapon = GameManager.Instance.GetWeaponSOFromIndex(weaponSOIndex);
             if (useWeapon)
             {
                 scopeMeshFilter.mesh = useWeapon.ScopeMesh;
@@ -38,7 +63,6 @@ namespace Shooter
             }
             else
                 HideWeaponModel();
-
         }
 
         private void HideWeaponModel()

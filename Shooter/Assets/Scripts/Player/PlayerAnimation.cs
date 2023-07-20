@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Shooter
 {
-    public class PlayerAnimation:MonoBehaviour
+    public class PlayerAnimation:NetworkBehaviour
     {
         private const string ANIM_IS_SQUAT = "isSquat";
         private const string ANIM_IS_FALL = "isFall";
@@ -18,6 +19,9 @@ namespace Shooter
 
         private void Start()
         {
+
+            if (!IsOwner) return;
+
             PlayerController.OnSquated += PlayerController_OnSquated;
 
             PlayerController.OnWalked += PlayerController_OnWalked;

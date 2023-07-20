@@ -2,10 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;
 
 namespace Shooter
 {
-    public class PlayerController : MonoBehaviour
+    public class PlayerController : NetworkBehaviour
     {
         public static event EventHandler<OnStateChangedEventArgs> OnSquated;
         public static event EventHandler<OnSprintedEventArgs> OnSprinted;
@@ -65,6 +66,8 @@ namespace Shooter
 
         private void Update() 
         {
+            if (!IsOwner) return;
+
             if (!playerInteract.GroundCheck() && rgb.velocity.y < 0)
             {
                 OnFalled?.Invoke(this, trueState);
@@ -75,12 +78,14 @@ namespace Shooter
                 OnFalled?.Invoke(this, falseState);
             }
 
-
-            if (Input.GetKeyDown(KeyCode.M))
-                transform.position = GameManager.Instance.GetRandomPosition();
         }
-      
-        private void FixedUpdate() => HandleMovement();
+
+        private void FixedUpdate() 
+        {
+            if (!IsOwner) return;
+
+            HandleMovement();
+        } 
 
         private void HandleMovement()
         {

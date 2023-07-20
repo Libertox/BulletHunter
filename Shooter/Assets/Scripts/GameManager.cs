@@ -15,6 +15,8 @@ namespace Shooter
 
         public bool  showPlayerName;
 
+        [SerializeField] private List<WeaponSO> weaponSOList;
+
         public enum GameState
         {
             Pause,
@@ -43,6 +45,16 @@ namespace Shooter
             usedPointsIndexList.Add(randomIndex);
             return playerSpawnPointsList[randomIndex].position;
 
+        }
+
+        public int GetWeaponSOIndex(WeaponSO weaponSO)
+        {
+            return weaponSOList.IndexOf(weaponSO);
+        }
+
+        public WeaponSO GetWeaponSOFromIndex(int index)
+        {
+            return weaponSOList[index];
         }
 
     }

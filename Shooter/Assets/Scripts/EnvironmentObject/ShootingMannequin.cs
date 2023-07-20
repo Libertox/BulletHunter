@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Shooter
 {
-    public class ShootingMannequin:MonoBehaviour, IDamageable
+    public class ShootingMannequin:NetworkBehaviour, IDamageable
     {
 
         private const string ANIM_IS_SHOOT = "isShoot";
@@ -22,8 +23,7 @@ namespace Shooter
 
         public void TakeDamage()
         {
-            animator.SetBool(ANIM_IS_SHOOT, true);
-            StartCoroutine(Uprighting());
+            TakeDamageServerRpc();
         }
 
         private IEnumerator Uprighting()
@@ -32,7 +32,22 @@ namespace Shooter
             animator.SetBool(ANIM_IS_SHOOT, false);
         }
 
+        [ServerRpc(RequireOwnership = false)]
+        private void TakeDamageServerRpc()
+        {
+            TakeDamageClientRpc();
+        }
 
+        [ClientRpc()]
+        private void TakeDamageClientRpc()
+        {
+            animator.SetBool(ANIM_IS_SHOOT, true);
+            StartCoroutine(Uprighting());
+        }
 
+        public NetworkObject GetNetworkObject()
+        {
+            return NetworkObject;
+        }
     }
 }

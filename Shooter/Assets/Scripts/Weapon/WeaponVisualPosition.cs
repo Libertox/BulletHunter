@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Shooter
 {
-    public class WeaponVisualPosition : MonoBehaviour
+    public class WeaponVisualPosition : NetworkBehaviour
     {
         [SerializeField] private Transform upPointTransform;
         [SerializeField] private Transform downPointTransform;
@@ -46,6 +47,8 @@ namespace Shooter
 
         private void Update()
         {
+            if (!IsOwner) return;
+
             HandleWeaponPositon();
 
             HandleAimPosition();
@@ -68,7 +71,6 @@ namespace Shooter
                     if (MoveUp())
                     {
                         isChangePosition = false;
-
                     }
                     break;
 

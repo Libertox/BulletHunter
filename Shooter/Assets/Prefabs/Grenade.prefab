@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4054632672694972650}
   - component: {fileID: 2189764758709901734}
   - component: {fileID: 1237121536711759884}
+  - component: {fileID: -8282754314798018601}
   m_Layer: 0
   m_Name: Grenade
   m_TagString: Untagged
@@ -100,6 +101,25 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.23875822, y: 0.3525145, z: 0.28928408}
   m_Center: {x: -0.015878655, y: -0.013283968, z: 0.017457828}
+--- !u!114 &-8282754314798018601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7620252119379095311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1001 &1194093452663898640
 PrefabInstance:
   m_ObjectHideFlags: 0

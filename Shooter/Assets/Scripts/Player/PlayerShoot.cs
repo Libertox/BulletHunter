@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Shooter
@@ -26,8 +27,8 @@ namespace Shooter
             if(Physics.Raycast(ray, out RaycastHit raycastHit, InventoryManager.Instance.UseWeapon.WeaponSO.WeaponRange))
             {
                 if (raycastHit.transform.TryGetComponent(out IDamageable damageable))
-                {                
-                    damageable.TakeDamage();
+                {
+                    HitObjectServerRpc(damageable.GetNetworkObject());
                 }
                 else
                 {
@@ -37,7 +38,19 @@ namespace Shooter
             }
         }
 
+        [ServerRpc(RequireOwnership = false)]
+        private void HitObjectServerRpc(NetworkObjectReference networkObjectReference)
+        {
+            HitObjectClientRpc(networkObjectReference);
+        }
 
+        [ClientRpc()]
+        private void HitObjectClientRpc(NetworkObjectReference networkObjectReference)
+        {
+            networkObjectReference.TryGet(out NetworkObject networkObject);
+            IDamageable damageable = networkObject.GetComponent<IDamageable>();
+            damageable.TakeDamage();
+        }
     }
 
 

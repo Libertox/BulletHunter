@@ -13,6 +13,7 @@ namespace Shooter
         public void Init(Vector3 position, ObjectPool<ParticleEffect> objectPool)
         {
             transform.position = position;
+            gameObject.SetActive(true);
             StartCoroutine(DisactiveAfterTime(objectPool));
         }
 

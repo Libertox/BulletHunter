@@ -1,9 +1,10 @@
 ﻿using System;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Shooter
 {
-    public class CameraController : MonoBehaviour
+    public class CameraController : NetworkBehaviour
     {
         [SerializeField] private float maxAngleY;
         [SerializeField] private float unzoomValue;
@@ -13,10 +14,15 @@ namespace Shooter
         private float rotationX;
         private Camera cameraToControl;
 
-        private void Awake() => cameraToControl = GetComponent<Camera>();
+        private void Awake() 
+        {
+            cameraToControl = GetComponent<Camera>();
+        }
 
         private void Start()
         {
+            if (!IsOwner) gameObject.SetActive(false);
+
             GameInput.Instance.OnAimed += GameInput_OnAimed;
             GameInput.Instance.OnCancelAimed += GameInput_OnCancelAimed;
             GameInput.Instance.OnWeaponDroped += GameInput_OnCancelAimed;
@@ -24,14 +30,16 @@ namespace Shooter
 
         private void GameInput_OnCancelAimed(object sender, EventArgs e) => Unzoom();
 
-
         private void GameInput_OnAimed(object sender, EventArgs e)
         {
             if (InventoryManager.Instance.UseWeapon != null)
                 Zoom();
         }
 
-        private void Update() => Rotate();
+        private void Update() 
+        {
+            Rotate();
+        } 
 
         private void Rotate()
         {
@@ -47,7 +55,6 @@ namespace Shooter
         {
             cameraToControl.fieldOfView = InventoryManager.Instance.UseWeapon.WeaponSO.WeaponZoom;
         }
-
 
         private void Unzoom() 
         {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -48,6 +49,10 @@ namespace Shooter
                 (effect) => effect.gameObject.SetActive(false)
                 );
 
-        } 
+        }
+
+        
+
+        
     }
 }

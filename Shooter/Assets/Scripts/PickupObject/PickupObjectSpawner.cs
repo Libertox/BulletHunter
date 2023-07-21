@@ -38,6 +38,7 @@ namespace Shooter
 
         }
 
+ 
         private PickupObject GetNewRandomPickupObject()
         {
             int pickupObjectIndex = UnityEngine.Random.Range(0, spawnObjects.Length);

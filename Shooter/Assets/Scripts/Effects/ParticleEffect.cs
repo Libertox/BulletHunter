@@ -1,26 +1,23 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Pool;
+using UnityEngine.UIElements;
 
 namespace Shooter
 {
-    public class ParticleEffect:MonoBehaviour
+    public class ParticleEffect:NetworkBehaviour
     {
         [SerializeField] private float lifeTime;
 
-        public void Init(Vector3 position, ObjectPool<ParticleEffect> objectPool)
-        {
-            transform.position = position;
-            gameObject.SetActive(true);
-            StartCoroutine(DisactiveAfterTime(objectPool));
-        }
-
-        private IEnumerator DisactiveAfterTime(ObjectPool<ParticleEffect> objectPool)
+        public void Relase(GameObject prefab) => StartCoroutine(DisactiveAfterTime(prefab));
+        private IEnumerator DisactiveAfterTime(GameObject prefab)
         {
             yield return new WaitForSeconds(lifeTime);
-            objectPool.Release(this);
+            NetworkObject.Despawn(false);
+            NetworkObjectPool.Singleton.ReturnNetworkObject(NetworkObject, prefab);
         }
 
     }

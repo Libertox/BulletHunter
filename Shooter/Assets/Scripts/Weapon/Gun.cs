@@ -35,6 +35,7 @@ namespace Shooter
 
         public void SetAmmoAmount(int ammoAmount) => this.ammoAmount = ammoAmount;
 
+
         public void Interact(PlayerController playerController)
         {
             if (InventoryManager.Instance.AddWeapon(new WeaponInstance(weaponSO, numberOfMagazine, ammoAmount)))

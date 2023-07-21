@@ -5,15 +5,17 @@ using UnityEngine;
 
 namespace Shooter
 {
-    public class PlayerShoot:MonoBehaviour
+    public class PlayerShoot:NetworkBehaviour
     {
         [SerializeField] private LayerMask damageableLayerMask;
 
-        [SerializeField] private Transform shootEffectTransform;
+        [SerializeField] private GameObject bulletTrackPrefab;
+        [SerializeField] private GameObject shootDustPrefab;
 
         private void Start()
         {
-            GameInput.Instance.OnShooted += GameInput_OnShooted;
+            if(IsOwner)
+                 GameInput.Instance.OnShooted += GameInput_OnShooted;
         }
 
         private void GameInput_OnShooted(object sender, EventArgs e)
@@ -32,10 +34,23 @@ namespace Shooter
                 }
                 else
                 {
-                    ObjectPoolingManager.Instance.BulletTrackPool.Get().Init(raycastHit.point, ObjectPoolingManager.Instance.BulletTrackPool);
-                    ObjectPoolingManager.Instance.ShootEffectPool.Get().Init(raycastHit.point, ObjectPoolingManager.Instance.ShootEffectPool);
+                    SpawnShootEffectServerRpc(raycastHit.point.x, raycastHit.point.y, raycastHit.point.z); 
                 }
             }
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void SpawnShootEffectServerRpc(float x, float y, float z)
+        {
+            SpawnEffect(new Vector3(x,y,z),bulletTrackPrefab);
+            SpawnEffect(new Vector3(x, y, z), shootDustPrefab);
+        }
+
+        private void SpawnEffect(Vector3 position, GameObject prefab)
+        {
+            NetworkObject networkObject = NetworkObjectPool.Singleton.GetNetworkObject(prefab,position, Quaternion.identity);
+            networkObject.Spawn(true);
+            networkObject.GetComponent<ParticleEffect>().Relase(prefab);
         }
 
         [ServerRpc(RequireOwnership = false)]

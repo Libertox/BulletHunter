@@ -23,6 +23,7 @@ namespace Shooter
         private void PickupServerRpc()
         {
             Destroy(gameObject);
+            if(pickupObjectSpawner!= null)
             pickupObjectSpawner.SpawnNewObject();
         }
 

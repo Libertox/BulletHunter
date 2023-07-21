@@ -515,8 +515,9 @@ MonoBehaviour:
   throwTransform: {fileID: 2932787809229707911}
   orientationPoint: {fileID: 7327464117183428356}
   trajectoryLine: {fileID: 6933795807678130847}
-  grenadePrefab: {fileID: 4054632672694972650, guid: dc4e0abfdd233ec4cb8ce7ccb1455c6f,
+  grenadePrefab: {fileID: 5695575670129514692, guid: dc4e0abfdd233ec4cb8ce7ccb1455c6f,
     type: 3}
+  playerCamera: {fileID: 8078224701712882229}
 --- !u!114 &2220072723811869591
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2054,7 +2055,10 @@ MonoBehaviour:
   damageableLayerMask:
     serializedVersion: 2
     m_Bits: 256
-  shootEffectTransform: {fileID: 1028371754456098909}
+  bulletTrackPrefab: {fileID: 3835748407868109026, guid: f13d30cdd7d9df449a6e9584c0ae5218,
+    type: 3}
+  shootDustPrefab: {fileID: 1067471869909948, guid: fbc5e59d75bc2f34c800d6a2e1da8362,
+    type: 3}
 --- !u!114 &61658700492521421
 MonoBehaviour:
   m_ObjectHideFlags: 0

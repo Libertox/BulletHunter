@@ -21,7 +21,7 @@ namespace Shooter
             waitForSeconds = new WaitForSeconds(uprightingCooldown);
         }
 
-        public void TakeDamage()
+        public void TakeDamage(float damage)
         {
             TakeDamageServerRpc();
         }

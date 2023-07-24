@@ -11,8 +11,29 @@ namespace Shooter.UI
 
         private void Start()
         {
-            PlayerStats.OnStaminaChanged += PlayerStats_OnStaminaChanged;
-            PlayerStats.OnHealthChanged += PlayerStats_OnHealthChanged;
+            if(PlayerStats.Instnace != null)
+            {
+                PlayerStats.Instnace.OnStaminaChanged += PlayerStats_OnStaminaChanged;
+                PlayerStats.Instnace.OnHealthChanged += PlayerStats_OnHealthChanged;
+            }
+            else
+            {
+                PlayerStats.OnAnyPlayerSpawn += PlayerStats_OnAnyPlayerSpawn;
+            }
+
+            
+        }
+
+        private void PlayerStats_OnAnyPlayerSpawn(object sender, EventArgs e)
+        {
+            if (PlayerStats.Instnace != null)
+            {
+                PlayerStats.Instnace.OnStaminaChanged -= PlayerStats_OnStaminaChanged;
+                PlayerStats.Instnace.OnStaminaChanged += PlayerStats_OnStaminaChanged;
+
+                PlayerStats.Instnace.OnHealthChanged -= PlayerStats_OnHealthChanged;
+                PlayerStats.Instnace.OnHealthChanged += PlayerStats_OnHealthChanged;
+            }
         }
 
         private void PlayerStats_OnHealthChanged(object sender, PlayerStats.OnStatsChangedEventArgs e)

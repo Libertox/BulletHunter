@@ -1,15 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEditor.Rendering;
 using UnityEngine;
 
 
 namespace Shooter
 {
-    public class PlayerStats:MonoBehaviour
+    public class PlayerStats:NetworkBehaviour, IDamageable
     {
-        public static event EventHandler<OnStatsChangedEventArgs> OnStaminaChanged;
-        public static event EventHandler<OnStatsChangedEventArgs> OnHealthChanged;
+        public static event EventHandler OnAnyPlayerSpawn;
+
+        public static PlayerStats Instnace { get; private set; }
+
+        public event EventHandler<OnStatsChangedEventArgs> OnStaminaChanged;
+        public event EventHandler<OnStatsChangedEventArgs> OnHealthChanged;
 
         public class OnStatsChangedEventArgs: EventArgs { public float stats; }
 
@@ -19,10 +24,21 @@ namespace Shooter
 
         [SerializeField] private PlayerStatsSO playerStatsSO;
 
+
         private void Start()
         {
             Health = playerStatsSO.MaxHealth;
             Stamina = playerStatsSO.MaxStamina;
+        }
+
+        public override void OnNetworkSpawn()
+        {
+            if(IsOwner)
+            {
+                Instnace = this;
+            }
+
+            OnAnyPlayerSpawn?.Invoke(this, EventArgs.Empty);
         }
 
         public void IncreaseStamina(float increaseValue)
@@ -90,11 +106,16 @@ namespace Shooter
             });
         }
 
-        public static void ResetStaticData()
+        
+
+        public void TakeDamage(float damage)
         {
-            OnHealthChanged = null;
-            OnStaminaChanged = null;
+            DecreaseHealth(damage);
         }
 
+        public NetworkObject GetNetworkObject()
+        {
+            return NetworkObject;
+        }
     }
 }

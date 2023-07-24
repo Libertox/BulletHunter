@@ -9,10 +9,7 @@ namespace Shooter
         public override void Interact(PlayerController playerController)
         {
             if (InventoryManager.Instance.AddOneGranade())
-            {
-                Pickup();
-            }
-                
+                Pickup();         
         }
     }
 }

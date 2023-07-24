@@ -15,17 +15,11 @@ namespace Shooter
 
         private float lifeTime = 48;
 
-        public void Drop()
-        {
-            DropServerRpc();
-        }
-
+        public void Drop() => DropServerRpc();
+      
         [ServerRpc(RequireOwnership = false)]
-        private void DropServerRpc()
-        {
-            DropClientRpc();
-        }
-
+        private void DropServerRpc() => DropClientRpc();
+      
         [ClientRpc()]
         private void DropClientRpc()
         {
@@ -33,28 +27,25 @@ namespace Shooter
             Destroy(gameObject, lifeTime);
         }
 
-        public void SetAmmoAmount(int ammoAmount) => this.ammoAmount = ammoAmount;
+        public void SetAmmoAmount(int ammoAmount) => SetAmmoAmountClientRpc(ammoAmount);
+
+        [ClientRpc]
+        private void SetAmmoAmountClientRpc(int ammoAmount) => this.ammoAmount = ammoAmount;
 
 
         public void Interact(PlayerController playerController)
         {
             if (InventoryManager.Instance.AddWeapon(new WeaponInstance(weaponSO, numberOfMagazine, ammoAmount)))
-            {
-                DestroyGunServerRpc();
-            }
+                DestroySelfServerRpc();
         }
 
         [ServerRpc(RequireOwnership = false)]
-        private void DestroyGunServerRpc()
-        {
-            DestroyGunClientRpc();
-        }
+        private void DestroySelfServerRpc() => DestroySelfClientRpc();
+      
 
         [ClientRpc()]
-        private void DestroyGunClientRpc()
-        {
-            Destroy(gameObject);
-        }
+        private void DestroySelfClientRpc() => Destroy(gameObject);
+      
 
     }
 }

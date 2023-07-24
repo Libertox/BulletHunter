@@ -31,3 +31,4 @@ MonoBehaviour:
   <WeaponRange>k__BackingField: 16
   <WeaponZoom>k__BackingField: 40
   <ReloadTime>k__BackingField: 3
+  <Damage>k__BackingField: 4

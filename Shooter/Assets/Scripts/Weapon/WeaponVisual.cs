@@ -36,8 +36,9 @@ namespace Shooter
 
             gun.SetAmmoAmount(ammoAmount);
             gun.Drop();
-
         }
+
+
 
         public void SwapWeaponModel(WeaponSO useWeapon)
         {

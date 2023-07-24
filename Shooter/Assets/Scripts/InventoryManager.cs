@@ -54,10 +54,7 @@ namespace Shooter
 
         private void Awake()
         {
-            if (!Instance)
-                Instance = this;
-            else
-                Destroy(gameObject);
+            Instance = this;
 
             ownedWeapon = new WeaponInstance[MaxNumberWeapon];
 

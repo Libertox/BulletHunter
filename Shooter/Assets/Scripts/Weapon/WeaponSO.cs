@@ -20,6 +20,8 @@ namespace Shooter
 
         [field: SerializeField] public float ReloadTime { get; private set; }
 
+        [field: SerializeField] public float Damage { get; private set; }
+
 
     }
 

@@ -46,12 +46,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnDuration: 40
-  spawnObjects:
-  - {fileID: 3653024553758821307, guid: 1e8bd1b9efdf96f4c946234f5a05fc37, type: 3}
-  - {fileID: 3653024553758821307, guid: 7cc0ea950b72ebf4aa3976fffaf9909e, type: 3}
-  - {fileID: 3653024553758821307, guid: 50b9bbac380b71644966340ce7a18253, type: 3}
-  - {fileID: 3653024553758821307, guid: c3341371f5ac23441b5c77102272a708, type: 3}
-  spawnPoint: {fileID: 0}
+  spawnObjectsPrefabs:
+  - {fileID: 8951942392733132164, guid: 1e8bd1b9efdf96f4c946234f5a05fc37, type: 3}
+  - {fileID: 8951942392733132164, guid: 7cc0ea950b72ebf4aa3976fffaf9909e, type: 3}
+  - {fileID: 8951942392733132164, guid: 50b9bbac380b71644966340ce7a18253, type: 3}
+  - {fileID: 8951942392733132164, guid: c3341371f5ac23441b5c77102272a708, type: 3}
 --- !u!114 &8940197742339149417
 MonoBehaviour:
   m_ObjectHideFlags: 0

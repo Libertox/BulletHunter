@@ -9,54 +9,43 @@ namespace Shooter
     public class PickupObjectSpawner:NetworkBehaviour
     {
         [SerializeField] private float spawnDuration;
-        [SerializeField] private PickupObject[] spawnObjects;
+        [SerializeField] private GameObject[] spawnObjectsPrefabs;
 
         private WaitForSeconds waitForSeconds;
 
-        private void Start() 
-        {
-            waitForSeconds = new WaitForSeconds(spawnDuration);
-          
-        }
-
+        private void Awake() => waitForSeconds = new WaitForSeconds(spawnDuration);
+      
         public override void OnNetworkSpawn()
         {
             if(IsServer)
-                SpawnServerRpc();
+                SpawnPickupObjectServerRpc();
         }
 
 
         [ServerRpc(RequireOwnership = false)]
-        private void SpawnServerRpc()
+        private void SpawnPickupObjectServerRpc()
         {
-            PickupObject pickupObject = Instantiate(GetNewRandomPickupObject());
-            pickupObject.transform.position = transform.position;
-            pickupObject.SetPickupObjectSpawner(this);
-
-            NetworkObject networkObject = pickupObject.GetComponent<NetworkObject>();
+            GameObject prefab = GetRandomPickupObject();
+            NetworkObject networkObject = NetworkObjectPool.Singleton.GetNetworkObject(prefab, transform.position, Quaternion.identity);
+            networkObject.GetComponent<PickupObject>().SetPickupObjectSpawner(this);
             networkObject.Spawn(true);
-
         }
 
- 
-        private PickupObject GetNewRandomPickupObject()
+        private GameObject GetRandomPickupObject()
         {
-            int pickupObjectIndex = UnityEngine.Random.Range(0, spawnObjects.Length);
-            return spawnObjects[pickupObjectIndex];
+            int pickupObjectIndex = UnityEngine.Random.Range(0, spawnObjectsPrefabs.Length);
+            return spawnObjectsPrefabs[pickupObjectIndex];
         }
 
-        public void SpawnNewObject() => SpawnNewObjectServerRpc();
+        public void RespawnPickupObject() => RespawnPickupObjectServerRpc();
 
         [ServerRpc(RequireOwnership = false)]
-        private void SpawnNewObjectServerRpc()
-        {
-            StartCoroutine(WaitForSpawnNewObject());
-        }
-
-        private IEnumerator WaitForSpawnNewObject()
+        private void RespawnPickupObjectServerRpc() => StartCoroutine(WaitForSpawnPickupObject());
+        
+        private IEnumerator WaitForSpawnPickupObject()
         {
             yield return waitForSeconds;
-            SpawnServerRpc();
+            SpawnPickupObjectServerRpc();
         }
 
     }

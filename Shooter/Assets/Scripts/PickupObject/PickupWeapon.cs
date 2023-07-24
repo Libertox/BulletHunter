@@ -12,9 +12,7 @@ namespace Shooter
         public override void Interact(PlayerController playerController)
         {
             if (InventoryManager.Instance.AddWeapon(new WeaponInstance(weaponSO,magazineAmount,0)))
-            {
                 Pickup();
-            }
         }
     }
 }

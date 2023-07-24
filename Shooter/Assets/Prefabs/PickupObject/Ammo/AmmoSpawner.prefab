@@ -46,12 +46,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnDuration: 30
-  spawnObjects:
-  - {fileID: 7759299689004112845, guid: 6b51a5c97afe1f549a4fd4d73707bddc, type: 3}
-  - {fileID: -2959929741518067828, guid: 63de2a81f64d1f1448eb55322d51325b, type: 3}
-  - {fileID: 7759299689004112845, guid: 8125305d057ad9f4895d9e3f7076acda, type: 3}
-  - {fileID: 7759299689004112845, guid: 672300a725b957b4a927103fcf34b357, type: 3}
-  - {fileID: 7759299689004112845, guid: d576e8527eb60984c84b2b1e8e86045a, type: 3}
+  spawnObjectsPrefabs:
+  - {fileID: 8951942392733132164, guid: 6b51a5c97afe1f549a4fd4d73707bddc, type: 3}
+  - {fileID: 8951942392733132164, guid: 8125305d057ad9f4895d9e3f7076acda, type: 3}
+  - {fileID: 8951942392733132164, guid: 672300a725b957b4a927103fcf34b357, type: 3}
+  - {fileID: 8951942392733132164, guid: d576e8527eb60984c84b2b1e8e86045a, type: 3}
+  - {fileID: 2620131183356007192, guid: 63de2a81f64d1f1448eb55322d51325b, type: 3}
 --- !u!114 &6654565158833902085
 MonoBehaviour:
   m_ObjectHideFlags: 0

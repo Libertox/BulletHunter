@@ -23,7 +23,6 @@ namespace Shooter.UI
             {
                 PlayerController.ResetStaticData();
                 WeaponReloading.ResetStaticData();
-                PlayerStats.ResetStaticData();
                 SceneLoader.Load(SceneLoader.GameScene.MainMenu); 
             });
         }

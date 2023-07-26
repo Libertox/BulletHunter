@@ -54,6 +54,11 @@ MonoBehaviour:
     type: 3}
   rotationForce: 0.01
   explosionTime: 3
+  baseDamage: 4
+  explosionRange: 2.5
+  targerLayerMask:
+    serializedVersion: 2
+    m_Bits: 384
   <ThrowForce>k__BackingField: 15
   prefab: {fileID: 0}
 --- !u!54 &4438788523304565246

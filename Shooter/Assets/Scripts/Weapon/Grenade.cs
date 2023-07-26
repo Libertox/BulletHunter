@@ -13,11 +13,16 @@ namespace Shooter
         [SerializeField] private GameObject explosionParticleEffect;
         [SerializeField] private float rotationForce;
         [SerializeField] private float explosionTime;
+        [SerializeField] private float baseDamage;
+        [SerializeField] private float explosionRange;
+
+        [SerializeField] private LayerMask targerLayerMask;
+
+        private readonly float maxDistance = 3f;
+        private GameObject prefab;
 
         [field: SerializeField] public float ThrowForce { get; private set; }
-
         public float Mass => rgb.mass;
-        public GameObject prefab;
 
         public void SetPrefab(GameObject gameObject) => prefab = gameObject;
 
@@ -33,6 +38,7 @@ namespace Shooter
         {
             yield return new WaitForSeconds(explosionTime);
             SpawnExplosionEffectServerRpc();
+            HurtAllTargetServerRpc();
             NetworkObject.Despawn(false);
             NetworkObjectPool.Singleton.ReturnNetworkObject(NetworkObject, prefab);
         }
@@ -45,5 +51,23 @@ namespace Shooter
             networkObject.GetComponent<ParticleEffect>().Relase(explosionParticleEffect);
         }
 
+        [ServerRpc(RequireOwnership = false)]
+        private void HurtAllTargetServerRpc() => HurtAllTargetClientRpc();
+       
+
+        [ClientRpc]
+        private void HurtAllTargetClientRpc()
+        {
+            RaycastHit[] raycastHits = Physics.SphereCastAll(transform.position, explosionRange, Vector3.up, maxDistance, targerLayerMask);
+            foreach (RaycastHit hit in raycastHits)
+            {
+                if (hit.transform.TryGetComponent(out IDamageable damageable))
+                {
+                    float distanceFromExplosionCenter = Vector3.Distance(hit.transform.position, transform.position);
+                    float damage = explosionRange  / distanceFromExplosionCenter + baseDamage;
+                    damageable.TakeDamage(damage);
+                }
+            }
+        }
     }
 }

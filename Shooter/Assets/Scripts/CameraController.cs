@@ -21,13 +21,46 @@ namespace Shooter
 
         private void Start()
         {
-            if (!IsOwner) gameObject.SetActive(false);
+            if (!IsOwner) 
+            {
+                Hide();
+                return;
+            }
 
             GameInput.Instance.OnAimed += GameInput_OnAimed;
             GameInput.Instance.OnCancelAimed += GameInput_OnCancelAimed;
             GameInput.Instance.OnWeaponDroped += GameInput_OnCancelAimed;
+
+            if(PlayerStats.Instnace != null)
+            {
+                PlayerStats.Instnace.OnDeathed += PlayerStats_OnDeathed;
+                PlayerStats.Instnace.OnRestored += PlayerStats_OnRestored;
+            }   
+            else
+                PlayerStats.OnAnyPlayerSpawn += PlayerStats_OnAnyPlayerSpawn;
+
         }
 
+        private void PlayerStats_OnRestored(object sender, EventArgs e)
+        {
+            Show();
+        }
+
+        private void PlayerStats_OnAnyPlayerSpawn(object sender, EventArgs e)
+        {
+            if (PlayerStats.Instnace != null)
+            {
+                PlayerStats.Instnace.OnDeathed -= PlayerStats_OnDeathed;
+                PlayerStats.Instnace.OnDeathed += PlayerStats_OnDeathed;
+
+                PlayerStats.Instnace.OnRestored -= PlayerStats_OnRestored;
+                PlayerStats.Instnace.OnRestored += PlayerStats_OnRestored;
+            }
+                
+        }
+
+        private void PlayerStats_OnDeathed(object sender, EventArgs e) => Hide();
+        
         private void GameInput_OnCancelAimed(object sender, EventArgs e) => Unzoom();
 
         private void GameInput_OnAimed(object sender, EventArgs e)
@@ -36,11 +69,8 @@ namespace Shooter
                 Zoom();
         }
 
-        private void Update() 
-        {
-            Rotate();
-        } 
-
+        private void Update() => Rotate();
+     
         private void Rotate()
         {
             rotationY += GameInput.Instance.GetMouseYAxis() * Time.deltaTime;
@@ -59,7 +89,11 @@ namespace Shooter
         private void Unzoom() 
         {
             cameraToControl.fieldOfView = unzoomValue;
-        } 
+        }
+
+        private void Hide() => gameObject.SetActive(false);
+
+        private void Show() => gameObject.SetActive(true);
 
     }
 }

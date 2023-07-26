@@ -12,6 +12,7 @@ namespace Shooter
        
         private List<int> usedPointsIndexList;
         private GameState gameState = GameState.Play;
+        private GameState previousGameState;
 
         public bool  showPlayerName;
 
@@ -21,6 +22,7 @@ namespace Shooter
         {
             Pause,
             Play,
+            Respawn
         }
 
         private void Awake()
@@ -31,9 +33,17 @@ namespace Shooter
             usedPointsIndexList = new List<int>();
         }
 
-        public void SetGameState(GameState gameState) => this.gameState = gameState;
+        public void SetGameState(GameState gameState) 
+        {
+            previousGameState = this.gameState;
+            this.gameState = gameState;
+        }
+
+        public void SetGameStateToPreviousGameState() => gameState = previousGameState;
 
         public bool IsPauseState() => gameState == GameState.Pause;
+
+        public bool IsPlayState() => gameState == GameState.Play;
 
         public Vector3 GetRandomPosition()
         {

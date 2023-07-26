@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEditor.Rendering;
@@ -15,8 +16,13 @@ namespace Shooter
 
         public event EventHandler<OnStatsChangedEventArgs> OnStaminaChanged;
         public event EventHandler<OnStatsChangedEventArgs> OnHealthChanged;
+        public event EventHandler OnDeathed;
+        public event EventHandler<OnRestoreWaitedEventArgs> OnRestoreWaited;
+        public event EventHandler OnRestored;
 
         public class OnStatsChangedEventArgs: EventArgs { public float stats; }
+
+        public class OnRestoreWaitedEventArgs : EventArgs { public float timerValue; }
 
         public float Health { get; private set; }
         public float Stamina { get; private set; }
@@ -29,6 +35,19 @@ namespace Shooter
         {
             Health = playerStatsSO.MaxHealth;
             Stamina = playerStatsSO.MaxStamina;
+        }
+
+        private void Update()
+        {
+            if (!IsOwner) return;
+
+            if (Input.GetKeyDown(KeyCode.Z))
+            {
+                OnDeathed?.Invoke(this, EventArgs.Empty);
+                StartCoroutine(Restore());
+                GameManager.Instance.SetGameState(GameManager.GameState.Respawn);
+            }
+                
         }
 
         public override void OnNetworkSpawn()
@@ -68,9 +87,9 @@ namespace Shooter
 
         public void IncreaseHealth(float increaseValue)
         {
-            if (Stamina == playerStatsSO.MaxHealth) return;
+            if (Health == playerStatsSO.MaxHealth) return;
 
-            if (Stamina < playerStatsSO.MaxHealth)
+            if (Health < playerStatsSO.MaxHealth)
                 Health += increaseValue;
             else
                 Health = playerStatsSO.MaxHealth;
@@ -80,10 +99,18 @@ namespace Shooter
 
         public void DecreaseHealth(float decreaseValue)
         {
-            if (Health == 0) return;
+            if (Health <= 0) return;
 
             if (Health > 0)
+            {
                 Health -= decreaseValue;
+                if (Health <= 0)
+                {
+                    OnDeathed?.Invoke(this, EventArgs.Empty);
+                    StartCoroutine(Restore());
+                    GameManager.Instance.SetGameState(GameManager.GameState.Respawn);
+                }
+            }    
             else
                 Health = 0;
 
@@ -106,6 +133,21 @@ namespace Shooter
             });
         }
 
+        private IEnumerator Restore()
+        {
+            float restoreTimer = 10;
+            OnRestoreWaited?.Invoke(this, new OnRestoreWaitedEventArgs { timerValue = restoreTimer });
+            while (restoreTimer > 0)
+            {
+                yield return new WaitForSeconds(1);
+                restoreTimer--;
+                OnRestoreWaited?.Invoke(this, new OnRestoreWaitedEventArgs { timerValue = restoreTimer });
+            }
+            OnRestored?.Invoke(this, EventArgs.Empty);
+            IncreaseHealth(playerStatsSO.MaxHealth);
+            GameManager.Instance.SetGameState(GameManager.GameState.Play);
+            transform.position = GameManager.Instance.GetRandomPosition();
+        }
         
 
         public void TakeDamage(float damage)

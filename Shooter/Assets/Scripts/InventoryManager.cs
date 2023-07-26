@@ -63,6 +63,45 @@ namespace Shooter
         {
             GameInput.Instance.OnWeaponSelected += GameInput_OnWeaponSelected;
             GameInput.Instance.OnWeaponDroped += GameInput_OnWeaponDroped;
+
+            if(PlayerStats.Instnace != null)
+            {
+                PlayerStats.Instnace.OnRestored += PlayerStats_OnRestored;
+            }
+            else
+            {
+                PlayerStats.OnAnyPlayerSpawn += PlayerStats_OnAnyPlayerSpawn;
+            }
+        }
+
+        private void PlayerStats_OnAnyPlayerSpawn(object sender, EventArgs e)
+        {
+            if (PlayerStats.Instnace != null)
+            {
+                PlayerStats.Instnace.OnRestored -= PlayerStats_OnRestored;
+                PlayerStats.Instnace.OnRestored += PlayerStats_OnRestored;
+            }
+        }
+
+        private void PlayerStats_OnRestored(object sender, EventArgs e)
+        {
+            ownedWeapon = new WeaponInstance[MaxNumberWeapon];
+            UseWeapon = null;
+            MagazineAmount = new Dictionary<WeaponType, int>
+            {
+                {WeaponType.Gun,0 },
+                {WeaponType.Rifle,0 },
+                {WeaponType.Sniper,0 },
+                {WeaponType.Shoutgun,0 },
+            };
+            OnSelectedWeaponChanged?.Invoke(this, new OnSelectedWeaponChangedEventArgs { selectedWeapon = UseWeapon });
+            OnAmmoChanged?.Invoke(this, EventArgs.Empty);
+            while(GrenadeAmount != 0)
+            {
+                GrenadeAmount--;
+                OnGrenadeSubstracted?.Invoke(this, new OnGrenadeAmountChangedEventArgs { grenadeAmount = GrenadeAmount });
+            }
+            
         }
 
         private void GameInput_OnWeaponDroped(object sender, EventArgs e) => DropUseWeapon();

@@ -16,6 +16,7 @@ namespace Shooter
 
         [SerializeField] private BoxCollider squatColider;
         [SerializeField] private BoxCollider uprightColider;
+        [SerializeField] private BoxCollider deathColider;
 
         [SerializeField] private Camera playerCamera;
 
@@ -23,23 +24,87 @@ namespace Shooter
         {
             GameInput.Instance.OnInteract += GameInput_OnInteract;
 
-            if(IsOwner)
+            if (IsOwner) 
+            {
                 PlayerController.OnSquated += PlayerController_OnSquated;
+
+                if (PlayerStats.Instnace != null)
+                {
+                    PlayerStats.Instnace.OnDeathed += PlayerStats_OnDeathed;
+                    PlayerStats.Instnace.OnRestored += PlayerStats_OnRestored;
+                }                
+                else
+                    PlayerStats.OnAnyPlayerSpawn += PlayerStats_OnAnyPlayerSpawn;
+            }
+               
+        }
+
+       
+
+        private void PlayerStats_OnAnyPlayerSpawn(object sender, EventArgs e)
+        {
+            if (PlayerStats.Instnace != null)
+            {
+                PlayerStats.Instnace.OnDeathed -= PlayerStats_OnDeathed;
+                PlayerStats.Instnace.OnDeathed += PlayerStats_OnDeathed;
+
+                PlayerStats.Instnace.OnRestored -= PlayerStats_OnRestored;
+                PlayerStats.Instnace.OnRestored += PlayerStats_OnRestored;
+            }
+                
+        }
+
+        private void PlayerStats_OnDeathed(object sender, EventArgs e)
+        {
+            ChangeDeathColiderServerRpc();
+        }
+
+        private void PlayerStats_OnRestored(object sender, EventArgs e)
+        {
+            SetUprightColiderServerRpc();
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void ChangeDeathColiderServerRpc()
+        {
+            ChangeDeathColiderClientRpc();
+        }
+
+        [ClientRpc()]
+        private void ChangeDeathColiderClientRpc()
+        {
+            uprightColider.enabled = false;
+            squatColider.enabled = false;
+            deathColider.enabled = true;
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void SetUprightColiderServerRpc()
+        {
+            SetUprightColiderClientRpc();
+        }
+
+        [ClientRpc]
+        private void SetUprightColiderClientRpc()
+        {
+            uprightColider.enabled = true;
+            squatColider.enabled = false;
+            deathColider.enabled = false;
         }
 
         private void PlayerController_OnSquated(object sender, PlayerController.OnStateChangedEventArgs e)
         {
-            ChangeColiderServerRpc(e.state);
+            ChangeSquatColiderServerRpc(e.state);
         }
 
         [ServerRpc()]
-        private void ChangeColiderServerRpc(bool state)
+        private void ChangeSquatColiderServerRpc(bool state)
         {
-            ChangeColiderClientRpc(state);
+            ChangeSquatColiderClientRpc(state);
         }
 
         [ClientRpc()]
-        private void ChangeColiderClientRpc(bool state)
+        private void ChangeSquatColiderClientRpc(bool state)
         {
             if (state)
             {

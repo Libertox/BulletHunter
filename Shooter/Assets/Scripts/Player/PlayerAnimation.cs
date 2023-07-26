@@ -12,15 +12,27 @@ namespace Shooter
         private const string ANIM_IS_JUMP = "isJump";
         private const string ANIM_IS_SPRINT = "isSprint";
         private const string ANIM_IS_WALK = "isWalk";
+        private const string ANIM_IS_DEATH = "isDeath";
 
         private Animator animator;
 
         private void Awake() => animator = GetComponent<Animator>();
 
+     
         private void Start()
         {
 
             if (!IsOwner) return;
+
+            if (PlayerStats.Instnace != null)
+            {
+                PlayerStats.Instnace.OnDeathed += PlayerStats_OnDeathed;
+                PlayerStats.Instnace.OnRestored += PlayerStatsOnRestored;
+            }
+            else
+            {
+                PlayerStats.OnAnyPlayerSpawn += PlayerStats_OnAnyPlayerSpawn;
+            }
 
             PlayerController.OnSquated += PlayerController_OnSquated;
 
@@ -28,6 +40,29 @@ namespace Shooter
             PlayerController.OnSprinted += PlayerController_OnSprinted;
             PlayerController.OnJumped += PlayerController_OnJumped;
             PlayerController.OnFalled += PlayerController_OnFalled;
+ 
+        }
+
+
+        private void PlayerStats_OnAnyPlayerSpawn(object sender, EventArgs e)
+        {
+            if (PlayerStats.Instnace != null)
+            {
+                PlayerStats.Instnace.OnDeathed -= PlayerStats_OnDeathed;
+                PlayerStats.Instnace.OnDeathed += PlayerStats_OnDeathed;
+
+                PlayerStats.Instnace.OnRestored -= PlayerStatsOnRestored;
+                PlayerStats.Instnace.OnRestored += PlayerStatsOnRestored;
+            }
+        }
+
+        private void PlayerStats_OnDeathed(object sender, EventArgs e)
+        {
+            animator.SetBool(ANIM_IS_DEATH, true);
+        }
+        private void PlayerStatsOnRestored(object sender, EventArgs e)
+        {
+            animator.SetBool(ANIM_IS_DEATH, false);
         }
 
         private void PlayerController_OnFalled(object sender, PlayerController.OnStateChangedEventArgs e)

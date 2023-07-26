@@ -27,6 +27,29 @@ namespace Shooter
             GameInput.Instance.OnWeaponSelected += GameInput_OnWeaponSelected;
             GameInput.Instance.OnWeaponDroped += GameInput_OnWeaponDroped;
             GameInput.Instance.OnShooted += GameInput_OnShooted;
+
+            if(PlayerStats.Instnace != null)
+            {
+                PlayerStats.Instnace.OnDeathed += PlayerStats_OnDeathed;
+            }
+            else
+            {
+                PlayerStats.OnAnyPlayerSpawn += PlayerStats_OnAnyPlayerSpawn;
+            }
+        }
+
+        private void PlayerStats_OnAnyPlayerSpawn(object sender, EventArgs e)
+        {
+            if (PlayerStats.Instnace != null)
+            {
+                PlayerStats.Instnace.OnDeathed -= PlayerStats_OnDeathed;
+                PlayerStats.Instnace.OnDeathed += PlayerStats_OnDeathed;
+            }
+        }
+
+        private void PlayerStats_OnDeathed(object sender, EventArgs e)
+        {
+            CancelReload();
         }
 
         private void GameInput_OnShooted(object sender, EventArgs e)

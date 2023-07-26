@@ -43,7 +43,7 @@ namespace Shooter.UI
             if (Time.timeScale == 0)
             {
                 Cursor.lockState = CursorLockMode.Locked;
-                GameManager.Instance.SetGameState(GameManager.GameState.Play);
+                GameManager.Instance.SetGameStateToPreviousGameState();
                 Time.timeScale = 1;
             }
             else

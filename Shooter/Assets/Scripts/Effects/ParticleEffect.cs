@@ -12,7 +12,8 @@ namespace Shooter
     {
         [SerializeField] private float lifeTime;
 
-        public void Relase(GameObject prefab) => StartCoroutine(DisactiveAfterTime(prefab));
+        public void Release(GameObject prefab) => StartCoroutine(DisactiveAfterTime(prefab));
+
         private IEnumerator DisactiveAfterTime(GameObject prefab)
         {
             yield return new WaitForSeconds(lifeTime);

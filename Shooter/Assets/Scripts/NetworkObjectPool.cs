@@ -28,15 +28,14 @@ namespace Unity.Netcode
                 Singleton = this;
             }
 
-        }
-
-        private void Start()
-        {
             foreach (var configObject in PooledPrefabsList)
             {
                 RegisterPrefabInternal(configObject.Prefab, configObject.PrewarmCount);
             }
+
         }
+
+
         public override void OnNetworkDespawn()
         {
             // Unregisters all objects in PooledPrefabsList from the cache.

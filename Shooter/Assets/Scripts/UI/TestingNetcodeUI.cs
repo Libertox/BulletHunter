@@ -16,13 +16,12 @@ namespace Shooter
             startHostButton.onClick.AddListener(() => 
             {
                 NetworkManager.Singleton.StartHost();
-                Hide();
+                SceneLoader.LoadNetwork(SceneLoader.GameScene.TeamSelectScene);
             });
 
             startClientButton.onClick.AddListener(() => 
             {
                 NetworkManager.Singleton.StartClient();
-                Hide();
             });
 
 

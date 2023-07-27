@@ -10,6 +10,7 @@ namespace Shooter
     {
 
         private const string ANIM_IS_SHOOT = "isShoot";
+
         private Animator animator;
         private WaitForSeconds waitForSeconds;
 
@@ -21,22 +22,11 @@ namespace Shooter
             waitForSeconds = new WaitForSeconds(uprightingCooldown);
         }
 
-        public void TakeDamage(float damage)
-        {
-            TakeDamageServerRpc();
-        }
-
-        private IEnumerator Uprighting()
-        {
-            yield return waitForSeconds;
-            animator.SetBool(ANIM_IS_SHOOT, false);
-        }
+        public void TakeDamage(float damage) => TakeDamageServerRpc();
 
         [ServerRpc(RequireOwnership = false)]
-        private void TakeDamageServerRpc()
-        {
-            TakeDamageClientRpc();
-        }
+        private void TakeDamageServerRpc() => TakeDamageClientRpc();
+      
 
         [ClientRpc()]
         private void TakeDamageClientRpc()
@@ -45,9 +35,13 @@ namespace Shooter
             StartCoroutine(Uprighting());
         }
 
-        public NetworkObject GetNetworkObject()
+        private IEnumerator Uprighting()
         {
-            return NetworkObject;
+            yield return waitForSeconds;
+            animator.SetBool(ANIM_IS_SHOOT, false);
         }
+
+        public NetworkObject GetNetworkObject() => NetworkObject;
+
     }
 }

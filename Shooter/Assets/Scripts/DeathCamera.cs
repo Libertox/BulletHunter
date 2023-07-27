@@ -7,6 +7,13 @@ namespace Shooter
 {
     public class DeathCamera: NetworkBehaviour
     {
+        private Camera deathCamera;
+
+
+        private void Awake()
+        {
+            deathCamera = GetComponent<Camera>();
+        }
 
         private void Start()
         {
@@ -26,6 +33,11 @@ namespace Shooter
                 PlayerStats.OnAnyPlayerSpawn += PlayerStats_OnAnyPlayerSpawn;
             }
 
+            int index = GameManagerMultiplayer.Instance.GetIndexFromPlayerIdList(OwnerClientId);
+            LayerMask gunLayerMask = GameManager.Instance.GetPlayerGunLayerMask(index);
+
+            deathCamera.cullingMask &= ~(1 << gunLayerMask);
+            
             Hide();
         }
 

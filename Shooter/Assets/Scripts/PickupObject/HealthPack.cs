@@ -12,7 +12,6 @@ namespace Shooter
         {
             playerController.PlayerStats.IncreaseHealth(healValue);
             Pickup();
-            
         }
     }
 }

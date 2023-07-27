@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Shooter
 {
-    public class GameManager: MonoBehaviour
+    public class GameManager: NetworkBehaviour
     {
         public static GameManager Instance { get; private set; }
+
+        [SerializeField] private PlayerController playerPrefab;
 
         [SerializeField] private List<Transform> playerSpawnPointsList;
        
@@ -14,9 +17,14 @@ namespace Shooter
         private GameState gameState = GameState.Play;
         private GameState previousGameState;
 
-        public bool  showPlayerName;
+        public bool showPlayerName;
 
         [SerializeField] private List<WeaponSO> weaponSOList;
+
+        [SerializeField] private int[] playerLayerMask;
+        [SerializeField] private int[] playerGunLayerMask;
+
+        private NetworkList<ulong> spawnedPlayerIdList;
 
         public enum GameState
         {
@@ -27,10 +35,34 @@ namespace Shooter
 
         private void Awake()
         {
-            if (!Instance)
-                Instance = this;
+           Instance = this;
 
             usedPointsIndexList = new List<int>();
+
+            spawnedPlayerIdList = new NetworkList<ulong>();
+        }
+
+        public override void OnNetworkSpawn()
+        {
+            if (IsServer)
+            {
+                NetworkManager.Singleton.SceneManager.OnLoadEventCompleted += SceneManager_OnLoadEventCompleted;
+            }
+        }
+
+        
+
+        private void SceneManager_OnLoadEventCompleted(string sceneName, UnityEngine.SceneManagement.LoadSceneMode loadSceneMode, List<ulong> clientsCompleted, List<ulong> clientsTimedOut)
+        {
+            foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
+            {
+                if (!spawnedPlayerIdList.Contains(clientId))
+                {
+                    PlayerController playerController = Instantiate(playerPrefab);
+                    playerController.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true);
+                    spawnedPlayerIdList.Add(clientId);
+                }
+            }
         }
 
         public void SetGameState(GameState gameState) 
@@ -67,5 +99,9 @@ namespace Shooter
             return weaponSOList[index];
         }
 
+
+        public LayerMask GetPlayerLayerMask(int index) => playerLayerMask[index];
+
+        public LayerMask GetPlayerGunLayerMask(int index) => playerGunLayerMask[index];
     }
 }

@@ -14,11 +14,14 @@ namespace Shooter
         [SerializeField] private MeshRenderer weaponMeshRender;
 
         private void Start()
-        { 
-            if(IsOwner)
+        {
+            if (IsOwner)
                 InventoryManager.Instance.OnSelectedWeaponDroped += Inventory_OnSelectedWeaponDroped;
+
+            SetWeaponLayerMask();
         }
 
+     
         private void Inventory_OnSelectedWeaponDroped(object sender, InventoryManager.OnSelectedWeaponChangedEventArgs e)
         {
             DropWeaponServerRpc(GameManager.Instance.GetWeaponSOIndex(e.selectedWeapon.WeaponSO), e.selectedWeapon.AmmoAmount);
@@ -37,7 +40,6 @@ namespace Shooter
             gun.SetAmmoAmount(ammoAmount);
             gun.Drop();
         }
-
 
 
         public void SwapWeaponModel(WeaponSO useWeapon)
@@ -77,6 +79,15 @@ namespace Shooter
         {
             scopeMeshFilter.gameObject.SetActive(true);
             weaponMeshFiler.gameObject.SetActive(true);
+        }
+
+        private void SetWeaponLayerMask()
+        {
+            int index = GameManagerMultiplayer.Instance.GetIndexFromPlayerIdList(OwnerClientId);
+            LayerMask gunLayerMask = GameManager.Instance.GetPlayerGunLayerMask(index);
+
+            scopeMeshFilter.gameObject.layer = gunLayerMask;
+            weaponMeshFiler.gameObject.layer = gunLayerMask;
         }
     }
 }

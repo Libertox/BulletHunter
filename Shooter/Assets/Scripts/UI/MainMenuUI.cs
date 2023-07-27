@@ -19,7 +19,7 @@ namespace Shooter.UI
             Time.timeScale = 1f;
             playButton.Select();
 
-            playButton.onClick.AddListener(() => SceneLoader.Load(SceneLoader.GameScene.LoadingScene));
+            playButton.onClick.AddListener(() => SceneLoader.Load(SceneLoader.GameScene.LobbyScene));
             settingsButton.onClick.AddListener(() => { settingsUI.Show(); } );
             exitButton.onClick.AddListener(() =>
             {

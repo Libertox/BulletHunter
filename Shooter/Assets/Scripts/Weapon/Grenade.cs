@@ -48,7 +48,7 @@ namespace Shooter
         {
             NetworkObject networkObject = NetworkObjectPool.Singleton.GetNetworkObject(explosionParticleEffect, transform.position, Quaternion.identity);
             networkObject.Spawn(true);
-            networkObject.GetComponent<ParticleEffect>().Relase(explosionParticleEffect);
+            networkObject.GetComponent<ParticleEffect>().Release(explosionParticleEffect);
         }
 
         [ServerRpc(RequireOwnership = false)]

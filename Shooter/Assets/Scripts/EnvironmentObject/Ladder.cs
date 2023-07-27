@@ -6,9 +6,6 @@ namespace Shooter
 {
     public class Ladder : MonoBehaviour, IInteractable
     {
-        public void Interact(PlayerController playerController)
-        {
-            playerController.ClimbOnLadder();
-        }
+        public void Interact(PlayerController playerController) => playerController.ClimbOnLadder();
     }
 }

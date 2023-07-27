@@ -7,9 +7,24 @@ namespace Shooter
 {
     public class WeaponCamera: NetworkBehaviour
     {
+        private Camera weaponCamera;
+
+        private void Awake()
+        {
+            weaponCamera = GetComponent<Camera>();
+        }
+
         private void Start()
         {
-            if (!IsOwner) gameObject.SetActive(false);
+            if (!IsOwner)
+            {
+                gameObject.SetActive(false);
+                return;
+            }
+
+            int index = GameManagerMultiplayer.Instance.GetIndexFromPlayerIdList(OwnerClientId);
+            LayerMask gunLayerMask = GameManager.Instance.GetPlayerGunLayerMask(index);
+            weaponCamera.cullingMask |= (1 << gunLayerMask);
         }
 
     }

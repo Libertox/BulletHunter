@@ -25,26 +25,26 @@ TagManager:
   - Water
   - UI
   - Ground
-  - Player
   - Damageable
   - Interactable
-  - Gun
-  - Wall
   - 
+  - Gun_1
+  - Gun_2
+  - Gun_3
+  - Gun_4
+  - Gun_5
+  - Gun_6
+  - Gun_7
+  - Gun_8
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Player_1
+  - Player_2
+  - Player_3
+  - Player_4
+  - Player_5
+  - Player_6
+  - Player_7
+  - Player_8
   - 
   - 
   - 

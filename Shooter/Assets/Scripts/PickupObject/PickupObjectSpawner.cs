@@ -14,13 +14,14 @@ namespace Shooter
         private WaitForSeconds waitForSeconds;
 
         private void Awake() => waitForSeconds = new WaitForSeconds(spawnDuration);
-      
-        public override void OnNetworkSpawn()
+
+        private void Start()
         {
             if(IsServer)
                 SpawnPickupObjectServerRpc();
         }
 
+      
 
         [ServerRpc(RequireOwnership = false)]
         private void SpawnPickupObjectServerRpc()

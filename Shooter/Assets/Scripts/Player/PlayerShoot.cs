@@ -49,7 +49,7 @@ namespace Shooter
         {
             NetworkObject networkObject = NetworkObjectPool.Singleton.GetNetworkObject(prefab,position, Quaternion.identity);
             networkObject.Spawn(true);
-            networkObject.GetComponent<ParticleEffect>().Relase(prefab);
+            networkObject.GetComponent<ParticleEffect>().Release(prefab);
         }
 
         [ServerRpc(RequireOwnership = false)]

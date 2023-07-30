@@ -15,13 +15,13 @@ namespace Shooter
         {
             startHostButton.onClick.AddListener(() => 
             {
-                NetworkManager.Singleton.StartHost();
+                GameManagerMultiplayer.Instance.StartHost();
                 SceneLoader.LoadNetwork(SceneLoader.GameScene.TeamSelectScene);
             });
 
             startClientButton.onClick.AddListener(() => 
             {
-                NetworkManager.Singleton.StartClient();
+                GameManagerMultiplayer.Instance.StartClient();
             });
 
 

@@ -39,7 +39,7 @@ namespace Shooter
             else
                 PlayerStats.OnAnyPlayerSpawn += PlayerStats_OnAnyPlayerSpawn;
 
-            int index = GameManagerMultiplayer.Instance.GetIndexFromPlayerIdList(OwnerClientId);
+            int index = GameManagerMultiplayer.Instance.GetPlayerDataIndexFromClientId(OwnerClientId);
             LayerMask playerMask = GameManager.Instance.GetPlayerLayerMask(index);
             LayerMask gunLayerMask = GameManager.Instance.GetPlayerGunLayerMask(index);
             cameraToControl.cullingMask &= ~(1 << playerMask);

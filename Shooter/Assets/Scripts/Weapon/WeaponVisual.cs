@@ -83,7 +83,7 @@ namespace Shooter
 
         private void SetWeaponLayerMask()
         {
-            int index = GameManagerMultiplayer.Instance.GetIndexFromPlayerIdList(OwnerClientId);
+            int index = GameManagerMultiplayer.Instance.GetPlayerDataIndexFromClientId(OwnerClientId);
             LayerMask gunLayerMask = GameManager.Instance.GetPlayerGunLayerMask(index);
 
             scopeMeshFilter.gameObject.layer = gunLayerMask;

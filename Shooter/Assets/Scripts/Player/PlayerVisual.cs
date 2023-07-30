@@ -9,7 +9,7 @@ namespace Shooter
     {
         private void Start()
         {
-            int index = GameManagerMultiplayer.Instance.GetIndexFromPlayerIdList(OwnerClientId);
+            int index = GameManagerMultiplayer.Instance.GetPlayerDataIndexFromClientId(OwnerClientId);
             LayerMask playerLayerMask = GameManager.Instance.GetPlayerLayerMask(index);
             SetGameLayerRecursive(gameObject, playerLayerMask);
         }

@@ -22,7 +22,7 @@ namespace Shooter
                 return;
             }
 
-            int index = GameManagerMultiplayer.Instance.GetIndexFromPlayerIdList(OwnerClientId);
+            int index = GameManagerMultiplayer.Instance.GetPlayerDataIndexFromClientId(OwnerClientId);
             LayerMask gunLayerMask = GameManager.Instance.GetPlayerGunLayerMask(index);
             weaponCamera.cullingMask |= (1 << gunLayerMask);
         }

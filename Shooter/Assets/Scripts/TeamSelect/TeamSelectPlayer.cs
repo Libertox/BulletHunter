@@ -19,7 +19,8 @@ namespace Shooter
             kickButton.onClick.AddListener(() =>
             {
                 PlayerData playerData = GameManagerMultiplayer.Instance.GetPlayerDataFromIndex(playerIndex);
-                GameManagerMultiplayer.Instance.KickPlayer(playerData.clientId);
+                LobbyManager.Instance.KickLobby(playerData.playerId.ToString());
+                GameManagerMultiplayer.Instance.KickPlayer(playerData.clientId);          
             });
         }
 

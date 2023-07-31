@@ -13,7 +13,11 @@ namespace Shooter.UI
 
         private void Awake()
         {
-            backMainMenuButton.onClick.AddListener(() => SceneLoader.Load(SceneLoader.GameScene.MainMenu));
+            backMainMenuButton.onClick.AddListener(() =>
+            {
+                LobbyManager.Instance.LeaveLobby();
+                SceneLoader.Load(SceneLoader.GameScene.MainMenu);
+            });
         }
 
         private void Start()

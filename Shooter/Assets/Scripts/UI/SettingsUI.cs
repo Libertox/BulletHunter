@@ -60,7 +60,7 @@ namespace Shooter
 
             showPlayerNameToggle.onValueChanged.AddListener((bool value) =>
             {
-                GameManager.Instance.showPlayerName = value;
+                //GameManager.Instance.showPlayerName = value;
             });
         }
 
@@ -75,7 +75,7 @@ namespace Shooter
             mouseSensitivitySlider.value = GameInput.Instance.MouseSensitivity * 0.1f;
             mouseSentitivityValueText.SetText($"{GameInput.Instance.MouseSensitivity * 0.1f}");
 
-            showPlayerNameToggle.isOn = GameManager.Instance.showPlayerName;
+            //showPlayerNameToggle.isOn = GameManager.Instance.showPlayerName;
 
             GameInput.Instance.OnPaused += GameInput_OnPaused;
 

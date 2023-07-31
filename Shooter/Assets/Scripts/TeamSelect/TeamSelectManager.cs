@@ -41,6 +41,7 @@ namespace Shooter
 
             if (allClientsReady)
             {
+                LobbyManager.Instance.DeleteLobby();
                 SceneLoader.LoadNetwork(SceneLoader.GameScene.Game);
             }
 

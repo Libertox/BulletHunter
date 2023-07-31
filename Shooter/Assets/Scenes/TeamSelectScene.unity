@@ -4148,6 +4148,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   readyButton: {fileID: 1478196267}
   mainMenuButton: {fileID: 1423274648}
+  lobbyNameText: {fileID: 105596295}
+  lobbyCodeText: {fileID: 126858315}
+  selectTeamButton:
+  - {fileID: 971512629}
+  - {fileID: 1934263502}
+  - {fileID: 1043100145}
+  - {fileID: 1571592537}
+  - {fileID: 1685564355}
+  - {fileID: 2098889699}
+  - {fileID: 508256605}
+  - {fileID: 1622104107}
 --- !u!1 &1478196265
 GameObject:
   m_ObjectHideFlags: 0

@@ -12,21 +12,25 @@ namespace Shooter.UI
         [SerializeField] private Button exitButton;
 
         [SerializeField] private SettingsUI settingsUI;
+        [SerializeField] private LobbyUI lobbyUI;
 
+        [SerializeField] private Button characterSelectButton;
 
         private void Start()
         {
             Time.timeScale = 1f;
             playButton.Select();
 
-            playButton.onClick.AddListener(() => SceneLoader.Load(SceneLoader.GameScene.LobbyScene));
-            settingsButton.onClick.AddListener(() => { settingsUI.Show(); } );
+            playButton.onClick.AddListener(() => lobbyUI.Show());
+            settingsButton.onClick.AddListener(() => settingsUI.Show());
             exitButton.onClick.AddListener(() =>
             {
 #if !UNITY_WEBGL
                 Application.Quit();
 #endif
             });
+
+            characterSelectButton.onClick.AddListener(() => SceneLoader.Load(SceneLoader.GameScene.CharacterSelectScene));
         }
 
     }

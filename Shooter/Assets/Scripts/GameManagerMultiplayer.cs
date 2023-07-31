@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.Services.Authentication;
 using UnityEngine;
 
 namespace Shooter
@@ -15,6 +16,10 @@ namespace Shooter
 
         [SerializeField] private List<Color> teamColorList;
 
+        public int MaxPlayer { get; private set; }
+        public NetworkVariable<int> MaxTeam { get; private set; } = new NetworkVariable<int>();
+        public int PointsToWin { get; private set; }
+
         private void Awake()
         {
             Instance = this;
@@ -27,6 +32,7 @@ namespace Shooter
 
         }
 
+  
         private void PlayerDataNetworkList_OnListChanged(NetworkListEvent<PlayerData> changeEvent)
         {
             OnPlayerDataNetworkListChanged?.Invoke(this, EventArgs.Empty);
@@ -59,11 +65,32 @@ namespace Shooter
                 clientId = clientId,
                 teamColorId = 0
             });
+
+            SetPlayerIdServerRpc(AuthenticationService.Instance.PlayerId);
         }
 
         public void StartClient()
         {
             NetworkManager.Singleton.StartClient();
+
+            NetworkManager.Singleton.OnClientConnectedCallback += NetworkManager_Client_OnClientConnectedCallback;
+        }
+
+        private void NetworkManager_Client_OnClientConnectedCallback(ulong obj)
+        {
+            SetPlayerIdServerRpc(AuthenticationService.Instance.PlayerId);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void SetPlayerIdServerRpc(string playerId, ServerRpcParams serverRpcParams = default)
+        {
+            int playerDataIndex = GetPlayerDataIndexFromClientId(serverRpcParams.Receive.SenderClientId);
+
+            PlayerData playerData = playerDataNetworkList[playerDataIndex];
+
+            playerData.playerId = playerId;
+
+            playerDataNetworkList[playerDataIndex] = playerData;
         }
 
         public bool IsPlayerIndexConnected(int playerIndex) => playerIndex < playerDataNetworkList.Count;
@@ -116,6 +143,14 @@ namespace Shooter
         {
             NetworkManager.Singleton.DisconnectClient(clientId);
             NetworkManager_Server_OnClientDisconnectCallback(clientId);
+        }
+
+
+        public void SetGameSettings(int maxPlayer, int maxTeam, int pointsToWin)
+        {
+            MaxPlayer = maxPlayer;
+            MaxTeam.Value = maxTeam;
+            PointsToWin = pointsToWin;
         }
     }
 }

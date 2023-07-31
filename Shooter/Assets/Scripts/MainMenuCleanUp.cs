@@ -14,6 +14,9 @@ namespace Shooter
 
             if (GameManagerMultiplayer.Instance != null)
                 Destroy(GameManagerMultiplayer.Instance.gameObject);
+
+            if (LobbyManager.Instance != null)
+                Destroy(LobbyManager.Instance.gameObject);
         }
 
     }

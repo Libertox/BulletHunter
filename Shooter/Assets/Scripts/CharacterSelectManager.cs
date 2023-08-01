@@ -33,13 +33,8 @@ namespace Shooter
            PlayerPrefs.Save();
         }
 
-        public string GetPlayerName() 
-        {
-            if (PlayerPrefs.HasKey(PLAYER_PREFS_PLAYER_NAME))
-                return PlayerPrefs.GetString(PLAYER_PREFS_PLAYER_NAME);
-            else
-                return "Player";
-        }
+        public string GetPlayerName() => PlayerPrefs.GetString(PLAYER_PREFS_PLAYER_NAME, "Player");
+      
 
         public void SetNextSkin()
         {

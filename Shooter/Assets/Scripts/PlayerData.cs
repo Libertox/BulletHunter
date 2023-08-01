@@ -10,11 +10,14 @@ namespace Shooter
     {
         public ulong clientId;
         public int teamColorId;
+        public int playerSkinId;
         public FixedString64Bytes playerId;
+        public FixedString64Bytes playerName;
 
         public bool Equals(PlayerData other)
         {
-            return clientId == other.clientId && teamColorId == other.teamColorId && playerId == other.playerId;
+            return clientId == other.clientId && teamColorId == other.teamColorId && playerId == other.playerId 
+                && playerSkinId == other.playerSkinId && playerName == other.playerName;
         }
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -22,6 +25,8 @@ namespace Shooter
             serializer.SerializeValue(ref clientId);
             serializer.SerializeValue(ref teamColorId);
             serializer.SerializeValue(ref playerId);
+            serializer.SerializeValue(ref playerSkinId);
+            serializer.SerializeValue(ref playerName);
         }
     }
 }

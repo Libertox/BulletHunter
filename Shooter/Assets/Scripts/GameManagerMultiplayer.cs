@@ -10,6 +10,9 @@ namespace Shooter
     {
         public static GameManagerMultiplayer Instance { get; private set; }
 
+        private const string PLAYER_PREFS_PLAYER_NAME = "PlayerName";
+        private const string PLAYER_PREFS_CHOOSE_SKIN_INDEX = "ChooseSkinIndex";
+
         public event EventHandler OnPlayerDataNetworkListChanged;
 
         private NetworkList<PlayerData> playerDataNetworkList;
@@ -20,6 +23,10 @@ namespace Shooter
         public NetworkVariable<int> MaxTeam { get; private set; } = new NetworkVariable<int>();
         public int PointsToWin { get; private set; }
 
+        public string PlayerName { get; private set; }
+        private int playerSkin;
+        [SerializeField] private PlayerSkinsSO playerSkinsSO;
+
         private void Awake()
         {
             Instance = this;
@@ -27,8 +34,10 @@ namespace Shooter
             playerDataNetworkList = new NetworkList<PlayerData>();
             playerDataNetworkList.OnListChanged += PlayerDataNetworkList_OnListChanged;
 
-            DontDestroyOnLoad(gameObject);
+            PlayerName = PlayerPrefs.GetString(PLAYER_PREFS_PLAYER_NAME,"Player");
+            playerSkin = PlayerPrefs.GetInt(PLAYER_PREFS_CHOOSE_SKIN_INDEX);
 
+            DontDestroyOnLoad(gameObject);
 
         }
 
@@ -67,6 +76,8 @@ namespace Shooter
             });
 
             SetPlayerIdServerRpc(AuthenticationService.Instance.PlayerId);
+            SetPlayerNameServerRpc(PlayerName);
+            SetPlayerSkinIdServerRpc(playerSkin);
         }
 
         public void StartClient()
@@ -79,6 +90,8 @@ namespace Shooter
         private void NetworkManager_Client_OnClientConnectedCallback(ulong obj)
         {
             SetPlayerIdServerRpc(AuthenticationService.Instance.PlayerId);
+            SetPlayerNameServerRpc(PlayerName);
+            SetPlayerSkinIdServerRpc(playerSkin);
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -89,6 +102,30 @@ namespace Shooter
             PlayerData playerData = playerDataNetworkList[playerDataIndex];
 
             playerData.playerId = playerId;
+
+            playerDataNetworkList[playerDataIndex] = playerData;
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void SetPlayerNameServerRpc(string playerName, ServerRpcParams serverRpcParams = default)
+        {
+            int playerDataIndex = GetPlayerDataIndexFromClientId(serverRpcParams.Receive.SenderClientId);
+
+            PlayerData playerData = playerDataNetworkList[playerDataIndex];
+
+            playerData.playerName = playerName;
+
+            playerDataNetworkList[playerDataIndex] = playerData;
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void SetPlayerSkinIdServerRpc(int playerSkinId, ServerRpcParams serverRpcParams = default)
+        {
+            int playerDataIndex = GetPlayerDataIndexFromClientId(serverRpcParams.Receive.SenderClientId);
+
+            PlayerData playerData = playerDataNetworkList[playerDataIndex];
+
+            playerData.playerSkinId = playerSkinId;
 
             playerDataNetworkList[playerDataIndex] = playerData;
         }
@@ -109,6 +146,8 @@ namespace Shooter
         public PlayerData GetPlayerDataFromIndex(int playerIndex) => playerDataNetworkList[playerIndex];
 
         public Color GetTeamColor(int teamId) => teamColorList[teamId];
+
+        public Material GetPlayerMaterial(int skinIndex) => playerSkinsSO.PlayerSkinList[skinIndex];
 
         public PlayerData GetPlayerDataFromClientId(ulong clientId)
         {

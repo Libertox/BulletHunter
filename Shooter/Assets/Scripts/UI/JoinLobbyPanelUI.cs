@@ -38,6 +38,11 @@ namespace Shooter.UI
             UpdateLobbyList(e.lobbyList);
         }
 
+        private void OnDestroy()
+        {
+            LobbyManager.Instance.OnLobbyListChanged -= LobbyManager_OnLobbyListChanged;
+        }
+
         private void UpdateLobbyList(List<Lobby> availableLobbies)
         {
             lobbySlotTemplate.Hide();

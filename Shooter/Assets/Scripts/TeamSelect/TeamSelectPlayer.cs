@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,6 +12,8 @@ namespace Shooter
         [SerializeField] private int playerIndex;
         [SerializeField] private GameObject readyText;
         [SerializeField] private Button kickButton;
+        [SerializeField] private TextMeshPro playerNameText;
+        [SerializeField] private SkinnedMeshRenderer playerSkinnedMeshRenderer;
 
         [SerializeField] private TeamSelectPlatform teamSelectPlatform;
 
@@ -53,6 +56,16 @@ namespace Shooter
                 PlayerData playerData = GameManagerMultiplayer.Instance.GetPlayerDataFromIndex(playerIndex);
 
                 readyText.SetActive(TeamSelectManager.Instance.IsPlayerReady(playerData.clientId));
+
+                playerNameText.SetText(playerData.playerName.ToString());
+
+                Material material = GameManagerMultiplayer.Instance.GetPlayerMaterial(playerData.playerSkinId);
+                playerSkinnedMeshRenderer.materials = new Material[]
+                {
+                    material,
+                    material,
+                    material,
+                };
 
                 teamSelectPlatform.SetColor(GameManagerMultiplayer.Instance.GetTeamColor(playerData.teamColorId));
             }

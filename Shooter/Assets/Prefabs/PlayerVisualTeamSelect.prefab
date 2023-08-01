@@ -270,6 +270,8 @@ MonoBehaviour:
   playerIndex: 0
   readyText: {fileID: 6095162060337707733}
   kickButton: {fileID: 4820096113221332652}
+  playerNameText: {fileID: 6308366393785114723}
+  playerSkinnedMeshRenderer: {fileID: 9102338457284726242}
   teamSelectPlatform: {fileID: 2978516632130566947}
 --- !u!1 &6095162060337707733
 GameObject:
@@ -829,13 +831,22 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2100000, guid: 4ffb04dab08f3bc46b4bae49c8873e63, type: 2}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 100108, guid: aaf0205bbf9d1a4458899575eed1c962, type: 3}
+    - {fileID: 100106, guid: aaf0205bbf9d1a4458899575eed1c962, type: 3}
+    - {fileID: 100104, guid: aaf0205bbf9d1a4458899575eed1c962, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aaf0205bbf9d1a4458899575eed1c962, type: 3}
 --- !u!4 &9102338457270901912 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400046, guid: aaf0205bbf9d1a4458899575eed1c962,
+    type: 3}
+  m_PrefabInstance: {fileID: 9102338457271027254}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &9102338457284726242 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 13700052, guid: aaf0205bbf9d1a4458899575eed1c962,
     type: 3}
   m_PrefabInstance: {fileID: 9102338457271027254}
   m_PrefabAsset: {fileID: 0}

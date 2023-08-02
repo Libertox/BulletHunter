@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: -8361259001447688131}
   - component: {fileID: 3653024553758821307}
   - component: {fileID: -2608576668449457340}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: PickupShoutgun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -84,7 +84,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f53e1f3a0d1ad145a098cfd37e13701, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pickupObjectSpawner: {fileID: 0}
   weaponSO: {fileID: 11400000, guid: 21fe374e25b5b344a8105877d9562497, type: 2}
   magazineAmount: 1
 --- !u!114 &-2608576668449457340

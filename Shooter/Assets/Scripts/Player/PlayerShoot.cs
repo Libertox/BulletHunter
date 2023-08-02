@@ -7,7 +7,7 @@ namespace Shooter
 {
     public class PlayerShoot:NetworkBehaviour
     {
-        [SerializeField] private LayerMask damageableLayerMask;
+        [SerializeField] private LayerMask shootLayerMask;
 
         [SerializeField] private GameObject bulletTrackPrefab;
         [SerializeField] private GameObject shootDustPrefab;
@@ -63,7 +63,7 @@ namespace Shooter
         {
             networkObjectReference.TryGet(out NetworkObject networkObject);
             IDamageable damageable = networkObject.GetComponent<IDamageable>();
-            damageable.TakeDamage(damage);
+            damageable.TakeDamage(damage, OwnerClientId);
         }
     }
 

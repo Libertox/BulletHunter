@@ -130,9 +130,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1932cba7e39808c4b95b09f77b709f53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageableLayerMask:
+  shootLayerMask:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 193
   bulletTrackPrefab: {fileID: 3835748407868109026, guid: f13d30cdd7d9df449a6e9584c0ae5218,
     type: 3}
   shootDustPrefab: {fileID: 1067471869909948, guid: fbc5e59d75bc2f34c800d6a2e1da8362,

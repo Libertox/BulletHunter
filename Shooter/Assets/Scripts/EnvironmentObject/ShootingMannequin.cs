@@ -22,7 +22,7 @@ namespace Shooter
             waitForSeconds = new WaitForSeconds(uprightingCooldown);
         }
 
-        public void TakeDamage(float damage) => TakeDamageServerRpc();
+        public void TakeDamage(float damage, ulong clientId) => TakeDamageServerRpc();
 
         [ServerRpc(RequireOwnership = false)]
         private void TakeDamageServerRpc() => TakeDamageClientRpc();

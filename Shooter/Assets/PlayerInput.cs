@@ -455,6 +455,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PointsTable"",
+                    ""type"": ""Button"",
+                    ""id"": ""9cc3ec28-499c-43b0-8278-3b36e2c04e75"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -466,6 +475,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""GameScheme"",
                     ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""80041bc3-6358-4e52-a9af-9dd24e1b110f"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PointsTable"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -510,6 +530,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Pause = m_UI.FindAction("Pause", throwIfNotFound: true);
+        m_UI_PointsTable = m_UI.FindAction("PointsTable", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -722,11 +743,13 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_UI;
     private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
     private readonly InputAction m_UI_Pause;
+    private readonly InputAction m_UI_PointsTable;
     public struct UIActions
     {
         private @PlayerInput m_Wrapper;
         public UIActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @Pause => m_Wrapper.m_UI_Pause;
+        public InputAction @PointsTable => m_Wrapper.m_UI_PointsTable;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -739,6 +762,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Pause.started += instance.OnPause;
             @Pause.performed += instance.OnPause;
             @Pause.canceled += instance.OnPause;
+            @PointsTable.started += instance.OnPointsTable;
+            @PointsTable.performed += instance.OnPointsTable;
+            @PointsTable.canceled += instance.OnPointsTable;
         }
 
         private void UnregisterCallbacks(IUIActions instance)
@@ -746,6 +772,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Pause.started -= instance.OnPause;
             @Pause.performed -= instance.OnPause;
             @Pause.canceled -= instance.OnPause;
+            @PointsTable.started -= instance.OnPointsTable;
+            @PointsTable.performed -= instance.OnPointsTable;
+            @PointsTable.canceled -= instance.OnPointsTable;
         }
 
         public void RemoveCallbacks(IUIActions instance)
@@ -792,5 +821,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     public interface IUIActions
     {
         void OnPause(InputAction.CallbackContext context);
+        void OnPointsTable(InputAction.CallbackContext context);
     }
 }

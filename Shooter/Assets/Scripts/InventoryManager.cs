@@ -64,9 +64,9 @@ namespace Shooter
             GameInput.Instance.OnWeaponSelected += GameInput_OnWeaponSelected;
             GameInput.Instance.OnWeaponDroped += GameInput_OnWeaponDroped;
 
-            if(PlayerStats.Instnace != null)
+            if(PlayerStats.Instance != null)
             {
-                PlayerStats.Instnace.OnRestored += PlayerStats_OnRestored;
+                PlayerStats.Instance.OnRestored += PlayerStats_OnRestored;
             }
             else
             {
@@ -76,10 +76,10 @@ namespace Shooter
 
         private void PlayerStats_OnAnyPlayerSpawn(object sender, EventArgs e)
         {
-            if (PlayerStats.Instnace != null)
+            if (PlayerStats.Instance != null)
             {
-                PlayerStats.Instnace.OnRestored -= PlayerStats_OnRestored;
-                PlayerStats.Instnace.OnRestored += PlayerStats_OnRestored;
+                PlayerStats.Instance.OnRestored -= PlayerStats_OnRestored;
+                PlayerStats.Instance.OnRestored += PlayerStats_OnRestored;
             }
         }
 

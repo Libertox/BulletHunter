@@ -19,6 +19,12 @@ namespace Shooter
 
         public event EventHandler<OnLobbyListChangedEventArgs> OnLobbyListChanged;
 
+        public event EventHandler OnJoinedLobby;
+        public event EventHandler OnJoinedLobbyFailed;
+        public event EventHandler OnQuickJoinedLobbyFailed;
+        public event EventHandler OnCreatedLobby;
+        public event EventHandler OnCreatedLobbyFailed;
+
         public class OnLobbyListChangedEventArgs : EventArgs { public List<Lobby> lobbyList; }
 
         private void Awake()
@@ -110,6 +116,7 @@ namespace Shooter
 
         public async void CreateLobby(string lobbyName, bool isPrivate, int playerNumber)
         {
+            OnCreatedLobby?.Invoke(this, EventArgs.Empty);
             try
             {
                 joinedLobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, playerNumber, new CreateLobbyOptions
@@ -122,6 +129,7 @@ namespace Shooter
             }
             catch (LobbyServiceException e)
             {
+                OnCreatedLobbyFailed?.Invoke(this, EventArgs.Empty);
                 Debug.Log(e);
             }
 
@@ -129,6 +137,7 @@ namespace Shooter
 
         public async void QuickJoin()
         {
+            OnJoinedLobby?.Invoke(this, EventArgs.Empty);
             try
             {
                 joinedLobby = await LobbyService.Instance.QuickJoinLobbyAsync();
@@ -136,6 +145,7 @@ namespace Shooter
             }
             catch (LobbyServiceException e)
             {
+                OnQuickJoinedLobbyFailed?.Invoke(this, EventArgs.Empty);
                 Debug.Log(e);
             }
 
@@ -143,6 +153,7 @@ namespace Shooter
 
         public async void JoinWithCode(string lobbyCode)
         {
+            OnJoinedLobby?.Invoke(this, EventArgs.Empty);
             try
             {
                 joinedLobby = await LobbyService.Instance.JoinLobbyByCodeAsync(lobbyCode);
@@ -151,12 +162,14 @@ namespace Shooter
             }
             catch (LobbyServiceException e)
             {
+                OnJoinedLobbyFailed?.Invoke(this, EventArgs.Empty);
                 Debug.Log(e);
             }
         }
 
         public async void JoinWithId(string lobbyId)
         {
+            OnJoinedLobby?.Invoke(this, EventArgs.Empty);
             try
             {
                 joinedLobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobbyId);
@@ -165,6 +178,7 @@ namespace Shooter
             }
             catch (LobbyServiceException e)
             {
+                OnJoinedLobbyFailed?.Invoke(this, EventArgs.Empty);
                 Debug.Log(e);
             }
         }

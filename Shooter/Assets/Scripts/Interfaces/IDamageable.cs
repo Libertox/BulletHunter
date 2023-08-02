@@ -7,7 +7,7 @@ namespace Shooter
 {
     public interface IDamageable
     {
-        public void TakeDamage(float damage);
+        public void TakeDamage(float damage, ulong clientId);
 
         public NetworkObject GetNetworkObject();
     }

@@ -23,10 +23,10 @@ namespace Shooter
                 return;
             }
 
-            if (PlayerStats.Instnace != null)
+            if (PlayerStats.Instance != null)
             {
-                PlayerStats.Instnace.OnDeathed += PlayerStats_OnDeathed;
-                PlayerStats.Instnace.OnRestored += PlayerStats_OnRestored;
+                PlayerStats.Instance.OnDeathed += PlayerStats_OnDeathed;
+                PlayerStats.Instance.OnRestored += PlayerStats_OnRestored;
             }
             else
             {
@@ -45,13 +45,13 @@ namespace Shooter
 
         private void PlayerStats_OnAnyPlayerSpawn(object sender, EventArgs e)
         {
-            if (PlayerStats.Instnace != null)
+            if (PlayerStats.Instance != null)
             {
-                PlayerStats.Instnace.OnDeathed -= PlayerStats_OnDeathed;
-                PlayerStats.Instnace.OnDeathed += PlayerStats_OnDeathed;
+                PlayerStats.Instance.OnDeathed -= PlayerStats_OnDeathed;
+                PlayerStats.Instance.OnDeathed += PlayerStats_OnDeathed;
 
-                PlayerStats.Instnace.OnRestored -= PlayerStats_OnRestored;
-                PlayerStats.Instnace.OnRestored += PlayerStats_OnRestored;
+                PlayerStats.Instance.OnRestored -= PlayerStats_OnRestored;
+                PlayerStats.Instance.OnRestored += PlayerStats_OnRestored;
             }
         }
 

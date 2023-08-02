@@ -24,6 +24,8 @@ namespace Shooter
         [field: SerializeField] public float ThrowForce { get; private set; }
         public float Mass => rgb.mass;
 
+        public ulong playerid;
+
         public void SetPrefab(GameObject gameObject) => prefab = gameObject;
 
         public void Throw(Vector3 direction)
@@ -65,7 +67,7 @@ namespace Shooter
                 {
                     float distanceFromExplosionCenter = Vector3.Distance(hit.transform.position, transform.position);
                     float damage = explosionRange  / distanceFromExplosionCenter + baseDamage;
-                    damageable.TakeDamage(damage);
+                    damageable.TakeDamage(damage, playerid);
                 }
             }
         }

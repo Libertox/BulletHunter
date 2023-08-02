@@ -51,7 +51,7 @@ namespace Shooter
             Game,
             MainMenu,
             LoadingScene,
-            LobbyScene,
+            WinningScene,
             TeamSelectScene,
             CharacterSelectScene,
         }

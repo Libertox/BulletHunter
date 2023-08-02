@@ -15,9 +15,13 @@ namespace Shooter
 
         public event EventHandler OnPlayerDataNetworkListChanged;
 
+
         private NetworkList<PlayerData> playerDataNetworkList;
 
         [SerializeField] private List<Color> teamColorList;
+        [SerializeField] private List<string> teamNameList;
+
+       
 
         public int MaxPlayer { get; private set; }
         public NetworkVariable<int> MaxTeam { get; private set; } = new NetworkVariable<int>();
@@ -37,11 +41,15 @@ namespace Shooter
             PlayerName = PlayerPrefs.GetString(PLAYER_PREFS_PLAYER_NAME,"Player");
             playerSkin = PlayerPrefs.GetInt(PLAYER_PREFS_CHOOSE_SKIN_INDEX);
 
+          
+
             DontDestroyOnLoad(gameObject);
 
         }
 
-  
+       
+
+
         private void PlayerDataNetworkList_OnListChanged(NetworkListEvent<PlayerData> changeEvent)
         {
             OnPlayerDataNetworkListChanged?.Invoke(this, EventArgs.Empty);
@@ -51,6 +59,7 @@ namespace Shooter
         {
             NetworkManager.Singleton.OnClientConnectedCallback += NetworkManager_OnClientConnectedCallback;
             NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_Server_OnClientDisconnectCallback;
+
             NetworkManager.Singleton.StartHost();
             
         }
@@ -82,9 +91,9 @@ namespace Shooter
 
         public void StartClient()
         {
+            NetworkManager.Singleton.OnClientConnectedCallback += NetworkManager_Client_OnClientConnectedCallback;
             NetworkManager.Singleton.StartClient();
 
-            NetworkManager.Singleton.OnClientConnectedCallback += NetworkManager_Client_OnClientConnectedCallback;
         }
 
         private void NetworkManager_Client_OnClientConnectedCallback(ulong obj)
@@ -147,6 +156,8 @@ namespace Shooter
 
         public Color GetTeamColor(int teamId) => teamColorList[teamId];
 
+        public string GetTeamName(int teamId) => teamNameList[teamId];
+
         public Material GetPlayerMaterial(int skinIndex) => playerSkinsSO.PlayerSkinList[skinIndex];
 
         public PlayerData GetPlayerDataFromClientId(ulong clientId)
@@ -191,5 +202,7 @@ namespace Shooter
             MaxTeam.Value = maxTeam;
             PointsToWin = pointsToWin;
         }
+
+       
     }
 }

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5858868993162831045}
   - component: {fileID: -2959929741518067828}
   - component: {fileID: -6236579277454351010}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: Pickup_Grenade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -84,7 +84,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67e579ee5ef78ee43a876c8b283976b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pickupObjectSpawner: {fileID: 0}
 --- !u!114 &-6236579277454351010
 MonoBehaviour:
   m_ObjectHideFlags: 0

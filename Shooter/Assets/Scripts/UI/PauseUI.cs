@@ -40,18 +40,16 @@ namespace Shooter.UI
         {
             isShow = !isShow;
 
-            if (Time.timeScale == 0)
+            if (GameManager.Instance.IsPauseState())
             {
                 Cursor.lockState = CursorLockMode.Locked;
                 GameManager.Instance.SetGameStateToPreviousGameState();
-                Time.timeScale = 1;
             }
             else
             {
                 resumeButton.Select();
                 Cursor.lockState = CursorLockMode.None;
                 GameManager.Instance.SetGameState(GameManager.GameState.Pause);
-                Time.timeScale = 0;
             }
                 
             gameObject.SetActive(isShow);

@@ -42,7 +42,7 @@ namespace Shooter
             if (allClientsReady)
             {
                 LobbyManager.Instance.DeleteLobby();
-                SceneLoader.LoadNetwork(SceneLoader.GameScene.Game);
+                SceneLoader.LoadNetwork(SceneLoader.GameScene.LoadingScene);
             }
 
             OnReadyChanged?.Invoke(this, EventArgs.Empty);

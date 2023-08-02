@@ -1,26 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 
 namespace Shooter.UI
 {
-    public class LoadingScene:MonoBehaviour
+    public class LoadingScene:NetworkBehaviour
     {
         [SerializeField] private float loadTime;
         [SerializeField] private BarUI loadingBar;
 
-        private float time;
+        private NetworkVariable<float> time = new NetworkVariable<float>();
 
         private void Update()
         {
-            time += Time.deltaTime;
-            loadingBar.ChangeFillAmount(time / loadTime);
-            if (time > loadTime)
+            if (!NetworkManager.Singleton.IsServer) return;
+
+            time.Value += Time.deltaTime;
+            ChangeProgressBarClientRpc();
+            if (time.Value > loadTime)
             {
-                SceneLoader.Load(SceneLoader.GameScene.Game);
-            }
-                
+                SceneLoader.LoadNetwork(SceneLoader.GameScene.Game);
+            }     
+        }
+
+        [ClientRpc()]
+        private void ChangeProgressBarClientRpc()
+        {
+            loadingBar.ChangeFillAmount(time.Value / loadTime);
         }
 
     }

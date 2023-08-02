@@ -48,12 +48,13 @@ namespace Shooter
         }
 
         [ServerRpc(RequireOwnership = false)]
-        private void ThowGrenadeServerRpc()
+        private void ThowGrenadeServerRpc(ServerRpcParams serverRpcParams = default)
         {
             NetworkObject networkObject = NetworkObjectPool.Singleton.GetNetworkObject(grenadePrefab.gameObject, throwTransform.position, Quaternion.identity);
             Grenade grenade = networkObject.GetComponent<Grenade>();
             grenade.Throw(playerCamera.transform.forward);
             grenade.SetPrefab(grenadePrefab.gameObject);
+            grenade.playerid = serverRpcParams.Receive.SenderClientId;
             networkObject.Spawn(true);
         }
 

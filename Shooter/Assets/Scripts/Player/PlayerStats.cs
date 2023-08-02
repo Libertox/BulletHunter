@@ -12,17 +12,21 @@ namespace Shooter
     {
         public static event EventHandler OnAnyPlayerSpawn;
 
-        public static PlayerStats Instnace { get; private set; }
+        public static PlayerStats Instance { get; private set; }
 
         public event EventHandler<OnStatsChangedEventArgs> OnStaminaChanged;
         public event EventHandler<OnStatsChangedEventArgs> OnHealthChanged;
-        public event EventHandler OnDeathed;
-        public event EventHandler<OnRestoreWaitedEventArgs> OnRestoreWaited;
+        public event EventHandler<OnStatsChangedEventArgs> OnInvulnerabilityChanged;
+
+        public event EventHandler<OnDeathedEventArgs> OnDeathed;
+        public event EventHandler<OnWaitedEventArgs> OnRestoreWaited;
         public event EventHandler OnRestored;
 
         public class OnStatsChangedEventArgs: EventArgs { public float stats; }
 
-        public class OnRestoreWaitedEventArgs : EventArgs { public float timerValue; }
+        public class OnDeathedEventArgs : EventArgs { public ulong targetId; public ulong ownerId; }
+
+        public class OnWaitedEventArgs : EventArgs { public float timerValue; }
 
         public float Health { get; private set; }
         public float Stamina { get; private set; }
@@ -30,11 +34,13 @@ namespace Shooter
 
         [SerializeField] private PlayerStatsSO playerStatsSO;
 
+        private bool isInvulnerable;
+        private ulong lastPlayerHitId;
 
         private void Start()
         {
             Health = playerStatsSO.MaxHealth;
-            Stamina = playerStatsSO.MaxStamina;
+            Stamina = playerStatsSO.MaxStamina;      
         }
 
         private void Update()
@@ -43,9 +49,10 @@ namespace Shooter
 
             if (Input.GetKeyDown(KeyCode.Z))
             {
-                OnDeathed?.Invoke(this, EventArgs.Empty);
+                /*OnDeathed?.Invoke(this, EventArgs.Empty);
                 StartCoroutine(Restore());
-                GameManager.Instance.SetGameState(GameManager.GameState.Respawn);
+                GameManager.Instance.SetGameState(GameManager.GameState.Respawn);*/
+                StartCoroutine(InvulnerabilityCountdown());
             }
                 
         }
@@ -54,7 +61,7 @@ namespace Shooter
         {
             if(IsOwner)
             {
-                Instnace = this;
+                Instance = this;
             }
 
             OnAnyPlayerSpawn?.Invoke(this, EventArgs.Empty);
@@ -106,9 +113,8 @@ namespace Shooter
                 Health -= decreaseValue;
                 if (Health <= 0)
                 {
-                    OnDeathed?.Invoke(this, EventArgs.Empty);
+                    OnDeathed?.Invoke(this, new OnDeathedEventArgs { targetId = lastPlayerHitId , ownerId = OwnerClientId});
                     StartCoroutine(Restore());
-                    GameManager.Instance.SetGameState(GameManager.GameState.Respawn);
                 }
             }    
             else
@@ -136,23 +142,46 @@ namespace Shooter
         private IEnumerator Restore()
         {
             float restoreTimer = 10;
-            OnRestoreWaited?.Invoke(this, new OnRestoreWaitedEventArgs { timerValue = restoreTimer });
+            WaitForSeconds waitForSeconds = new WaitForSeconds(1);
+            OnRestoreWaited?.Invoke(this, new OnWaitedEventArgs { timerValue = restoreTimer });
             while (restoreTimer > 0)
             {
-                yield return new WaitForSeconds(1);
+                yield return waitForSeconds;
                 restoreTimer--;
-                OnRestoreWaited?.Invoke(this, new OnRestoreWaitedEventArgs { timerValue = restoreTimer });
+                OnRestoreWaited?.Invoke(this, new OnWaitedEventArgs { timerValue = restoreTimer });
             }
             OnRestored?.Invoke(this, EventArgs.Empty);
             IncreaseHealth(playerStatsSO.MaxHealth);
             GameManager.Instance.SetGameState(GameManager.GameState.Play);
             transform.position = GameManager.Instance.GetRandomPosition();
+            StartCoroutine(InvulnerabilityCountdown());
         }
-        
 
-        public void TakeDamage(float damage)
+        private IEnumerator InvulnerabilityCountdown()
         {
-            DecreaseHealth(damage);
+            float restoreTimer = 10;
+            float timer = restoreTimer;
+            isInvulnerable = true;
+            OnInvulnerabilityChanged?.Invoke(this, new OnStatsChangedEventArgs { stats = timer / restoreTimer });
+            while (timer > 0)
+            {
+                timer -= Time.deltaTime * 2;
+                OnInvulnerabilityChanged?.Invoke(this, new OnStatsChangedEventArgs { stats = timer / restoreTimer });
+                yield return new WaitForSeconds(Time.deltaTime);
+                
+            }
+            isInvulnerable = false;
+        }
+
+
+        public void TakeDamage(float damage, ulong clientId)
+        {
+            if(!GameManager.Instance.IsStartState() && !isInvulnerable)
+            {
+                lastPlayerHitId = clientId;
+                DecreaseHealth(damage);
+            }
+                
         }
 
         public NetworkObject GetNetworkObject()

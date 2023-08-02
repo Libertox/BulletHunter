@@ -11,11 +11,11 @@ namespace Shooter
 
         private void Start()
         {
-            if(PlayerStats.Instnace != null)
+            if(PlayerStats.Instance != null)
             {
-                PlayerStats.Instnace.OnDeathed += PlayerStats_OnDeathed;
-                PlayerStats.Instnace.OnRestored += PlayersStats_OnRestored;
-                PlayerStats.Instnace.OnRestoreWaited += PlayerStats_OnRestoreWaited;
+                PlayerStats.Instance.OnDeathed += PlayerStats_OnDeathed;
+                PlayerStats.Instance.OnRestored += PlayersStats_OnRestored;
+                PlayerStats.Instance.OnRestoreWaited += PlayerStats_OnRestoreWaited;
             }
             else
             {
@@ -28,20 +28,20 @@ namespace Shooter
      
         private void PlayerStats_OnAnyPlayerSpawn(object sender, EventArgs e)
         {
-            if (PlayerStats.Instnace != null)
+            if (PlayerStats.Instance != null)
             {
-                PlayerStats.Instnace.OnDeathed -= PlayerStats_OnDeathed;
-                PlayerStats.Instnace.OnDeathed += PlayerStats_OnDeathed;
+                PlayerStats.Instance.OnDeathed -= PlayerStats_OnDeathed;
+                PlayerStats.Instance.OnDeathed += PlayerStats_OnDeathed;
 
-                PlayerStats.Instnace.OnRestoreWaited -= PlayerStats_OnRestoreWaited;
-                PlayerStats.Instnace.OnRestoreWaited += PlayerStats_OnRestoreWaited;
+                PlayerStats.Instance.OnRestoreWaited -= PlayerStats_OnRestoreWaited;
+                PlayerStats.Instance.OnRestoreWaited += PlayerStats_OnRestoreWaited;
 
-                PlayerStats.Instnace.OnRestored -= PlayersStats_OnRestored;
-                PlayerStats.Instnace.OnRestored += PlayersStats_OnRestored;
+                PlayerStats.Instance.OnRestored -= PlayersStats_OnRestored;
+                PlayerStats.Instance.OnRestored += PlayersStats_OnRestored;
             }
         }
 
-        private void PlayerStats_OnRestoreWaited(object sender, PlayerStats.OnRestoreWaitedEventArgs e)
+        private void PlayerStats_OnRestoreWaited(object sender, PlayerStats.OnWaitedEventArgs e)
         {
             restoreTimerText.SetText($"RESPAWN IN " + e.timerValue);
         }

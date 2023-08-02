@@ -24,10 +24,10 @@ namespace Shooter
 
             if (!IsOwner) return;
 
-            if (PlayerStats.Instnace != null)
+            if (PlayerStats.Instance != null)
             {
-                PlayerStats.Instnace.OnDeathed += PlayerStats_OnDeathed;
-                PlayerStats.Instnace.OnRestored += PlayerStatsOnRestored;
+                PlayerStats.Instance.OnDeathed += PlayerStats_OnDeathed;
+                PlayerStats.Instance.OnRestored += PlayerStatsOnRestored;
             }
             else
             {
@@ -46,13 +46,13 @@ namespace Shooter
 
         private void PlayerStats_OnAnyPlayerSpawn(object sender, EventArgs e)
         {
-            if (PlayerStats.Instnace != null)
+            if (PlayerStats.Instance != null)
             {
-                PlayerStats.Instnace.OnDeathed -= PlayerStats_OnDeathed;
-                PlayerStats.Instnace.OnDeathed += PlayerStats_OnDeathed;
+                PlayerStats.Instance.OnDeathed -= PlayerStats_OnDeathed;
+                PlayerStats.Instance.OnDeathed += PlayerStats_OnDeathed;
 
-                PlayerStats.Instnace.OnRestored -= PlayerStatsOnRestored;
-                PlayerStats.Instnace.OnRestored += PlayerStatsOnRestored;
+                PlayerStats.Instance.OnRestored -= PlayerStatsOnRestored;
+                PlayerStats.Instance.OnRestored += PlayerStatsOnRestored;
             }
         }
 

@@ -28,7 +28,7 @@ namespace Shooter.UI
         [ClientRpc()]
         private void ChangeProgressBarClientRpc()
         {
-            loadingBar.ChangeFillAmount(time.Value / loadTime);
+            loadingBar.ChangeFillAmountImmediately(time.Value / loadTime);
         }
 
     }

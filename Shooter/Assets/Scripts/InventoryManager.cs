@@ -66,7 +66,7 @@ namespace Shooter
 
             if(PlayerStats.Instance != null)
             {
-                PlayerStats.Instance.OnRestored += PlayerStats_OnRestored;
+                PlayerStats.Instance.OnDeathed += PlayerStats_OnDeathed;
             }
             else
             {
@@ -78,15 +78,18 @@ namespace Shooter
         {
             if (PlayerStats.Instance != null)
             {
-                PlayerStats.Instance.OnRestored -= PlayerStats_OnRestored;
-                PlayerStats.Instance.OnRestored += PlayerStats_OnRestored;
+                PlayerStats.Instance.OnDeathed -= PlayerStats_OnDeathed;
+                PlayerStats.Instance.OnDeathed += PlayerStats_OnDeathed;
             }
         }
 
-        private void PlayerStats_OnRestored(object sender, EventArgs e)
+        private void PlayerStats_OnDeathed(object sender, EventArgs e)
         {
+            foreach (WeaponInstance weaponInstance in ownedWeapon)
+            {
+                DropUseWeapon(weaponInstance);
+            }
             ownedWeapon = new WeaponInstance[MaxNumberWeapon];
-            UseWeapon = null;
             MagazineAmount = new Dictionary<WeaponType, int>
             {
                 {WeaponType.Gun,0 },
@@ -94,7 +97,8 @@ namespace Shooter
                 {WeaponType.Sniper,0 },
                 {WeaponType.Shoutgun,0 },
             };
-            OnSelectedWeaponChanged?.Invoke(this, new OnSelectedWeaponChangedEventArgs { selectedWeapon = UseWeapon });
+            UseWeapon = null;
+            //OnSelectedWeaponChanged?.Invoke(this, new OnSelectedWeaponChangedEventArgs { selectedWeapon = UseWeapon });
             OnAmmoChanged?.Invoke(this, EventArgs.Empty);
             while(GrenadeAmount != 0)
             {
@@ -104,7 +108,7 @@ namespace Shooter
             
         }
 
-        private void GameInput_OnWeaponDroped(object sender, EventArgs e) => DropUseWeapon();
+        private void GameInput_OnWeaponDroped(object sender, EventArgs e) => DropUseWeapon(UseWeapon);
 
         private void GameInput_OnWeaponSelected(object sender, GameInput.OnWeaponSelectedEventArgs e)
         {
@@ -169,15 +173,18 @@ namespace Shooter
             }
         }
 
-        private void DropUseWeapon()
+        private void DropUseWeapon(WeaponInstance dropedWeapon)
         {
-            if (UseWeapon == null) return;
+            if (dropedWeapon == null) return;
 
-            OnSelectedWeaponDroped?.Invoke(this, new OnSelectedWeaponChangedEventArgs { selectedWeapon = UseWeapon });
+            OnSelectedWeaponDroped?.Invoke(this, new OnSelectedWeaponChangedEventArgs { selectedWeapon = dropedWeapon });
 
-            UseWeapon = null;
-            ownedWeapon[useWeaponIndex] = null;
-
+            if(dropedWeapon == UseWeapon)
+            {
+                UseWeapon = null;
+                ownedWeapon[useWeaponIndex] = null;
+            }
+       
         }
 
         public bool CanShoot()

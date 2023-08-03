@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace Shooter
 {
-    public class HealthPack : PickupObject,IInteractable
+    public class ArmorPack:PickupObject,IInteractable
     {
-        [SerializeField] private float healValue;
+        [SerializeField] private float armorValue;
 
         public override void Interact(PlayerController playerController)
         {
-            playerController.PlayerStats.IncreaseHealth(healValue);
+            playerController.PlayerStats.IncreaseArmor(armorValue);
             Pickup();
         }
     }

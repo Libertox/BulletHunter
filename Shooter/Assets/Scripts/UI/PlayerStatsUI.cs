@@ -8,6 +8,7 @@ namespace Shooter.UI
     {
         [SerializeField] private BarUI healthBar;
         [SerializeField] private BarUI staminaBar;
+        [SerializeField] private BarUI armorBar;
         [SerializeField] private BarUI invulnerabilityBar;
 
         private void Start()
@@ -16,17 +17,16 @@ namespace Shooter.UI
             {
                 PlayerStats.Instance.OnStaminaChanged += PlayerStats_OnStaminaChanged;
                 PlayerStats.Instance.OnHealthChanged += PlayerStats_OnHealthChanged;
+                PlayerStats.Instance.OnArmorChanged += PlayerStats_OnArmorChanged;
                 PlayerStats.Instance.OnInvulnerabilityChanged += PlayerStats_OnInvulnerabilityChanged;
             }
             else
             {
                 PlayerStats.OnAnyPlayerSpawn += PlayerStats_OnAnyPlayerSpawn;
             }
-
-            
+          
         }
 
-     
         private void PlayerStats_OnAnyPlayerSpawn(object sender, EventArgs e)
         {
             if (PlayerStats.Instance != null)
@@ -39,22 +39,30 @@ namespace Shooter.UI
 
                 PlayerStats.Instance.OnInvulnerabilityChanged -= PlayerStats_OnInvulnerabilityChanged;
                 PlayerStats.Instance.OnInvulnerabilityChanged += PlayerStats_OnInvulnerabilityChanged;
+
+                PlayerStats.Instance.OnArmorChanged -= PlayerStats_OnArmorChanged;
+                PlayerStats.Instance.OnArmorChanged += PlayerStats_OnArmorChanged;
             }
         }
 
         private void PlayerStats_OnHealthChanged(object sender, PlayerStats.OnStatsChangedEventArgs e)
         {
-            healthBar.ChangeFillAmount(e.stats);
+            healthBar.ChangeFillAmountSlowly(e.stats);
         }
 
         private void PlayerStats_OnStaminaChanged(object sender, PlayerStats.OnStatsChangedEventArgs e)
         {
-            staminaBar.ChangeFillAmount(e.stats);
+            staminaBar.ChangeFillAmountImmediately(e.stats);
         }
 
         private void PlayerStats_OnInvulnerabilityChanged(object sender, PlayerStats.OnStatsChangedEventArgs e)
         {
-            invulnerabilityBar.ChangeFillAmount(e.stats);
+            invulnerabilityBar.ChangeFillAmountImmediately(e.stats);
+        }
+
+        private void PlayerStats_OnArmorChanged(object sender, PlayerStats.OnStatsChangedEventArgs e)
+        {
+            armorBar.ChangeFillAmountSlowly(e.stats);
         }
     }
 }

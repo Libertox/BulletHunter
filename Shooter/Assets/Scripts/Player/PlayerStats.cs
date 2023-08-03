@@ -17,6 +17,7 @@ namespace Shooter
         public event EventHandler<OnStatsChangedEventArgs> OnStaminaChanged;
         public event EventHandler<OnStatsChangedEventArgs> OnHealthChanged;
         public event EventHandler<OnStatsChangedEventArgs> OnInvulnerabilityChanged;
+        public event EventHandler<OnStatsChangedEventArgs> OnArmorChanged;
 
         public event EventHandler<OnDeathedEventArgs> OnDeathed;
         public event EventHandler<OnWaitedEventArgs> OnRestoreWaited;
@@ -30,17 +31,21 @@ namespace Shooter
 
         public float Health { get; private set; }
         public float Stamina { get; private set; }
+
+        public float Armor { get; private set; }
    
 
         [SerializeField] private PlayerStatsSO playerStatsSO;
 
         private bool isInvulnerable;
+        private bool haveStaminaBust;
+
         private ulong lastPlayerHitId;
 
         private void Start()
         {
             Health = playerStatsSO.MaxHealth;
-            Stamina = playerStatsSO.MaxStamina;      
+            Stamina = playerStatsSO.MaxStamina;
         }
 
         private void Update()
@@ -49,10 +54,16 @@ namespace Shooter
 
             if (Input.GetKeyDown(KeyCode.Z))
             {
-                /*OnDeathed?.Invoke(this, EventArgs.Empty);
+                /*OnDeathed?.Invoke(this, new OnDeathedEventArgs());
                 StartCoroutine(Restore());
                 GameManager.Instance.SetGameState(GameManager.GameState.Respawn);*/
-                StartCoroutine(InvulnerabilityCountdown());
+                // StartCoroutine(InvulnerabilityCountdown());
+                IncreaseHealth(5f);
+            }
+
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                DecreaseHealth(2f);
             }
                 
         }
@@ -69,11 +80,9 @@ namespace Shooter
 
         public void IncreaseStamina(float increaseValue)
         {
-            if (Stamina == playerStatsSO.MaxStamina) return;
+            Stamina += increaseValue;
 
-            if (Stamina < playerStatsSO.MaxStamina)
-                Stamina += increaseValue;
-            else
+            if (Stamina > playerStatsSO.MaxStamina)
                 Stamina = playerStatsSO.MaxStamina;
 
             ChangeStaminaValue();
@@ -82,11 +91,11 @@ namespace Shooter
 
         public void DecreaseStamina(float decreaseValue)
         {
-            if (Stamina == 0) return;
+            if (haveStaminaBust) return;
 
-            if (Stamina > 0)
-                Stamina -= decreaseValue;
-            else
+            Stamina -= decreaseValue;
+
+            if (Stamina < 0)
                 Stamina = 0;
 
             ChangeStaminaValue();
@@ -94,11 +103,9 @@ namespace Shooter
 
         public void IncreaseHealth(float increaseValue)
         {
-            if (Health == playerStatsSO.MaxHealth) return;
+            Health += increaseValue;
 
-            if (Health < playerStatsSO.MaxHealth)
-                Health += increaseValue;
-            else
+            if (Health > playerStatsSO.MaxHealth)
                 Health = playerStatsSO.MaxHealth;
 
             ChnageHealthValue();
@@ -106,7 +113,6 @@ namespace Shooter
 
         public void DecreaseHealth(float decreaseValue)
         {
-            if (Health <= 0) return;
 
             if (Health > 0)
             {
@@ -115,12 +121,31 @@ namespace Shooter
                 {
                     OnDeathed?.Invoke(this, new OnDeathedEventArgs { targetId = lastPlayerHitId , ownerId = OwnerClientId});
                     StartCoroutine(Restore());
+                    Health = 0;
                 }
             }    
-            else
-                Health = 0;
-
+               
             ChnageHealthValue();
+        }
+
+        public void IncreaseArmor(float increaseValue)
+        {
+            Armor += increaseValue;
+
+            if (Armor > playerStatsSO.MaxArmor)
+                Armor = playerStatsSO.MaxArmor;
+
+            ChangeArmorValue();
+        }
+
+        public void DecreaseArmor(float decreaseValue)
+        {
+            Armor -= decreaseValue;
+
+            if (Armor < 0)        
+                Armor = 0;
+
+            ChangeArmorValue();
         }
 
         private void ChangeStaminaValue()
@@ -136,6 +161,14 @@ namespace Shooter
             OnHealthChanged?.Invoke(this, new OnStatsChangedEventArgs
             {
                 stats = Health / playerStatsSO.MaxHealth
+            });
+        }
+
+        private void ChangeArmorValue()
+        {
+            OnArmorChanged?.Invoke(this, new OnStatsChangedEventArgs
+            {
+                stats = Armor / playerStatsSO.MaxArmor
             });
         }
 
@@ -173,16 +206,30 @@ namespace Shooter
             isInvulnerable = false;
         }
 
+        public void SetStaminaBust() => StartCoroutine(StaminaBust());
+
+        private IEnumerator StaminaBust()
+        {
+            haveStaminaBust = true;
+            yield return new WaitForSeconds(6f);
+            haveStaminaBust = false;
+        }
+
 
         public void TakeDamage(float damage, ulong clientId)
         {
             if(!GameManager.Instance.IsStartState() && !isInvulnerable)
             {
                 lastPlayerHitId = clientId;
-                DecreaseHealth(damage);
+                if (Armor <= 0)
+                    DecreaseHealth(damage);
+                else
+                    DecreaseArmor(damage);
             }
                 
         }
+
+
 
         public NetworkObject GetNetworkObject()
         {

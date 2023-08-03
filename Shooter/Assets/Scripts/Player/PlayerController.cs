@@ -175,12 +175,11 @@ namespace Shooter
         {
             rgb.useGravity = false;
             
-
             Vector2 inputVector = GameInput.Instance.GetMovementVectorNormalized();
 
             moveDirection = (orientationPoint.right.normalized * inputVector.x) * baseSpeed;
 
-            rgb.velocity = new Vector3(moveDirection.x, inputVector.y, 0);
+            rgb.velocity = new Vector3(moveDirection.x, inputVector.y, moveDirection.z);
             if (!playerInteract.GroundCheck() || inputVector.y >= 0)
                 isClimb = true;
             else
@@ -192,9 +191,11 @@ namespace Shooter
             rgb.useGravity = true;
             isClimb = false;
 
+            Vector2 inputVector = GameInput.Instance.GetMovementVectorNormalized();
+
             if (!playerInteract.GroundCheck())
             {
-                rgb.velocity = (Vector3.up  + orientationPoint.forward) * 2f;
+                rgb.velocity = 2f * inputVector.y * (Vector3.up  + orientationPoint.forward);
             }
        
         }

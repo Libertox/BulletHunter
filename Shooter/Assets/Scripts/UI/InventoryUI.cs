@@ -45,7 +45,7 @@ namespace Shooter.UI
 
         private void WeaponReloading_OnReloaded(object sender, WeaponReloading.OnReloadedEventArgs e)
         {
-            weaponReloadBar.ChangeFillAmount(e.reloadTime);
+            weaponReloadBar.ChangeFillAmountImmediately(e.reloadTime);
             weaponReloadBar.Show();
         }
 

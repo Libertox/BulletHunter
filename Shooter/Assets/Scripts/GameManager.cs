@@ -55,7 +55,7 @@ namespace Shooter
 
             for (int i = 0; i < GameManagerMultiplayer.Instance.MaxTeam.Value; i++)
             {
-                TeamPointsDictionary[i] = i;
+                TeamPointsDictionary[i] = 0;
             }
         }
 
@@ -78,6 +78,14 @@ namespace Shooter
             StartCoroutine(StartGame());
         }
 
+        public override void OnDestroy()
+        {
+            if (IsServer)
+            {
+                NetworkManager.Singleton.SceneManager.OnLoadEventCompleted -= SceneManager_OnLoadEventCompleted;
+            }
+        }
+      
         private void PlayerStats_OnAnyPlayerSpawn(object sender, EventArgs e)
         {
             if (PlayerStats.Instance != null)
@@ -180,6 +188,22 @@ namespace Shooter
         {
             TeamPointsDictionary[teamId]++;
             OnTeamPointsChanged?.Invoke(this, EventArgs.Empty);
+
+            if (CheckAnyoneWin(teamId))
+            {
+                GameManagerMultiplayer.Instance.WinningTeam = teamId;
+                SceneLoader.LoadNetwork(SceneLoader.GameScene.WinningScene);
+            }
+        }
+
+        private bool CheckAnyoneWin(int teamId)
+        {
+            if (TeamPointsDictionary[teamId] >= GameManagerMultiplayer.Instance.PointsToWin)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

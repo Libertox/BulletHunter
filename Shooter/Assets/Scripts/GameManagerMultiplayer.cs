@@ -31,6 +31,8 @@ namespace Shooter
         private int playerSkin;
         [SerializeField] private PlayerSkinsSO playerSkinsSO;
 
+        public int WinningTeam;
+
         private void Awake()
         {
             Instance = this;

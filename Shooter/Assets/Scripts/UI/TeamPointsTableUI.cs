@@ -15,12 +15,17 @@ namespace Shooter.UI
 
         private void Start()
         {
-            GameInput.Instance.OnTableShowed += GameInput_OnTableShowed;
-            GameInput.Instance.OnTableHided += GameInput_OnTableHided;
-            GameInput.Instance.OnPaused += GameInput_OnPaused;
+            if(GameInput.Instance != null)
+            {
+                GameInput.Instance.OnTableShowed += GameInput_OnTableShowed;
+                GameInput.Instance.OnTableHided += GameInput_OnTableHided;
+                GameInput.Instance.OnPaused += GameInput_OnPaused;
+            }
+            
+            if(GameManager.Instance != null)
+                GameManager.Instance.OnTeamPointsChanged += GameManager_OnTeamPointsChanged;
 
-            GameManager.Instance.OnTeamPointsChanged += GameManager_OnTeamPointsChanged;
-        
+            UpdatePointsTable();
             Hide();
         }
 
@@ -72,9 +77,9 @@ namespace Shooter.UI
             }
         }
 
-        private void Show() => gameObject.SetActive(true);
+        public void Show() => gameObject.SetActive(true);
 
-        private void Hide() => gameObject.SetActive(false);
+        public void Hide() => gameObject.SetActive(false);
 
 
     }

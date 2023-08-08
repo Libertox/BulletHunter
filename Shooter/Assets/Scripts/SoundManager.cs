@@ -83,14 +83,12 @@ namespace Shooter
 
         public void PlayPickupObjectSound(Vector3 playpoint)
         {
-            int pickupClipIndex = UnityEngine.Random.Range(0, audioClipsSO.PickupObjectSound.Length);
-            AudioSource.PlayClipAtPoint(audioClipsSO.PickupObjectSound[pickupClipIndex], playpoint, SoundEffectVolume);
+            AudioSource.PlayClipAtPoint(audioClipsSO.PickupObjectSound, playpoint, SoundEffectVolume);
         }
 
         public void PlayPlayerTakeDamageSound(Vector3 playPoint)
         {
-            int takeDamageClipIndex = UnityEngine.Random.Range(0, audioClipsSO.TakeDamageSound.Length);
-            AudioSource.PlayClipAtPoint(audioClipsSO.TakeDamageSound[takeDamageClipIndex], playPoint, SoundEffectVolume);
+            AudioSource.PlayClipAtPoint(audioClipsSO.TakeDamageSound, playPoint, SoundEffectVolume);
         }
     }
 }

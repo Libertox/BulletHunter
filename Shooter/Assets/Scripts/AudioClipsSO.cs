@@ -14,9 +14,9 @@ namespace Shooter
         [field: SerializeField] public AudioClip WalkSound { get; private set; }
         [field: SerializeField] public AudioClip JumpSound { get; private set; }
 
-        [field: SerializeField] public AudioClip[] PickupObjectSound { get; private set; }
+        [field: SerializeField] public AudioClip PickupObjectSound { get; private set; }
 
-        [field: SerializeField] public AudioClip[] TakeDamageSound { get; private set; }
+        [field: SerializeField] public AudioClip TakeDamageSound { get; private set; }
 
     }
 }

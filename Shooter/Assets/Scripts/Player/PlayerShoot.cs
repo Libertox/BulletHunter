@@ -7,6 +7,9 @@ namespace Shooter
 {
     public class PlayerShoot : NetworkBehaviour
     {
+        public static event EventHandler<OnAnyPlayerKilledEventArgs> OnAnyPlayerKilled;
+
+        public class OnAnyPlayerKilledEventArgs : EventArgs { public ulong targetId; }
 
         [SerializeField] private LayerMask shootLayerMask;
 
@@ -80,7 +83,16 @@ namespace Shooter
         {
             networkObjectReference.TryGet(out NetworkObject networkObject);
             IDamageable damageable = networkObject.GetComponent<IDamageable>();
-            damageable.TakeDamage(damage, OwnerClientId);
+            if(damageable.TakeDamage(damage, OwnerClientId))
+            {
+                if (IsOwner)
+                {
+                    OnAnyPlayerKilled?.Invoke(this, new OnAnyPlayerKilledEventArgs
+                    {
+                        targetId = networkObject.OwnerClientId
+                    });
+                }
+            }
         }
     }
 

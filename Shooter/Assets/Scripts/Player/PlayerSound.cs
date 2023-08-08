@@ -9,7 +9,7 @@ namespace Shooter
     {
         private bool playWalkSound;
         private float footstepTimer;
-        private float footstepTimerMax = .2f;
+        private float footstepTimerMax = .25f;
 
 
         private void Start()

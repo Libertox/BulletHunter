@@ -111,21 +111,24 @@ namespace Shooter
             ChnageHealthValue();
         }
 
-        public void DecreaseHealth(float decreaseValue)
+        public bool DecreaseHealth(float decreaseValue)
         {
 
             if (Health > 0)
             {
                 Health -= decreaseValue;
+                ChnageHealthValue();
                 if (Health <= 0)
                 {
                     OnDeathed?.Invoke(this, new OnDeathedEventArgs { targetId = lastPlayerHitId , ownerId = OwnerClientId});
                     StartCoroutine(Restore());
                     Health = 0;
+                    return true;
                 }
-            }    
-               
-            ChnageHealthValue();
+            }
+  
+            return false;
+            
         }
 
         public void IncreaseArmor(float increaseValue)
@@ -216,18 +219,18 @@ namespace Shooter
         }
 
 
-        public void TakeDamage(float damage, ulong clientId)
+        public bool TakeDamage(float damage, ulong clientId)
         {
             if(!GameManager.Instance.IsStartState() && !isInvulnerable)
             {
                 lastPlayerHitId = clientId;
                 SoundManager.Instance.PlayPlayerTakeDamageSound(transform.position);
                 if (Armor <= 0)
-                    DecreaseHealth(damage);
+                     return DecreaseHealth(damage);
                 else
                     DecreaseArmor(damage);
             }
-                
+            return false;    
         }
 
 

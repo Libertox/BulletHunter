@@ -16,6 +16,7 @@ namespace Shooter
         public void Pickup()
         {
             gameObject.SetActive(false);
+            SoundManager.Instance.PlayPickupObjectSound(transform.position);
             PickupServerRpc();
         }
 

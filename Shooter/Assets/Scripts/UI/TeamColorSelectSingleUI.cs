@@ -15,7 +15,11 @@ namespace Shooter.UI
 
         private void Awake()
         {
-            changeTeamColorButton.onClick.AddListener(() => GameManagerMultiplayer.Instance.ChangePlayerTeamColor(teamColorId));
+            changeTeamColorButton.onClick.AddListener(() => 
+            {
+                GameManagerMultiplayer.Instance.ChangePlayerTeamColor(teamColorId);
+                SoundManager.Instance.PlayButtonSound();
+            });
         }
 
         private void Start()

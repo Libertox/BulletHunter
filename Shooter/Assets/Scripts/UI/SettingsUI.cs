@@ -32,12 +32,14 @@ namespace Shooter
             {
                 gameplaySettingsWindow.SetActive(true);
                 keyBindingsSettingsWindow.SetActive(false);
+                SoundManager.Instance.PlayButtonSound();
             });
 
             keyBindingsSettingsButton.onClick.AddListener(() =>
             {
                 gameplaySettingsWindow.SetActive(false);
                 keyBindingsSettingsWindow.SetActive(true);
+                SoundManager.Instance.PlayButtonSound();
             });
 
             musicSlider.onValueChanged.AddListener((float value) =>
@@ -62,6 +64,7 @@ namespace Shooter
             {
                 //GameManager.Instance.showPlayerName = value;
             });
+
         }
 
         private void Start()

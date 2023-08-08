@@ -16,6 +16,7 @@ namespace Shooter.UI
             backMainMenuButton.onClick.AddListener(() =>
             {
                 LobbyManager.Instance.LeaveLobby();
+                SoundManager.Instance.PlayButtonSound();
                 SceneLoader.Load(SceneLoader.GameScene.MainMenu);
             });
         }

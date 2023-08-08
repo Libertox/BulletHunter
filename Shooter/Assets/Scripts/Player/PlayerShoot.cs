@@ -5,8 +5,9 @@ using UnityEngine;
 
 namespace Shooter
 {
-    public class PlayerShoot:NetworkBehaviour
+    public class PlayerShoot : NetworkBehaviour
     {
+
         [SerializeField] private LayerMask shootLayerMask;
 
         [SerializeField] private GameObject bulletTrackPrefab;
@@ -14,8 +15,8 @@ namespace Shooter
 
         private void Start()
         {
-            if(IsOwner)
-                 GameInput.Instance.OnShooted += GameInput_OnShooted;
+            if (IsOwner)
+                GameInput.Instance.OnShooted += GameInput_OnShooted;
         }
 
         private void GameInput_OnShooted(object sender, EventArgs e)
@@ -25,7 +26,7 @@ namespace Shooter
             InventoryManager.Instance.UseWeapon.SubstractAmmo();
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if(Physics.Raycast(ray, out RaycastHit raycastHit, InventoryManager.Instance.UseWeapon.WeaponSO.WeaponRange))
+            if (Physics.Raycast(ray, out RaycastHit raycastHit, InventoryManager.Instance.UseWeapon.WeaponSO.WeaponRange))
             {
                 if (raycastHit.transform.TryGetComponent(out IDamageable damageable))
                 {
@@ -33,16 +34,32 @@ namespace Shooter
                 }
                 else
                 {
-                    SpawnShootEffectServerRpc(raycastHit.point.x, raycastHit.point.y, raycastHit.point.z); 
+                    SpawnShootEffectServerRpc(raycastHit.point.x, raycastHit.point.y, raycastHit.point.z);
                 }
             }
+            ShootServerRpc(transform.position.x, transform.position.y, transform.position.z);
+
         }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void ShootServerRpc(float x, float y, float z) => ShootClientRpc(x, y, z);
+       
+        [ClientRpc]
+        private void ShootClientRpc(float x, float y, float z) => SoundManager.Instance.PlayShootSound(new Vector3(x, y, z));
+       
 
         [ServerRpc(RequireOwnership = false)]
         private void SpawnShootEffectServerRpc(float x, float y, float z)
         {
             SpawnEffect(new Vector3(x,y,z),bulletTrackPrefab);
             SpawnEffect(new Vector3(x, y, z), shootDustPrefab);
+            SpawnShootEffectClientRpc(x, y, z);
+        }
+
+        [ClientRpc]
+        private void SpawnShootEffectClientRpc(float x, float y, float z)
+        {
+            SoundManager.Instance.PlayBulletImpactSound(new Vector3(x, y, z));
         }
 
         private void SpawnEffect(Vector3 position, GameObject prefab)

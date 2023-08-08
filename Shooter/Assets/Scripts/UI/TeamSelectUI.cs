@@ -20,11 +20,16 @@ namespace Shooter
         
         private void Awake()
         {
-            readyButton.onClick.AddListener(() => TeamSelectManager.Instance.SetPlayerReady());
+            readyButton.onClick.AddListener(() => 
+            {
+                SoundManager.Instance.PlayButtonSound();
+                TeamSelectManager.Instance.SetPlayerReady();      
+            });
 
             mainMenuButton.onClick.AddListener(() =>
             {
                 LobbyManager.Instance.LeaveLobby();
+                SoundManager.Instance.PlayButtonSound();
                 NetworkManager.Singleton.Shutdown();
                 SceneLoader.Load(SceneLoader.GameScene.MainMenu);
             });

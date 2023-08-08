@@ -17,7 +17,11 @@ namespace Shooter
 
         private void Awake()
         {
-            joinLobbyButton.onClick.AddListener(() => LobbyManager.Instance.JoinWithId(lobby.Id));
+            joinLobbyButton.onClick.AddListener(() => 
+            {
+                LobbyManager.Instance.JoinWithId(lobby.Id);
+                SoundManager.Instance.PlayButtonSound();
+            });
         }
 
         public void SetLobby(Lobby lobby)

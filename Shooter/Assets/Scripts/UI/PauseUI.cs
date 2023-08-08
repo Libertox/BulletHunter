@@ -17,12 +17,21 @@ namespace Shooter.UI
 
         private void Awake()
         {
-            resumeButton.onClick.AddListener(() => Show());
-            settingsButton.onClick.AddListener(() => { settingsUI.Show(); });
+            resumeButton.onClick.AddListener(() => 
+            {
+                Show();
+                SoundManager.Instance.PlayButtonSound();
+            });
+            settingsButton.onClick.AddListener(() => 
+            { 
+                settingsUI.Show();
+                SoundManager.Instance.PlayButtonSound();
+            });
             exitButton.onClick.AddListener(() => 
             {
                 PlayerController.ResetStaticData();
                 WeaponReloading.ResetStaticData();
+                SoundManager.Instance.PlayButtonSound();
                 SceneLoader.Load(SceneLoader.GameScene.MainMenu); 
             });
         }

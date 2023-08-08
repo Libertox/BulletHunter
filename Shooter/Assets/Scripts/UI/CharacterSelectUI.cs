@@ -20,19 +20,22 @@ namespace Shooter.UI
         {
             backMainMenuButton.onClick.AddListener(() =>
             {
+                SoundManager.Instance.PlayButtonSound();
                 CharacterSelectManager.Instance.SaveCharacterSelect(playerNameInputField.text);
-                SceneLoader.Load(SceneLoader.GameScene.MainMenu);
+                SceneLoader.Load(SceneLoader.GameScene.MainMenu);      
             });
 
             nextSkinButton.onClick.AddListener(() =>
             {
                 CharacterSelectManager.Instance.SetNextSkin();
                 UpdatePointsButton();
+                SoundManager.Instance.PlayButtonSound();
             });
 
             previousSkinButton.onClick.AddListener(() =>
             {
                 CharacterSelectManager.Instance.SetPreviousSkin();
+                SoundManager.Instance.PlayButtonSound();
                 UpdatePointsButton();
             });
 
@@ -43,6 +46,7 @@ namespace Shooter.UI
                 {
                     int newIndex = (CharacterSelectManager.Instance.ChooseSkinIndex / pointsButton.Length) * pointsButton.Length + index;
                     CharacterSelectManager.Instance.SetChooseSkinIndex(newIndex);
+                    SoundManager.Instance.PlayButtonSound();
                 });
 
 

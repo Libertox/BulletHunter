@@ -23,6 +23,7 @@ namespace Shooter.UI
                 bool isPrivate = gameAccessDropdown.value != 0;
                 GameManagerMultiplayer.Instance.SetGameSettings(maxPlayerDropdown.value + 1, maxTeamDropdown.value + 1, int.Parse(pointsToWinInputField.text));
                 LobbyManager.Instance.CreateLobby(lobbyNameInputField.text, isPrivate, maxPlayerDropdown.value + 1);
+                SoundManager.Instance.PlayButtonSound();
             });
         }
 

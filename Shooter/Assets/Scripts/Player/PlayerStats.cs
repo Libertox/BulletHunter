@@ -63,7 +63,7 @@ namespace Shooter
 
             if (Input.GetKeyDown(KeyCode.X))
             {
-                DecreaseHealth(2f);
+                TakeDamage(2f, 0);
             }
                 
         }
@@ -221,6 +221,7 @@ namespace Shooter
             if(!GameManager.Instance.IsStartState() && !isInvulnerable)
             {
                 lastPlayerHitId = clientId;
+                SoundManager.Instance.PlayPlayerTakeDamageSound(transform.position);
                 if (Armor <= 0)
                     DecreaseHealth(damage);
                 else

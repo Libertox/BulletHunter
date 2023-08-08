@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 008b7d8a33dca234a829da6bacb53fbb, type: 3}
+  m_Name: AudioClips
+  m_EditorClassIdentifier: 
+  <ButtonSound>k__BackingField:
+  - {fileID: 8300000, guid: 52ae59bc28da63f4cac0f20170196326, type: 3}
+  - {fileID: 8300000, guid: b30d23f7d7730ab418d658f3ab9b23a2, type: 3}
+  <ShootSound>k__BackingField:
+  - {fileID: 8300000, guid: 54a27b01e79c735498e30fe6ae752359, type: 3}
+  - {fileID: 8300000, guid: c65ce024105c0c44db834ddbe46b9cad, type: 3}
+  <BulletImpactSound>k__BackingField:
+  - {fileID: 8300000, guid: 8cf9756db3e23744f938d694c4634d7d, type: 3}
+  - {fileID: 8300000, guid: f5bfc70d8f899be49ade45629a0389aa, type: 3}
+  - {fileID: 8300000, guid: 6d9d81a54f1fdcf42a3431f6bd7ba8f1, type: 3}
+  - {fileID: 8300000, guid: 3a7b9c9af8ae6454c88c8e23156d12b0, type: 3}
+  <ExplosionSound>k__BackingField:
+  - {fileID: 8300000, guid: 3c438fa0bcbbdd74da80d1e4d6c43432, type: 3}
+  - {fileID: 8300000, guid: c9bc10bf1af39d94ab2223b3934948fc, type: 3}
+  - {fileID: 8300000, guid: 527198366c90b004e998c0ab9a56a591, type: 3}
+  - {fileID: 8300000, guid: 34a735f4350ccd94fa207e0a1f283c6e, type: 3}
+  - {fileID: 8300000, guid: cdc1a906c3fac364685b098c88458b8d, type: 3}
+  - {fileID: 8300000, guid: 363991aa889a16f4a86aa307de729406, type: 3}
+  <WalkSound>k__BackingField: {fileID: 8300000, guid: 0ef9893c182ab4746a9b8b7638053f0e,
+    type: 3}
+  <JumpSound>k__BackingField: {fileID: 8300000, guid: a804c733755b6014584de9ffc7ebab4b,
+    type: 3}
+  <PickupObjectSound>k__BackingField:
+  - {fileID: 8300000, guid: 7025996f207c43048926a139964c1e3c, type: 3}
+  - {fileID: 8300000, guid: f0031e1c10cf688429e0ea43dcc623a1, type: 3}
+  - {fileID: 8300000, guid: 652cfda6b13ffff4fb443155d2fe0d2a, type: 3}
+  <TakeDamageSound>k__BackingField:
+  - {fileID: 8300000, guid: 51d962ffe9cba174a84b71ea56a44da7, type: 3}
+  - {fileID: 8300000, guid: ad8cf2dea0e4dbd49ab0e44d35c57763, type: 3}

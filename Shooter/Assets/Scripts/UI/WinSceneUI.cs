@@ -16,10 +16,15 @@ namespace Shooter.UI
 
         private void Awake()
         {
-            backToMainMenuButton.onClick.AddListener(() => SceneLoader.Load(SceneLoader.GameScene.MainMenu));
+            backToMainMenuButton.onClick.AddListener(() => 
+            {
+                SceneLoader.Load(SceneLoader.GameScene.MainMenu);
+                SoundManager.Instance.PlayButtonSound();
+            });
 
             pointsTableButton.onClick.AddListener(() =>
             {
+                SoundManager.Instance.PlayButtonSound();
                 if (teamPointsTable.isActiveAndEnabled)
                     teamPointsTable.Hide();
                 else

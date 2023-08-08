@@ -105,7 +105,7 @@ namespace Shooter
                 return;
             }
 
-            OnWalked?.Invoke(this, trueState) ;
+            OnWalked?.Invoke(this, trueState);
 
             if(GameInput.Instance.GetSprintValue() == 1)
                 PlayerStats.DecreaseStamina(Time.deltaTime);

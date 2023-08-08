@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Unity.Netcode;
+using Unity.Services.Lobbies.Models;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Shooter
 {
@@ -14,6 +17,7 @@ namespace Shooter
         public float SoundEffectVolume { get; private set; }
 
         [SerializeField] private AudioSource soundEffectSource;
+        [SerializeField] private AudioClipsSO audioClipsSO;
 
         private void Awake()
         {
@@ -23,6 +27,19 @@ namespace Shooter
             SoundEffectVolume = PlayerPrefs.GetFloat(PLAYER_PREFS_SOUND_EFFECT_VOLUME, defaultSoundEffectVolume);
         }
 
+        private void Start()
+        {
+            PlayerController.OnJumped += PlayerController_OnJumped;
+        }
+
+        private void PlayerController_OnJumped(object sender, PlayerController.OnStateChangedEventArgs e)
+        {
+            if (!e.state) return;
+
+            PlayerController playerController = sender as PlayerController;
+            PlayPlayerJumpSound(playerController.transform.position);
+        }
+
         public void SetSoundEffectVolume(float volume)
         {
             SoundEffectVolume = volume;
@@ -30,6 +47,50 @@ namespace Shooter
             PlayerPrefs.Save();
         }
 
+        public void PlayButtonSound()
+        {
+            int buttonClipIndex = UnityEngine.Random.Range(0, audioClipsSO.ButtonSound.Length);
+            soundEffectSource.PlayOneShot(audioClipsSO.ButtonSound[buttonClipIndex],SoundEffectVolume);
+        }
 
+        public void PlayShootSound(Vector3 playPoint)
+        {
+            int shootClipIndex = UnityEngine.Random.Range(0, audioClipsSO.ShootSound.Length);
+            AudioSource.PlayClipAtPoint(audioClipsSO.ShootSound[shootClipIndex], playPoint, SoundEffectVolume);
+        }
+
+        public void PlayBulletImpactSound(Vector3 playPoint)
+        {
+            int bulletImpactClipIndex = UnityEngine.Random.Range(0, audioClipsSO.BulletImpactSound.Length);
+            AudioSource.PlayClipAtPoint(audioClipsSO.BulletImpactSound[bulletImpactClipIndex], playPoint, SoundEffectVolume);
+        }
+
+        public void PlayGrenadeExplosionSound(Vector3 playPoint)
+        {
+            int explosionClipIndex = UnityEngine.Random.Range(0, audioClipsSO.ExplosionSound.Length);
+            AudioSource.PlayClipAtPoint(audioClipsSO.ExplosionSound[explosionClipIndex], playPoint, SoundEffectVolume);
+        }
+     
+        public void PlayPlayerWalkSound(Vector3 playPoint)
+        {
+            AudioSource.PlayClipAtPoint(audioClipsSO.WalkSound, playPoint, SoundEffectVolume);
+        }
+
+        public void PlayPlayerJumpSound(Vector3 playPoint)
+        {
+            AudioSource.PlayClipAtPoint(audioClipsSO.JumpSound, playPoint, SoundEffectVolume);
+        }
+
+        public void PlayPickupObjectSound(Vector3 playpoint)
+        {
+            int pickupClipIndex = UnityEngine.Random.Range(0, audioClipsSO.PickupObjectSound.Length);
+            AudioSource.PlayClipAtPoint(audioClipsSO.PickupObjectSound[pickupClipIndex], playpoint, SoundEffectVolume);
+        }
+
+        public void PlayPlayerTakeDamageSound(Vector3 playPoint)
+        {
+            int takeDamageClipIndex = UnityEngine.Random.Range(0, audioClipsSO.TakeDamageSound.Length);
+            AudioSource.PlayClipAtPoint(audioClipsSO.TakeDamageSound[takeDamageClipIndex], playPoint, SoundEffectVolume);
+        }
     }
 }

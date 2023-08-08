@@ -24,6 +24,7 @@ namespace Shooter
             {
                 rebindText.SetText("PRESS A KEY TO REBIND");
                 ShowRebindMessage();
+                SoundManager.Instance.PlayButtonSound();
 
                 GameInput.Instance.RebindBinding(inputActions.action.id.ToString(), bindingsIndex,() =>
                 {

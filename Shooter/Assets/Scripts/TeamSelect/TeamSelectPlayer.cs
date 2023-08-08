@@ -23,7 +23,8 @@ namespace Shooter
             {
                 PlayerData playerData = GameManagerMultiplayer.Instance.GetPlayerDataFromIndex(playerIndex);
                 LobbyManager.Instance.KickLobby(playerData.playerId.ToString());
-                GameManagerMultiplayer.Instance.KickPlayer(playerData.clientId);          
+                GameManagerMultiplayer.Instance.KickPlayer(playerData.clientId);
+                SoundManager.Instance.PlayButtonSound();
             });
         }
 

@@ -40,6 +40,7 @@ namespace Shooter
         {
             yield return new WaitForSeconds(explosionTime);
             SpawnExplosionEffectServerRpc();
+            PlayExplosionSoundServerRpc(transform.position.x, transform.position.y, transform.position.z);
             HurtAllTargetServerRpc();
             NetworkObject.Despawn(false);
             NetworkObjectPool.Singleton.ReturnNetworkObject(NetworkObject, prefab);
@@ -54,9 +55,21 @@ namespace Shooter
         }
 
         [ServerRpc(RequireOwnership = false)]
+        private void PlayExplosionSoundServerRpc(float x, float y, float z)
+        {
+            PlayExplosionSoundClientRpc(x, y, z);
+        }
+
+        [ClientRpc]
+        private void PlayExplosionSoundClientRpc(float x, float y, float z)
+        {
+            SoundManager.Instance.PlayGrenadeExplosionSound(new Vector3(x, y, z));
+        }
+
+
+        [ServerRpc(RequireOwnership = false)]
         private void HurtAllTargetServerRpc() => HurtAllTargetClientRpc();
        
-
         [ClientRpc]
         private void HurtAllTargetClientRpc()
         {

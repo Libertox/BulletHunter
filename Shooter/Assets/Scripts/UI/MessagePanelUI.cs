@@ -16,7 +16,11 @@ namespace Shooter
 
         private void Awake()
         {
-            continueButton.onClick.AddListener(() => Hide());
+            continueButton.onClick.AddListener(() => 
+            {
+                Hide();
+                SoundManager.Instance.PlayButtonSound();
+            });
         }
 
         private void Start()

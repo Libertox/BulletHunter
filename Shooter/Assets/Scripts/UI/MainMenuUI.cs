@@ -18,19 +18,31 @@ namespace Shooter.UI
 
         private void Start()
         {
-            Time.timeScale = 1f;
             playButton.Select();
 
-            playButton.onClick.AddListener(() => lobbyUI.Show());
-            settingsButton.onClick.AddListener(() => settingsUI.Show());
+            playButton.onClick.AddListener(() => 
+            {
+                lobbyUI.Show();
+                SoundManager.Instance.PlayButtonSound();
+            });
+            settingsButton.onClick.AddListener(() => 
+            {
+                settingsUI.Show();
+                SoundManager.Instance.PlayButtonSound();
+            });
             exitButton.onClick.AddListener(() =>
             {
 #if !UNITY_WEBGL
                 Application.Quit();
+                SoundManager.Instance.PlayButtonSound();
 #endif
             });
 
-            characterSelectButton.onClick.AddListener(() => SceneLoader.Load(SceneLoader.GameScene.CharacterSelectScene));
+            characterSelectButton.onClick.AddListener(() => 
+            {
+                SceneLoader.Load(SceneLoader.GameScene.CharacterSelectScene);
+                SoundManager.Instance.PlayButtonSound();
+            });
         }
 
     }

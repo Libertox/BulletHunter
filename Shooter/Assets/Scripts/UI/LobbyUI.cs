@@ -19,12 +19,14 @@ namespace Shooter.UI
             {
                 createLobbyPanelUI.Show();
                 joinLobbyPanelUI.Hide();
+                SoundManager.Instance.PlayButtonSound();
             });
 
             joinGameButton.onClick.AddListener(() => 
             {
                 joinLobbyPanelUI.Show();
                 createLobbyPanelUI.Hide();
+                SoundManager.Instance.PlayButtonSound();
             });
         }
 

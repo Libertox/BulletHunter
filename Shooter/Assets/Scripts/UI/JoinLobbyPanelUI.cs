@@ -21,9 +21,17 @@ namespace Shooter.UI
 
         private void Awake()
         {
-            quickJoinButton.onClick.AddListener(() => LobbyManager.Instance.QuickJoin());
+            quickJoinButton.onClick.AddListener(() =>
+            {
+                LobbyManager.Instance.QuickJoin();
+                SoundManager.Instance.PlayButtonSound();
+            });
 
-            joinByCodeButton.onClick.AddListener(() => LobbyManager.Instance.JoinWithCode(joinCodeInputField.text));
+            joinByCodeButton.onClick.AddListener(() => 
+            {
+                LobbyManager.Instance.JoinWithCode(joinCodeInputField.text);
+                SoundManager.Instance.PlayButtonSound();
+            });
         }
 
         private void Start()

@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.Pool;
 using UnityEngine.UIElements;
 
-namespace Shooter
+namespace BulletHaunter
 {
     public class ParticleEffect:NetworkBehaviour
     {

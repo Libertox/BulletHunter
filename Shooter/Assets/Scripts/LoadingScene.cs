@@ -4,7 +4,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 
-namespace Shooter.UI
+namespace BulletHaunter.UI
 {
     public class LoadingScene:NetworkBehaviour
     {

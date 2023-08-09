@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-namespace Shooter.UI
+namespace BulletHaunter.UI
 {
     public class GameStartTimerUI:MonoBehaviour
     {

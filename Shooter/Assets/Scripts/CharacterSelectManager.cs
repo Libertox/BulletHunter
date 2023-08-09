@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Shooter
+namespace BulletHaunter
 {
     public class CharacterSelectManager:MonoBehaviour
     {

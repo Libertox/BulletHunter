@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Shooter.UI
+namespace BulletHaunter.UI
 {
     [CreateAssetMenu(fileName = "PlayerPositionImage", menuName = "ScriptableObject/PlayerPositionImage", order = 2)]
     public class PlayerPositionUIImageSO: ScriptableObject

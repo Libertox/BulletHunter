@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
 
-namespace Shooter
+namespace BulletHaunter
 {
     public class PlayerSound:MonoBehaviour
     {

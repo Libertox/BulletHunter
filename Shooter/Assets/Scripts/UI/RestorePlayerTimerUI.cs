@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-namespace Shooter
+namespace BulletHaunter
 {
     public class RestorePlayerTimerUI:MonoBehaviour
     {

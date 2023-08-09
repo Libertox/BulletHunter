@@ -6,7 +6,7 @@ using Unity.Services.Lobbies.Models;
 using Unity.Services.Lobbies;
 using UnityEngine;
 
-namespace Shooter
+namespace BulletHaunter
 {
     public class LobbyManager:MonoBehaviour
     {

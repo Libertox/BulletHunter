@@ -34,10 +34,7 @@ MonoBehaviour:
     type: 3}
   <JumpSound>k__BackingField: {fileID: 8300000, guid: a804c733755b6014584de9ffc7ebab4b,
     type: 3}
-  <PickupObjectSound>k__BackingField:
-  - {fileID: 8300000, guid: 7025996f207c43048926a139964c1e3c, type: 3}
-  - {fileID: 8300000, guid: f0031e1c10cf688429e0ea43dcc623a1, type: 3}
-  - {fileID: 8300000, guid: 652cfda6b13ffff4fb443155d2fe0d2a, type: 3}
-  <TakeDamageSound>k__BackingField:
-  - {fileID: 8300000, guid: 51d962ffe9cba174a84b71ea56a44da7, type: 3}
-  - {fileID: 8300000, guid: ad8cf2dea0e4dbd49ab0e44d35c57763, type: 3}
+  <PickupObjectSound>k__BackingField: {fileID: 8300000, guid: e603744fa813d1b43b6e2804fbe9689b,
+    type: 3}
+  <TakeDamageSound>k__BackingField: {fileID: 8300000, guid: ad8cf2dea0e4dbd49ab0e44d35c57763,
+    type: 3}

@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Shooter
+namespace BulletHaunter
 {
     public class MessagePanelUI:MonoBehaviour
     {

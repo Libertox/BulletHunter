@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using static Shooter.PlayerStats;
+using static BulletHaunter.PlayerStats;
 
-namespace Shooter.UI
+namespace BulletHaunter.UI
 {
     public class BarUI:MonoBehaviour
     {

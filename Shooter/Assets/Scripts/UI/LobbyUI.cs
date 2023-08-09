@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Shooter.UI
+namespace BulletHaunter.UI
 {
     public class LobbyUI:MonoBehaviour
     {

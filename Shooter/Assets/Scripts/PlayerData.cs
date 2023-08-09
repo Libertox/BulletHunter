@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Netcode;
 
-namespace Shooter
+namespace BulletHaunter
 {
 
     public  struct PlayerData: IEquatable<PlayerData>, INetworkSerializable

@@ -5,7 +5,7 @@ using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Shooter
+namespace BulletHaunter
 {
     public class SoundManager: MonoBehaviour
     {

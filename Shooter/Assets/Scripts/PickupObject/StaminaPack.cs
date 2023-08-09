@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Shooter
+namespace BulletHaunter
 {
     public class StaminaPack:PickupObject,IInteractable
     {

@@ -6,7 +6,7 @@ using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Shooter
+namespace BulletHaunter
 {
     public class TeamSelectUI:MonoBehaviour
     {
@@ -15,6 +15,7 @@ namespace Shooter
 
         [SerializeField] private TextMeshProUGUI lobbyNameText;
         [SerializeField] private TextMeshProUGUI lobbyCodeText;
+        [SerializeField] private TextMeshProUGUI lobbyAdminText;
 
         [SerializeField] private List<GameObject> selectTeamButton;
         
@@ -46,6 +47,8 @@ namespace Shooter
             Lobby lobby = LobbyManager.Instance.GetLobby();
             lobbyNameText.SetText(lobby.Name);
             lobbyCodeText.SetText("CODE: " + lobby.LobbyCode);
+            PlayerData playerData = GameManagerMultiplayer.Instance.GetPlayerDataFromClientId(0);
+            lobbyAdminText.SetText("ADMIN: " + playerData.playerName.ToString());
         }
     }
 }

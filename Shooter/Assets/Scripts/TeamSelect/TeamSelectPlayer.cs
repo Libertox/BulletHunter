@@ -5,7 +5,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Shooter
+namespace BulletHaunter
 {
     public class TeamSelectPlayer:MonoBehaviour
     {

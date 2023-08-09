@@ -5,7 +5,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Shooter
+namespace BulletHaunter
 {
     public class Grenade: NetworkBehaviour
     {

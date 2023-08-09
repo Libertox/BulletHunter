@@ -4,7 +4,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Shooter
+namespace BulletHaunter
 {
     public static class SceneLoader
     {

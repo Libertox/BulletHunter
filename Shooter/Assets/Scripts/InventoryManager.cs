@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using Unity.Netcode;
 
-namespace Shooter
+namespace BulletHaunter
 {
     public class InventoryManager : NetworkBehaviour
     {

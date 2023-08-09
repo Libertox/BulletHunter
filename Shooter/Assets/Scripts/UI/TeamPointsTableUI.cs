@@ -4,7 +4,7 @@ using System.Linq;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
 
-namespace Shooter.UI
+namespace BulletHaunter.UI
 {
     public class TeamPointsTableUI:MonoBehaviour
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Shooter
+namespace BulletHaunter
 {
     [CreateAssetMenu(fileName = "PlayerSkins", menuName = "ScriptableObject/PlayerSkins", order = 2)]
     public class PlayerSkinsSO:ScriptableObject

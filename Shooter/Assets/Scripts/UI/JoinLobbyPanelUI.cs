@@ -5,7 +5,7 @@ using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Shooter.UI
+namespace BulletHaunter.UI
 {
     public class JoinLobbyPanelUI:MonoBehaviour
     {

@@ -2,7 +2,7 @@
 using Unity.Netcode;
 using UnityEngine;
 
-namespace Shooter
+namespace BulletHaunter
 {
     public class CameraController : NetworkBehaviour
     {

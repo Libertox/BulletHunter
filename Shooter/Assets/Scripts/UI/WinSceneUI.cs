@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Shooter.UI
+namespace BulletHaunter.UI
 {
     public class WinSceneUI:MonoBehaviour
     {

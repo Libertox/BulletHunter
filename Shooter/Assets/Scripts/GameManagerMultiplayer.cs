@@ -4,7 +4,7 @@ using Unity.Netcode;
 using Unity.Services.Authentication;
 using UnityEngine;
 
-namespace Shooter
+namespace BulletHaunter
 {
     public class GameManagerMultiplayer: NetworkBehaviour
     {

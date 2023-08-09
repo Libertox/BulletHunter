@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-namespace Shooter
+namespace BulletHaunter
 {
     public class PickupObjectSpawner:NetworkBehaviour
     {

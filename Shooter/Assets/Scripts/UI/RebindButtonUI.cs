@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-namespace Shooter
+namespace BulletHaunter
 {
     public class RebindButtonUI:MonoBehaviour
     {

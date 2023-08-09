@@ -4,7 +4,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Shooter
+namespace BulletHaunter
 {
     public class GameInput: MonoBehaviour
     {

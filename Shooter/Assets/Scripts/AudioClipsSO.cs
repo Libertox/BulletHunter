@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Shooter
+namespace BulletHaunter
 {
     [CreateAssetMenu(fileName = "AudioClips", menuName = "ScriptableObject/AudioClips", order = 3)]
     public class AudioClipsSO:ScriptableObject
@@ -13,9 +13,7 @@ namespace Shooter
         [field: SerializeField] public AudioClip[] ExplosionSound { get; private set; }
         [field: SerializeField] public AudioClip WalkSound { get; private set; }
         [field: SerializeField] public AudioClip JumpSound { get; private set; }
-
         [field: SerializeField] public AudioClip PickupObjectSound { get; private set; }
-
         [field: SerializeField] public AudioClip TakeDamageSound { get; private set; }
 
     }

@@ -6,7 +6,7 @@ using UnityEditor.Rendering;
 using UnityEngine;
 
 
-namespace Shooter
+namespace BulletHaunter
 {
     public class PlayerStats:NetworkBehaviour, IDamageable
     {

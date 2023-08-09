@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 
-namespace Shooter
+namespace BulletHaunter
 {
     public class PlayerController : NetworkBehaviour
     {

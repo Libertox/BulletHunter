@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Shooter.UI
+namespace BulletHaunter.UI
 {
     public class CharacterSelectUI:MonoBehaviour
     {
@@ -44,6 +44,8 @@ namespace Shooter.UI
                 int index = i;
                 pointsButton[i].onClick.AddListener(() =>
                 {
+                    ResetPointsButtonColor();
+
                     int newIndex = (CharacterSelectManager.Instance.ChooseSkinIndex / pointsButton.Length) * pointsButton.Length + index;
                     CharacterSelectManager.Instance.SetChooseSkinIndex(newIndex);
                     SoundManager.Instance.PlayButtonSound();
@@ -62,7 +64,15 @@ namespace Shooter.UI
 
         private void UpdatePointsButton()
         {
-            pointsButton[CharacterSelectManager.Instance.ChooseSkinIndex % pointsButton.Length].Select();
+            ResetPointsButtonColor();
+
+            pointsButton[CharacterSelectManager.Instance.ChooseSkinIndex % pointsButton.Length].image.color = Color.gray;
+        }
+
+        private void ResetPointsButtonColor()
+        {
+            foreach (var button in pointsButton)
+                button.image.color = Color.white;
         }
     }
 }

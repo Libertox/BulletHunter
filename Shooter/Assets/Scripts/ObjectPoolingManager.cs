@@ -4,7 +4,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Pool;
 
-namespace Shooter
+namespace BulletHaunter
 {
     public class ObjectPoolingManager: NetworkBehaviour
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Shooter.UI
+namespace BulletHaunter.UI
 {
     public class PlayerStatsUI: MonoBehaviour
     {

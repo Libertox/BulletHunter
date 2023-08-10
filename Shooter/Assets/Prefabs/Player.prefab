@@ -159,6 +159,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2268816705678063342}
+  - component: {fileID: 8967956702355637175}
   m_Layer: 7
   m_Name: WeaponModel
   m_TagString: Untagged
@@ -187,6 +188,26 @@ Transform:
   m_Father: {fileID: 6580218076246730362}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 1.45, z: 0}
+--- !u!1818360608 &8967956702355637175
+PositionConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 549934237973794726}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Weight: 1
+  m_TranslationAtRest: {x: 0.268, y: 0.561, z: 0.932}
+  m_TranslationOffset: {x: 0.176, y: -0.47398758, z: 0.742}
+  m_AffectTranslationX: 1
+  m_AffectTranslationY: 1
+  m_AffectTranslationZ: 1
+  m_Active: 1
+  m_IsLocked: 1
+  m_Sources:
+  - sourceTransform: {fileID: 4672605997594288462}
+    weight: 1
 --- !u!1 &685596458053179573
 GameObject:
   m_ObjectHideFlags: 0

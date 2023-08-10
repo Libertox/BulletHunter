@@ -29,6 +29,7 @@ namespace BulletHaunter
 
         [SerializeField] private int[] playerLayerMask;
         [SerializeField] private int[] playerGunLayerMask;
+        [SerializeField] private int[] playerTeamLayerMask;
 
         private NetworkList<ulong> spawnedPlayerIdList;
         public event EventHandler OnTeamPointsChanged;
@@ -170,6 +171,8 @@ namespace BulletHaunter
         public LayerMask GetPlayerLayerMask(int index) => playerLayerMask[index];
 
         public LayerMask GetPlayerGunLayerMask(int index) => playerGunLayerMask[index];
+
+        public LayerMask GetPlayerTeamLayerMask(int index) => playerTeamLayerMask[index];
 
         public void SetPointForTeam(ulong targetId, ulong ownerId) => SetPointsForTeamServerRpc(targetId, ownerId);
 

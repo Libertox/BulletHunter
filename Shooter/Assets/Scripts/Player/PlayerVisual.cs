@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -9,6 +10,7 @@ namespace BulletHaunter
     {
 
         [SerializeField] private SkinnedMeshRenderer playerSkinnedMeshRenderer;
+        [SerializeField] private TextMeshPro playerNickText;
 
         private void Start()
         {
@@ -17,6 +19,8 @@ namespace BulletHaunter
             SetGameLayerRecursive(gameObject, playerLayerMask);
 
             SetPlayerSkin();
+            SetPlayerNick();
+
         }
 
         private void SetGameLayerRecursive(GameObject gameobject, int layer)
@@ -43,6 +47,14 @@ namespace BulletHaunter
                 material,
                 material
             };
+        }
+
+        private void SetPlayerNick()
+        {
+            PlayerData playerData = GameManagerMultiplayer.Instance.GetPlayerDataFromClientId(OwnerClientId);
+            playerNickText.SetText(playerData.playerName.ToString());
+            playerNickText.color = GameManagerMultiplayer.Instance.GetTeamColor(playerData.teamColorId);
+            playerNickText.gameObject.layer = GameManager.Instance.GetPlayerTeamLayerMask(playerData.teamColorId);
         }
     }
 }

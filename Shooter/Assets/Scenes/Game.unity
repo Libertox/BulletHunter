@@ -3144,7 +3144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a16840a929abf4041a01702770dd45c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 3061107838528568613, guid: 25bb7517aa2f89b409eb3019b019514b,
+  playerPrefab: {fileID: 9039287277968145441, guid: 25bb7517aa2f89b409eb3019b019514b,
     type: 3}
   playerSpawnPointsList:
   - {fileID: 10965119}
@@ -3158,6 +3158,7 @@ MonoBehaviour:
   - {fileID: 0}
   playerLayerMask: 130000001400000015000000160000001700000018000000190000001a000000
   playerGunLayerMask: 0a0000000b0000000c0000000d0000000e0000000f0000001000000011000000
+  playerTeamLayerMask: 0300000009000000120000001b0000001c0000001d0000001e0000001f000000
 --- !u!114 &119323465
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -21,13 +21,13 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Team_1
   - Water
   - UI
   - Ground
   - Damageable
   - Interactable
-  - 
+  - Team_2
   - Gun_1
   - Gun_2
   - Gun_3
@@ -36,7 +36,7 @@ TagManager:
   - Gun_6
   - Gun_7
   - Gun_8
-  - 
+  - Team_3
   - Player_1
   - Player_2
   - Player_3
@@ -45,11 +45,11 @@ TagManager:
   - Player_6
   - Player_7
   - Player_8
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Team_4
+  - Team_5
+  - Team_6
+  - Team_7
+  - Team_8
   m_SortingLayers:
   - name: Default
     uniqueID: 0

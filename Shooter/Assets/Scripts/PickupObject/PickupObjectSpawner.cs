@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-namespace BulletHaunter
+namespace BulletHaunter.PickupObject
 {
     public class PickupObjectSpawner:NetworkBehaviour
     {
@@ -21,14 +21,14 @@ namespace BulletHaunter
                 SpawnPickupObjectServerRpc();
         }
 
-      
-
         [ServerRpc(RequireOwnership = false)]
         private void SpawnPickupObjectServerRpc()
         {
             GameObject prefab = GetRandomPickupObject();
             NetworkObject networkObject = NetworkObjectPool.Singleton.GetNetworkObject(prefab, transform.position, Quaternion.identity);
-            networkObject.GetComponent<PickupObject>().SetPickupObjectSpawner(this);
+            PickupObject pickupObject = networkObject.GetComponent<PickupObject>();
+            pickupObject.SetPickupObjectSpawner(this);
+            pickupObject.SetPickupObjectPrefab(prefab);
             networkObject.Spawn(true);
         }
 

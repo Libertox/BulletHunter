@@ -34,11 +34,12 @@ namespace BulletHaunter
         private PlayerInteract playerInteract;
 
         private float jumpForce;
-
         private Vector3 moveDirection;
+
         private bool isSquat;
         private bool isClimb;
-
+        private bool isSprint;
+        private bool isGround;
 
         private void Awake()
         {
@@ -57,7 +58,6 @@ namespace BulletHaunter
             GameInput.Instance.OnSquat += GameInput_OnSquat;
 
             transform.position = GameManager.Instance.GetRandomPosition();
-
         }
     
         private void GameInput_OnSquat(object sender, System.EventArgs e) => HandleSquat();
@@ -68,16 +68,16 @@ namespace BulletHaunter
         {
             if (!IsOwner) return;
 
-            if (!playerInteract.GroundCheck() && rgb.velocity.y < 0)
+            isSprint = !isSquat && GameInput.Instance.GetSprintValue() == 1;
+            isGround = playerInteract.GroundCheck();
+
+            if (!isGround && rgb.velocity.y < 0)
             {
                 OnFalled?.Invoke(this, trueState);
                 OnJumped?.Invoke(this, falseState);
             }
             else
-            {
                 OnFalled?.Invoke(this, falseState);
-            }
-
         }
 
         private void FixedUpdate() 
@@ -93,10 +93,14 @@ namespace BulletHaunter
        
             Vector2 inputVector = GameInput.Instance.GetMovementVectorNormalized();
 
-            if (GameInput.Instance.GetSprintValue() == 0 || inputVector == Vector2.zero)
+            if (!isSprint || inputVector == Vector2.zero)
             {
                 PlayerStats.IncreaseStamina(Time.deltaTime);
-                InvokeSprintEvent(false);
+                OnSprinted?.Invoke(this, new OnSprintedEventArgs
+                {
+                    isSprint = isSprint,
+                    isSquat = isSquat
+                });
             }
 
             if (inputVector == Vector2.zero)
@@ -107,7 +111,7 @@ namespace BulletHaunter
 
             OnWalked?.Invoke(this, trueState);
 
-            if(GameInput.Instance.GetSprintValue() == 1)
+            if(isSprint)
                 PlayerStats.DecreaseStamina(Time.deltaTime);
 
             float movementSpeed = GetMovementSpeed();
@@ -119,28 +123,24 @@ namespace BulletHaunter
 
         private float GetMovementSpeed()
         {
-            if (PlayerStats.Stamina > 0)
+            if (PlayerStats.Stamina > 0 && isSprint)
             {
-                if(GameInput.Instance.GetSprintValue() == 1)
-                    InvokeSprintEvent(true);
+                OnSprinted?.Invoke(this, new OnSprintedEventArgs
+                {
+                    isSprint = isSprint,
+                    isSquat = isSquat
+                });
 
                 return GameInput.Instance.GetSprintValue() * sprintBust + baseSpeed;
             }
-            else
-            {
-                InvokeSprintEvent(false);
-                return baseSpeed;
-            }
-                
-        }
 
-        private void InvokeSprintEvent(bool isSprint)
-        {
+
             OnSprinted?.Invoke(this, new OnSprintedEventArgs
             {
                 isSprint = isSprint,
                 isSquat = isSquat
             });
+            return baseSpeed;      
         }
 
         private void HandleJump()
@@ -151,7 +151,7 @@ namespace BulletHaunter
             moveDirection = (orientationPoint.forward.normalized * inputVector.y + orientationPoint.right.normalized * inputVector.x) * baseSpeed;
             Vector3 jumpDirection = new Vector3(moveDirection.x, jumpForce, moveDirection.z);
 
-            if (playerInteract.GroundCheck())
+            if (isGround)
             {
                 rgb.AddForce(jumpDirection, ForceMode.Impulse);
                 OnJumped?.Invoke(this, trueState);
@@ -163,6 +163,8 @@ namespace BulletHaunter
      
         private void HandleSquat()
         {
+            if (isClimb) return;
+
             isSquat = !isSquat;
             OnSquated?.Invoke(this, new OnStateChangedEventArgs
             {
@@ -180,24 +182,22 @@ namespace BulletHaunter
             moveDirection = (orientationPoint.right.normalized * inputVector.x) * baseSpeed;
 
             rgb.velocity = new Vector3(moveDirection.x, inputVector.y, moveDirection.z);
-            if (!playerInteract.GroundCheck() || inputVector.y >= 0)
+            if (!isGround || inputVector.y >= 0)
                 isClimb = true;
             else
                 isClimb = false;
         }
 
-        public void DropLadder()
+        public void GetOffLader()
         {
             rgb.useGravity = true;
             isClimb = false;
 
             Vector2 inputVector = GameInput.Instance.GetMovementVectorNormalized();
+            float getOffLaderSpeed = 2f;
 
-            if (!playerInteract.GroundCheck())
-            {
-                rgb.velocity = 2f * inputVector.y * (Vector3.up  + orientationPoint.forward);
-            }
-       
+            if (!isGround)
+                rgb.velocity = getOffLaderSpeed * inputVector.y * (Vector3.up  + orientationPoint.forward);   
         }
 
         public static void ResetStaticData()

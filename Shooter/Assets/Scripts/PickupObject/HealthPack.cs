@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace BulletHaunter
+namespace BulletHaunter.PickupObject
 {
     public class HealthPack : PickupObject,IInteractable
     {

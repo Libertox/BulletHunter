@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3509563451300320678}
   - component: {fileID: 8581588567318389421}
   - component: {fileID: 8940197742339149417}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: PickupWeaponSpawner
   m_TagString: Untagged
   m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}

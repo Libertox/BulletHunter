@@ -30,9 +30,7 @@ namespace BulletHaunter
                 PlayerStats.Instance.OnRestored += PlayerStatsOnRestored;
             }
             else
-            {
                 PlayerStats.OnAnyPlayerSpawn += PlayerStats_OnAnyPlayerSpawn;
-            }
 
             PlayerController.OnSquated += PlayerController_OnSquated;
 
@@ -56,38 +54,19 @@ namespace BulletHaunter
             }
         }
 
-        private void PlayerStats_OnDeathed(object sender, EventArgs e)
-        {
-            animator.SetBool(ANIM_IS_DEATH, true);
-        }
-        private void PlayerStatsOnRestored(object sender, EventArgs e)
-        {
-            animator.SetBool(ANIM_IS_DEATH, false);
-        }
-
-        private void PlayerController_OnFalled(object sender, PlayerController.OnStateChangedEventArgs e)
-        {
-            animator.SetBool(ANIM_IS_FALL, e.state);
-        }
-
-        private void PlayerController_OnJumped(object sender, PlayerController.OnStateChangedEventArgs e)
-        {
-            animator.SetBool(ANIM_IS_JUMP, e.state);
-        }
-
-        private void PlayerController_OnSprinted(object sender, PlayerController.OnSprintedEventArgs e)
-        {
-            animator.SetBool(ANIM_IS_SPRINT, e.isSprint);
-        }
-
-        private void PlayerController_OnWalked(object sender, PlayerController.OnStateChangedEventArgs e)
-        {
-            animator.SetBool(ANIM_IS_WALK, e.state);
-        }
-
-        private void PlayerController_OnSquated(object sender, PlayerController.OnStateChangedEventArgs e)
-        {
-            animator.SetBool(ANIM_IS_SQUAT, e.state);
-        }
+        private void PlayerStats_OnDeathed(object sender, EventArgs e) => animator.SetBool(ANIM_IS_DEATH, true);
+       
+        private void PlayerStatsOnRestored(object sender, EventArgs e) => animator.SetBool(ANIM_IS_DEATH, false);
+       
+        private void PlayerController_OnFalled(object sender, PlayerController.OnStateChangedEventArgs e) => animator.SetBool(ANIM_IS_FALL, e.state);
+       
+        private void PlayerController_OnJumped(object sender, PlayerController.OnStateChangedEventArgs e) => animator.SetBool(ANIM_IS_JUMP, e.state);
+       
+        private void PlayerController_OnSprinted(object sender, PlayerController.OnSprintedEventArgs e) => animator.SetBool(ANIM_IS_SPRINT, e.isSprint);
+       
+        private void PlayerController_OnWalked(object sender, PlayerController.OnStateChangedEventArgs e) => animator.SetBool(ANIM_IS_WALK, e.state);
+       
+        private void PlayerController_OnSquated(object sender, PlayerController.OnStateChangedEventArgs e) => animator.SetBool(ANIM_IS_SQUAT, e.state);
+       
     }
 }

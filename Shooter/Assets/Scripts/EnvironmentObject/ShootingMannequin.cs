@@ -36,10 +36,10 @@ namespace BulletHaunter
         private void TakeDamageClientRpc()
         {
             animator.SetBool(ANIM_IS_SHOOT, true);
-            StartCoroutine(Uprighting());
+            StartCoroutine(UprightingCoroutine());
         }
 
-        private IEnumerator Uprighting()
+        private IEnumerator UprightingCoroutine()
         {
             yield return waitForSeconds;
             animator.SetBool(ANIM_IS_SHOOT, false);

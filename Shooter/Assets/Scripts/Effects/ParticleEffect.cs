@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.Pool;
-using UnityEngine.UIElements;
 
 namespace BulletHaunter
 {
@@ -12,9 +9,9 @@ namespace BulletHaunter
     {
         [SerializeField] private float lifeTime;
 
-        public void Release(GameObject prefab) => StartCoroutine(DisactiveAfterTime(prefab));
+        public void ReleaseToPool(GameObject prefab) => StartCoroutine(DisactiveCoroutine(prefab));
 
-        private IEnumerator DisactiveAfterTime(GameObject prefab)
+        private IEnumerator DisactiveCoroutine(GameObject prefab)
         {
             yield return new WaitForSeconds(lifeTime);
             NetworkObject.Despawn(false);

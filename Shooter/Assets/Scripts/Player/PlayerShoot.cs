@@ -69,7 +69,7 @@ namespace BulletHaunter
         {
             NetworkObject networkObject = NetworkObjectPool.Singleton.GetNetworkObject(prefab,position, Quaternion.identity);
             networkObject.Spawn(true);
-            networkObject.GetComponent<ParticleEffect>().Release(prefab);
+            networkObject.GetComponent<ParticleEffect>().ReleaseToPool(prefab);
         }
 
         [ServerRpc(RequireOwnership = false)]

@@ -39,8 +39,6 @@ namespace BulletHaunter
                
         }
 
-       
-
         private void PlayerStats_OnAnyPlayerSpawn(object sender, EventArgs e)
         {
             if (PlayerStats.Instance != null)
@@ -54,21 +52,14 @@ namespace BulletHaunter
                 
         }
 
-        private void PlayerStats_OnDeathed(object sender, EventArgs e)
-        {
-            ChangeDeathColiderServerRpc();
-        }
-
-        private void PlayerStats_OnRestored(object sender, EventArgs e)
-        {
-            SetUprightColiderServerRpc();
-        }
+        private void PlayerStats_OnDeathed(object sender, EventArgs e) => ChangeDeathColiderServerRpc();
+       
+        private void PlayerStats_OnRestored(object sender, EventArgs e) => SetUprightColiderServerRpc();
+        
 
         [ServerRpc(RequireOwnership = false)]
-        private void ChangeDeathColiderServerRpc()
-        {
-            ChangeDeathColiderClientRpc();
-        }
+        private void ChangeDeathColiderServerRpc() => ChangeDeathColiderClientRpc();
+       
 
         [ClientRpc()]
         private void ChangeDeathColiderClientRpc()
@@ -79,11 +70,8 @@ namespace BulletHaunter
         }
 
         [ServerRpc(RequireOwnership = false)]
-        private void SetUprightColiderServerRpc()
-        {
-            SetUprightColiderClientRpc();
-        }
-
+        private void SetUprightColiderServerRpc() => SetUprightColiderClientRpc();
+        
         [ClientRpc]
         private void SetUprightColiderClientRpc()
         {
@@ -92,21 +80,17 @@ namespace BulletHaunter
             deathColider.enabled = false;
         }
 
-        private void PlayerController_OnSquated(object sender, PlayerController.OnStateChangedEventArgs e)
-        {
-            ChangeSquatColiderServerRpc(e.state);
-        }
+        private void PlayerController_OnSquated(object sender, PlayerController.OnStateChangedEventArgs e) => ChangeSquatColiderServerRpc(e.state);
+        
 
         [ServerRpc()]
-        private void ChangeSquatColiderServerRpc(bool state)
-        {
-            ChangeSquatColiderClientRpc(state);
-        }
+        private void ChangeSquatColiderServerRpc(bool isSquat) => ChangeSquatColiderClientRpc(isSquat);
+       
 
         [ClientRpc()]
-        private void ChangeSquatColiderClientRpc(bool state)
+        private void ChangeSquatColiderClientRpc(bool isSquat)
         {
-            if (state)
+            if (isSquat)
             {
                 uprightColider.enabled = false;
                 squatColider.enabled = true;
@@ -124,9 +108,7 @@ namespace BulletHaunter
             if (Physics.Raycast(ray, out RaycastHit hit, interactRange, interactableLayerMask))
             {
                 if (hit.transform.TryGetComponent(out IInteractable interactable))
-                {
                     interactable.Interact(playerController);
-                }
             }
         }
 
@@ -145,18 +127,13 @@ namespace BulletHaunter
             if (!IsOwner) return;
 
             if (collider.GetComponent<Ladder>())
-                playerController.DropLadder();      
+                playerController.GetOffLader();      
         }
 
         public bool GroundCheck()
         {
             Vector3 boxSize = new Vector3(1f, 0.1f, 1f);
-            if (Physics.CheckBox(transform.position, boxSize, Quaternion.identity, groundLayerMask))
-                return true;
-
-            return false;
+            return (Physics.CheckBox(transform.position, boxSize, Quaternion.identity, groundLayerMask));
         }
-
-
     }
 }

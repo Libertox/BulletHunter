@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace BulletHaunter
+namespace BulletHaunter.PickupObject
 {
     internal class PickupWeapon : PickupObject
     {

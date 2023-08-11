@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6390642340253443253}
   - component: {fileID: 2635379965977026830}
   - component: {fileID: 7965506817491984935}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: BustSpawnner
   m_TagString: Untagged
   m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
@@ -47,7 +47,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnDuration: 70
   spawnObjectsPrefabs:
-  - {fileID: 2620131183356007192, guid: a5dab21279fb4934099ee526d8455067, type: 3}
+  - {fileID: 5597698865530221589, guid: a5dab21279fb4934099ee526d8455067, type: 3}
+  - {fileID: 2293607185391224482, guid: fd67dabcd868a6e4bb4aec0d12d9a7a7, type: 3}
+  - {fileID: 2966455566384338033, guid: 0b610065eb3e5904ab578c43ca831101, type: 3}
 --- !u!114 &7965506817491984935
 MonoBehaviour:
   m_ObjectHideFlags: 0

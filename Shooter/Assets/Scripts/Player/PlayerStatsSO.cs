@@ -12,5 +12,9 @@ namespace BulletHaunter
         [field: SerializeField] public float MaxStamina { get; private set; }
 
         [field: SerializeField] public float MaxArmor { get; private set; }
+
+        [field: SerializeField] public float RestoreCooldown { get; private set; }
+
+        [field: SerializeField] public float InvulnerabilityCooldown { get; private set; }
     }
 }

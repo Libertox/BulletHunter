@@ -24,18 +24,16 @@ namespace BulletHaunter
         public event EventHandler OnRestored;
 
         public class OnStatsChangedEventArgs: EventArgs { public float stats; }
-
         public class OnDeathedEventArgs : EventArgs { public ulong targetId; public ulong ownerId; }
-
         public class OnWaitedEventArgs : EventArgs { public float timerValue; }
 
-        public float Health { get; private set; }
         public float Stamina { get; private set; }
 
-        public float Armor { get; private set; }
-   
-
         [SerializeField] private PlayerStatsSO playerStatsSO;
+
+        private float health;
+        private float armor;
+        
 
         private bool isInvulnerable;
         private bool haveStaminaBust;
@@ -44,7 +42,7 @@ namespace BulletHaunter
 
         private void Start()
         {
-            Health = playerStatsSO.MaxHealth;
+            health = playerStatsSO.MaxHealth;
             Stamina = playerStatsSO.MaxStamina;
         }
 
@@ -71,10 +69,8 @@ namespace BulletHaunter
         public override void OnNetworkSpawn()
         {
             if(IsOwner)
-            {
                 Instance = this;
-            }
-
+ 
             OnAnyPlayerSpawn?.Invoke(this, EventArgs.Empty);
         }
 
@@ -86,7 +82,6 @@ namespace BulletHaunter
                 Stamina = playerStatsSO.MaxStamina;
 
             ChangeStaminaValue();
-
         }
 
         public void DecreaseStamina(float decreaseValue)
@@ -103,50 +98,48 @@ namespace BulletHaunter
 
         public void IncreaseHealth(float increaseValue)
         {
-            Health += increaseValue;
+            health += increaseValue;
 
-            if (Health > playerStatsSO.MaxHealth)
-                Health = playerStatsSO.MaxHealth;
+            if (health > playerStatsSO.MaxHealth)
+                health = playerStatsSO.MaxHealth;
 
             ChnageHealthValue();
         }
 
         public bool DecreaseHealth(float decreaseValue)
         {
-
-            if (Health > 0)
+            if (health > 0)
             {
-                Health -= decreaseValue;
+                health -= decreaseValue;
                 ChnageHealthValue();
-                if (Health <= 0)
+                if (health <= 0)
                 {
                     OnDeathed?.Invoke(this, new OnDeathedEventArgs { targetId = lastPlayerHitId , ownerId = OwnerClientId});
-                    StartCoroutine(Restore());
-                    Health = 0;
+                    StartCoroutine(RestoreCoroutine());
+                    health = 0;
                     return true;
                 }
             }
   
-            return false;
-            
+            return false;        
         }
 
         public void IncreaseArmor(float increaseValue)
         {
-            Armor += increaseValue;
+            armor += increaseValue;
 
-            if (Armor > playerStatsSO.MaxArmor)
-                Armor = playerStatsSO.MaxArmor;
+            if (armor > playerStatsSO.MaxArmor)
+                armor = playerStatsSO.MaxArmor;
 
             ChangeArmorValue();
         }
 
         public void DecreaseArmor(float decreaseValue)
         {
-            Armor -= decreaseValue;
+            armor -= decreaseValue;
 
-            if (Armor < 0)        
-                Armor = 0;
+            if (armor < 0)        
+                armor = 0;
 
             ChangeArmorValue();
         }
@@ -163,7 +156,7 @@ namespace BulletHaunter
         {
             OnHealthChanged?.Invoke(this, new OnStatsChangedEventArgs
             {
-                stats = Health / playerStatsSO.MaxHealth
+                stats = health / playerStatsSO.MaxHealth
             });
         }
 
@@ -171,50 +164,52 @@ namespace BulletHaunter
         {
             OnArmorChanged?.Invoke(this, new OnStatsChangedEventArgs
             {
-                stats = Armor / playerStatsSO.MaxArmor
+                stats = armor / playerStatsSO.MaxArmor
             });
         }
 
-        private IEnumerator Restore()
+        private IEnumerator RestoreCoroutine()
         {
-            float restoreTimer = 10;
+            float restoreTimer = playerStatsSO.RestoreCooldown;
             WaitForSeconds waitForSeconds = new WaitForSeconds(1);
+
             OnRestoreWaited?.Invoke(this, new OnWaitedEventArgs { timerValue = restoreTimer });
+
             while (restoreTimer > 0)
             {
                 yield return waitForSeconds;
                 restoreTimer--;
                 OnRestoreWaited?.Invoke(this, new OnWaitedEventArgs { timerValue = restoreTimer });
             }
+
             OnRestored?.Invoke(this, EventArgs.Empty);
             IncreaseHealth(playerStatsSO.MaxHealth);
             GameManager.Instance.SetGameState(GameManager.GameState.Play);
             transform.position = GameManager.Instance.GetRandomPosition();
-            StartCoroutine(InvulnerabilityCountdown());
+            StartCoroutine(InvulnerabilityCountdownCoroutine());
         }
 
-        private IEnumerator InvulnerabilityCountdown()
+        private IEnumerator InvulnerabilityCountdownCoroutine()
         {
-            float restoreTimer = 10;
-            float timer = restoreTimer;
+            float InvulnerabilityTimer = playerStatsSO.InvulnerabilityCooldown;
             isInvulnerable = true;
-            OnInvulnerabilityChanged?.Invoke(this, new OnStatsChangedEventArgs { stats = timer / restoreTimer });
-            while (timer > 0)
+            OnInvulnerabilityChanged?.Invoke(this, new OnStatsChangedEventArgs { stats = InvulnerabilityTimer / playerStatsSO.InvulnerabilityCooldown });
+            while (InvulnerabilityTimer > 0)
             {
-                timer -= Time.deltaTime * 2;
-                OnInvulnerabilityChanged?.Invoke(this, new OnStatsChangedEventArgs { stats = timer / restoreTimer });
+                InvulnerabilityTimer -= Time.deltaTime * 2;
+                OnInvulnerabilityChanged?.Invoke(this, new OnStatsChangedEventArgs { stats = InvulnerabilityTimer / playerStatsSO.InvulnerabilityCooldown });
                 yield return new WaitForSeconds(Time.deltaTime);
                 
             }
             isInvulnerable = false;
         }
 
-        public void SetStaminaBust() => StartCoroutine(StaminaBust());
+        public void SetStaminaBust(float duration) => StartCoroutine(StaminaBustCoroutine(duration));
 
-        private IEnumerator StaminaBust()
+        private IEnumerator StaminaBustCoroutine(float duration)
         {
             haveStaminaBust = true;
-            yield return new WaitForSeconds(6f);
+            yield return new WaitForSeconds(duration);
             haveStaminaBust = false;
         }
 
@@ -225,7 +220,7 @@ namespace BulletHaunter
             {
                 lastPlayerHitId = clientId;
                 SoundManager.Instance.PlayPlayerTakeDamageSound(transform.position);
-                if (Armor <= 0)
+                if (armor <= 0)
                      return DecreaseHealth(damage);
                 else
                     DecreaseArmor(damage);
@@ -233,11 +228,7 @@ namespace BulletHaunter
             return false;    
         }
 
-
-
-        public NetworkObject GetNetworkObject()
-        {
-            return NetworkObject;
-        }
+        public NetworkObject GetNetworkObject() => NetworkObject;
+       
     }
 }

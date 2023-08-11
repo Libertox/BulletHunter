@@ -17,7 +17,10 @@ namespace BulletHaunter
         public event EventHandler OnSquat;
         public event EventHandler OnInteract;
         public event EventHandler OnWeaponDroped;
+
         public event EventHandler OnShooted;
+        public event EventHandler OnCancelShooted;
+
         public event EventHandler OnReloaded;
 
         public event EventHandler OnAimed;
@@ -65,7 +68,11 @@ namespace BulletHaunter
             playerInput.Player.SelectWeaponByScroll.performed += SelectWeaponByScroll_performed;
             playerInput.Player.SelectWeapon.performed += SelectWeapon_performed;
             playerInput.Player.DropWeapon.performed += DropWeapon_performed;
+
+
             playerInput.Player.Shoot.performed += Shoot_performed;
+            playerInput.Player.Shoot.canceled += Shoot_canceled;
+           
             playerInput.Player.Reload.performed += Reload_performed;
 
             playerInput.Player.Aim.performed += Aim_performed;
@@ -80,7 +87,7 @@ namespace BulletHaunter
             playerInput.UI.PointsTable.canceled += PointsTable_canceled;
         }
 
-       
+     
 
         private void OnDestroy()
         {
@@ -91,6 +98,7 @@ namespace BulletHaunter
             playerInput.Player.SelectWeapon.performed -= SelectWeapon_performed;
             playerInput.Player.DropWeapon.performed -= DropWeapon_performed;
             playerInput.Player.Shoot.performed -= Shoot_performed;
+            playerInput.Player.Shoot.canceled -= Shoot_canceled;
             playerInput.Player.Reload.performed -= Reload_performed;
 
             playerInput.Player.Aim.performed -= Aim_performed;
@@ -165,7 +173,14 @@ namespace BulletHaunter
         {
             if (GameManager.Instance != null && !GameManager.Instance.CanInputAction()) return;
 
-            OnShooted?.Invoke(this, EventArgs.Empty);
+           OnShooted?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void Shoot_canceled(InputAction.CallbackContext obj)
+        {
+            if (GameManager.Instance != null && !GameManager.Instance.CanInputAction()) return;
+
+            OnCancelShooted?.Invoke(this, EventArgs.Empty);
         }
 
         private void DropWeapon_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)

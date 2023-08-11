@@ -9,19 +9,13 @@ namespace BulletHaunter
     {
         private bool playWalkSound;
         private float footstepTimer;
-        private float footstepTimerMax = .25f;
+        private readonly float footstepTimerMax = .25f;
 
 
-        private void Start()
-        {
-            PlayerController.OnWalked += PlayerController_OnWalked;
-        }
-
-        private void PlayerController_OnWalked(object sender, PlayerController.OnStateChangedEventArgs e)
-        {
-            playWalkSound = e.state;
-        }
-
+        private void Start() => PlayerController.OnWalked += PlayerController_OnWalked;
+      
+        private void PlayerController_OnWalked(object sender, PlayerController.OnStateChangedEventArgs e) => playWalkSound = e.state;
+      
         private void Update()
         {
             footstepTimer -= Time.deltaTime;
@@ -29,10 +23,7 @@ namespace BulletHaunter
             {
                 footstepTimer = footstepTimerMax;
                 if (playWalkSound)
-                {
-                    
-                    SoundManager.Instance.PlayPlayerWalkSound(transform.position);
-                }
+                    SoundManager.Instance.PlayPlayerWalkSound(transform.position); 
             }
         }
     }

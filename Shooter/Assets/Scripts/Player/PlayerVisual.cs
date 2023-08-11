@@ -21,6 +21,8 @@ namespace BulletHaunter
             SetPlayerSkin();
             SetPlayerNick();
 
+            if (IsOwner) playerNickText.gameObject.SetActive(false);
+
         }
 
         private void SetGameLayerRecursive(GameObject gameobject, int layer)

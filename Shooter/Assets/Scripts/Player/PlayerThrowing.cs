@@ -7,7 +7,6 @@ namespace BulletHaunter
 {
     public class PlayerThrowing:NetworkBehaviour
     {
-
         [SerializeField] private Transform throwTransform;
         [SerializeField] private Transform orientationPoint;
         [SerializeField] private TrajectoryLine trajectoryLine;
@@ -31,9 +30,7 @@ namespace BulletHaunter
         {
             if (!isThrowed || !IsOwner) return;
 
-            trajectoryLine.DrawLine(throwTransform.transform.position, playerCamera.transform.forward * grenadePrefab.ThrowForce * grenadePrefab.Mass);
-
-          
+            trajectoryLine.DrawLine(throwTransform.transform.position, grenadePrefab.Mass * grenadePrefab.ThrowForce * playerCamera.transform.forward);
         }
 
         private void GameInput_OnCancelThrowed(object sender, EventArgs e)

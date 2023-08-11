@@ -85,6 +85,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   staminaValue: 5
+  bustDuration: 6
 --- !u!114 &3174337446784318276
 MonoBehaviour:
   m_ObjectHideFlags: 0

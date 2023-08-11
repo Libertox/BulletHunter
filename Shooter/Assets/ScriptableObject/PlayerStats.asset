@@ -15,3 +15,5 @@ MonoBehaviour:
   <MaxHealth>k__BackingField: 20
   <MaxStamina>k__BackingField: 5
   <MaxArmor>k__BackingField: 10
+  <RestoreCooldown>k__BackingField: 10
+  <InvulnerabilityCooldown>k__BackingField: 0

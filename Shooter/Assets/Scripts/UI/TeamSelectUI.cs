@@ -38,17 +38,27 @@ namespace BulletHaunter
 
         private void Start()
         {
-            for (int i = 0; i < selectTeamButton.Count; i++)
-            {
-                if (i >= GameManagerMultiplayer.Instance.MaxTeam.Value)
-                    selectTeamButton[i].SetActive(false);
-            }
+            UpdateTeamSelectButton();
 
+            UpdateLobbyInformation();
+        }
+
+        private void UpdateLobbyInformation()
+        {
             Lobby lobby = LobbyManager.Instance.GetLobby();
             lobbyNameText.SetText(lobby.Name);
             lobbyCodeText.SetText("CODE: " + lobby.LobbyCode);
             PlayerData playerData = GameManagerMultiplayer.Instance.GetPlayerDataFromClientId(0);
             lobbyAdminText.SetText("ADMIN: " + playerData.playerName.ToString());
+        }
+
+        private void UpdateTeamSelectButton()
+        {
+            for (int i = 0; i < selectTeamButton.Count; i++)
+            {
+                if (i >= GameManagerMultiplayer.Instance.MaxTeam.Value)
+                    selectTeamButton[i].SetActive(false);
+            }
         }
     }
 }

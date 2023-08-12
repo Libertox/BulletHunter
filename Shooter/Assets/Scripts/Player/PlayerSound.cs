@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Unity.Services.Lobbies.Models;
 using UnityEngine;
 
 namespace BulletHaunter

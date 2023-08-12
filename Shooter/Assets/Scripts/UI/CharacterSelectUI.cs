@@ -9,12 +9,11 @@ namespace BulletHaunter.UI
     public class CharacterSelectUI:MonoBehaviour
     {
         [SerializeField] private Button backMainMenuButton;
-        [SerializeField] private TMP_InputField playerNameInputField;
         [SerializeField] private Button nextSkinButton;
         [SerializeField] private Button previousSkinButton;
-
         [SerializeField] private Button[] pointsButton;
 
+        [SerializeField] private TMP_InputField playerNameInputField;
 
         private void Awake()
         {
@@ -46,12 +45,10 @@ namespace BulletHaunter.UI
                 {
                     ResetPointsButtonColor();
 
-                    int newIndex = (CharacterSelectManager.Instance.ChooseSkinIndex / pointsButton.Length) * pointsButton.Length + index;
-                    CharacterSelectManager.Instance.SetChooseSkinIndex(newIndex);
+                    int chooseSkinIndex = (CharacterSelectManager.Instance.ChooseSkinIndex / pointsButton.Length) * pointsButton.Length + index;
+                    CharacterSelectManager.Instance.SetChooseSkinIndex(chooseSkinIndex);
                     SoundManager.Instance.PlayButtonSound();
                 });
-
-
             }
         }
 
@@ -60,7 +57,6 @@ namespace BulletHaunter.UI
             playerNameInputField.text = CharacterSelectManager.Instance.GetPlayerName();
             UpdatePointsButton();
         }
-
 
         private void UpdatePointsButton()
         {

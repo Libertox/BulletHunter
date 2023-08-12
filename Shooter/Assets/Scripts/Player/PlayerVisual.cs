@@ -14,15 +14,20 @@ namespace BulletHaunter
 
         private void Start()
         {
+            GameManager.Instance.OnShowPlayerNickChanged += GameManager_OnShowPlayerNickChanged;
+
             int index = GameManagerMultiplayer.Instance.GetPlayerDataIndexFromClientId(OwnerClientId);
             LayerMask playerLayerMask = GameManager.Instance.GetPlayerLayerMask(index);
             SetGameLayerRecursive(gameObject, playerLayerMask);
 
             SetPlayerSkin();
             SetPlayerNick();
+            SetPlayerNickShow(GameManager.Instance.ShowPlayerName);
+        }
 
-            if (IsOwner) playerNickText.gameObject.SetActive(false);
-
+        private void GameManager_OnShowPlayerNickChanged(object sender, GameManager.OnShowPlayerNickChangedEventArgs e)
+        {
+            SetPlayerNickShow(e.isShow);
         }
 
         private void SetGameLayerRecursive(GameObject gameobject, int layer)
@@ -57,6 +62,13 @@ namespace BulletHaunter
             playerNickText.SetText(playerData.playerName.ToString());
             playerNickText.color = GameManagerMultiplayer.Instance.GetTeamColor(playerData.teamColorId);
             playerNickText.gameObject.layer = GameManager.Instance.GetPlayerTeamLayerMask(playerData.teamColorId);
+        }
+
+        private void SetPlayerNickShow(bool isShow)
+        {
+            playerNickText.gameObject.SetActive(isShow);
+
+            if (IsOwner) playerNickText.gameObject.SetActive(false);
         }
     }
 }

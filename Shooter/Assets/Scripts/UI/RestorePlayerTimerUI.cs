@@ -46,16 +46,10 @@ namespace BulletHaunter
             restoreTimerText.SetText($"RESPAWN IN " + e.timerValue);
         }
 
-        private void PlayerStats_OnDeathed(object sender, EventArgs e)
-        {
-            Show();
-        }
-
-        private void PlayersStats_OnRestored(object sender, EventArgs e)
-        {
-            Hide();
-        }
-
+        private void PlayerStats_OnDeathed(object sender, EventArgs e) => Show();
+      
+        private void PlayersStats_OnRestored(object sender, EventArgs e) => Hide();
+       
         private void Hide() => gameObject.SetActive(false);
 
         private void Show() => gameObject.SetActive(true);

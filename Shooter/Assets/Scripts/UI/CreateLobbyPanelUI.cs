@@ -9,11 +9,12 @@ namespace BulletHaunter.UI
     public class CreateLobbyPanelUI:MonoBehaviour
     {
         [SerializeField] private TMP_InputField lobbyNameInputField;
+        [SerializeField] private TMP_InputField pointsToWinInputField;
+
         [SerializeField] private TMP_Dropdown gameAccessDropdown;
         [SerializeField] private TMP_Dropdown maxPlayerDropdown;
         [SerializeField] private TMP_Dropdown maxTeamDropdown;
-        [SerializeField] private TMP_InputField pointsToWinInputField;
-
+ 
         [SerializeField] private Button createLobby;
 
         private void Awake()

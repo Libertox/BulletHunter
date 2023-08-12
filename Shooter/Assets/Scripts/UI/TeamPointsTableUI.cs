@@ -29,16 +29,11 @@ namespace BulletHaunter.UI
             Hide();
         }
 
-        private void GameManager_OnTeamPointsChanged(object sender, EventArgs e)
-        {
-            UpdatePointsTable();
-        }
+        private void GameManager_OnTeamPointsChanged(object sender, EventArgs e) => UpdatePointsTable();
+     
 
-        private void GameInput_OnPaused(object sender, EventArgs e)
-        {
-            Hide();
-        }
-
+        private void GameInput_OnPaused(object sender, EventArgs e) => Hide();
+       
         private void GameInput_OnTableHided(object sender, EventArgs e)
         {
             Cursor.lockState = CursorLockMode.Locked;
@@ -52,11 +47,13 @@ namespace BulletHaunter.UI
             UpdatePointsTable();
         }
 
-      
-
+     
         private void UpdatePointsTable()
         {
             teamPointsSlotTemplate.Hide();
+
+            Vector2 basicContainerDimension = new Vector2(0, 200);
+            const int heightIncreaseValue = 150;
 
             foreach (Transform child in containrerRectTransform)
             {
@@ -64,7 +61,7 @@ namespace BulletHaunter.UI
 
                 Destroy(child.gameObject);
             }
-            containrerRectTransform.sizeDelta = new Vector2(0, 200);
+            containrerRectTransform.sizeDelta = basicContainerDimension;
 
             var ordered = GameManager.Instance.TeamPointsDictionary.OrderByDescending(x => x.Value);
 
@@ -73,7 +70,7 @@ namespace BulletHaunter.UI
                 TeamPointsSlotUI teamPointsSlotUI = Instantiate(teamPointsSlotTemplate, containrerRectTransform);
                 teamPointsSlotUI.Show();
                 teamPointsSlotUI.UpdateContent(GameManagerMultiplayer.Instance.GetTeamName(team.Key), GameManagerMultiplayer.Instance.GetTeamColor(team.Key), team.Value);
-                containrerRectTransform.sizeDelta = new Vector2(0, containrerRectTransform.rect.height + 150);
+                containrerRectTransform.sizeDelta = new Vector2(0, containrerRectTransform.rect.height + heightIncreaseValue);
             }
         }
 

@@ -29,11 +29,8 @@ namespace BulletHaunter.UI
             UpdateIsSelected();
         }
 
-        private void GameManagerMultiplayer_OnPlayerDataNetworkListChanged(object sender, EventArgs e)
-        {
-            UpdateIsSelected();
-        }
-
+        private void GameManagerMultiplayer_OnPlayerDataNetworkListChanged(object sender, EventArgs e) => UpdateIsSelected();
+       
         private void UpdateIsSelected()
         {
             if (GameManagerMultiplayer.Instance.GetPlayerData().teamColorId == teamColorId)

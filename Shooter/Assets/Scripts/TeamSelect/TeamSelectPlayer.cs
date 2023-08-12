@@ -38,16 +38,15 @@ namespace BulletHaunter
             UpdatePlayer();
         }
 
-        private void TeamSelectManager_OnReadyChanged(object sender, EventArgs e)
+        private void OnDestroy()
         {
-            UpdatePlayer();
+            GameManagerMultiplayer.Instance.OnPlayerDataNetworkListChanged -= GameManagerMultiplayer_OnPlayerDataNetworkListChanged;
         }
 
-        private void GameManagerMultiplayer_OnPlayerDataNetworkListChanged(object sender, EventArgs e)
-        {
-            UpdatePlayer();
-        }
-
+        private void TeamSelectManager_OnReadyChanged(object sender, EventArgs e) => UpdatePlayer();
+      
+        private void GameManagerMultiplayer_OnPlayerDataNetworkListChanged(object sender, EventArgs e) => UpdatePlayer();
+      
         private void UpdatePlayer()
         {
             if (GameManagerMultiplayer.Instance.IsPlayerIndexConnected(playerIndex))
@@ -71,9 +70,7 @@ namespace BulletHaunter
                 teamSelectPlatform.SetColor(GameManagerMultiplayer.Instance.GetTeamColor(playerData.teamColorId));
             }
             else
-            {
                 Hide();
-            }
         }
 
         private void Hide() => gameObject.SetActive(false);

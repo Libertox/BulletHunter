@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using static BulletHaunter.PlayerStats;
+
 
 namespace BulletHaunter.UI
 {
@@ -17,18 +17,17 @@ namespace BulletHaunter.UI
         {
             if (newValue > barImage.fillAmount)
             {
-                StopCoroutine(nameof(ChangeFillAmountSlowlyDown));
-                StartCoroutine(ChangeFillAmountSlowlyUp(newValue));
+                StopCoroutine(nameof(ChangeFillAmountDownCoroutine));
+                StartCoroutine(ChangeFillAmountUpCoroutine(newValue));
             }
             else
             {
-                StopCoroutine(nameof(ChangeFillAmountSlowlyUp));
-                StartCoroutine(ChangeFillAmountSlowlyDown(newValue));
-            }
-                
+                StopCoroutine(nameof(ChangeFillAmountUpCoroutine));
+                StartCoroutine(ChangeFillAmountDownCoroutine(newValue));
+            }         
         } 
 
-        private IEnumerator ChangeFillAmountSlowlyDown(float newValue)
+        private IEnumerator ChangeFillAmountDownCoroutine(float newValue)
         {
             while (newValue < barImage.fillAmount)
             {
@@ -38,23 +37,18 @@ namespace BulletHaunter.UI
             }
         }
 
-        private IEnumerator ChangeFillAmountSlowlyUp(float newValue)
+        private IEnumerator ChangeFillAmountUpCoroutine(float newValue)
         {
             while (newValue > barImage.fillAmount)
             {
                 barImage.fillAmount += Time.deltaTime * 2;
 
                 yield return new WaitForSeconds(Time.deltaTime);
-
             }
         }
-
 
         public void Show() => gameObject.SetActive(true);
 
         public void Hide() => gameObject.SetActive(false);
-
-
-
     }
 }

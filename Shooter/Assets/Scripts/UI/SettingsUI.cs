@@ -8,6 +8,8 @@ namespace BulletHaunter
 {
     public class SettingsUI:MonoBehaviour
     {
+        
+
         [SerializeField] private Button gameplaySettingsButton;
         [SerializeField] private Button keyBindingsSettingsButton;
 
@@ -62,7 +64,11 @@ namespace BulletHaunter
 
             showPlayerNameToggle.onValueChanged.AddListener((bool value) =>
             {
-                //GameManager.Instance.showPlayerName = value;
+                int showValue = value ? 1 : 0;
+                PlayerPrefs.SetInt(GameManager.PLAYER_PREFS_SHOW_PLAYER_NICK, showValue);
+
+                if (GameManager.Instance != null)
+                    GameManager.Instance.SetShowPlayerNick(value);
             });
 
         }
@@ -78,17 +84,14 @@ namespace BulletHaunter
             mouseSensitivitySlider.value = GameInput.Instance.MouseSensitivity * 0.1f;
             mouseSentitivityValueText.SetText($"{GameInput.Instance.MouseSensitivity * 0.1f}");
 
-            //showPlayerNameToggle.isOn = GameManager.Instance.showPlayerName;
+            showPlayerNameToggle.isOn = PlayerPrefs.GetInt(GameManager.PLAYER_PREFS_SHOW_PLAYER_NICK, 0) == 1;
 
             GameInput.Instance.OnPaused += GameInput_OnPaused;
 
             Hide();
         }
 
-        private void GameInput_OnPaused(object sender, EventArgs e)
-        {
-            Hide();
-        }
+        private void GameInput_OnPaused(object sender, EventArgs e) => Hide();
 
         public void Show() => gameObject.SetActive(true);
 

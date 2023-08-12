@@ -8,11 +8,8 @@ namespace BulletHaunter
 {
     public class MessagePanelUI:MonoBehaviour
     {
-
         [SerializeField] private TextMeshProUGUI messageText;
         [SerializeField] private Button continueButton;
-
-
 
         private void Awake()
         {

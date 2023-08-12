@@ -10,13 +10,12 @@ namespace BulletHaunter.UI
     public class JoinLobbyPanelUI:MonoBehaviour
     {
         [SerializeField] private Button quickJoinButton;
-
         [SerializeField] private Button joinByCodeButton;
+
         [SerializeField] private TMP_InputField joinCodeInputField;
 
         [SerializeField] private LobbySlotUI lobbySlotTemplate;
         [SerializeField] private Transform containerTitle;
-
         [SerializeField] private RectTransform container;
 
         private void Awake()
@@ -41,35 +40,32 @@ namespace BulletHaunter.UI
             Hide();
         }
 
-        private void LobbyManager_OnLobbyListChanged(object sender, LobbyManager.OnLobbyListChangedEventArgs e)
-        {
-            UpdateLobbyList(e.lobbyList);
-        }
-
-        private void OnDestroy()
-        {
-            LobbyManager.Instance.OnLobbyListChanged -= LobbyManager_OnLobbyListChanged;
-        }
-
+        private void LobbyManager_OnLobbyListChanged(object sender, LobbyManager.OnLobbyListChangedEventArgs e) => UpdateLobbyList(e.lobbyList);
+      
+        private void OnDestroy() => LobbyManager.Instance.OnLobbyListChanged -= LobbyManager_OnLobbyListChanged;
+      
         private void UpdateLobbyList(List<Lobby> availableLobbies)
         {
             lobbySlotTemplate.Hide();
 
-            foreach(Transform child in container)
+            Vector2 basicContainerDimension = new Vector2(0, 100);
+            const int heightIncreaseValue = 150;
+
+            foreach (Transform child in container)
             {
                 if (child == containerTitle.transform || child == lobbySlotTemplate.transform) continue;
 
                 Destroy(child.gameObject);
             }
-            container.sizeDelta = new Vector2(0, 100);
 
+            container.sizeDelta = basicContainerDimension;
 
             foreach(Lobby lobby in availableLobbies)
             {
                 LobbySlotUI lobbySlotUI = Instantiate(lobbySlotTemplate, container);
                 lobbySlotUI.Show();
                 lobbySlotUI.SetLobby(lobby);
-                container.sizeDelta = new Vector2(0, container.rect.height + 150);
+                container.sizeDelta = new Vector2(0, container.rect.height + heightIncreaseValue);
             }
 
         }

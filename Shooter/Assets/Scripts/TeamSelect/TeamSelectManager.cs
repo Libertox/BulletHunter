@@ -11,7 +11,6 @@ namespace BulletHaunter
 
         public event EventHandler OnReadyChanged;
 
-
         private Dictionary<ulong, bool> playerReadyDictionary;
 
         private void Awake()
@@ -57,9 +56,6 @@ namespace BulletHaunter
             OnReadyChanged?.Invoke(this, EventArgs.Empty);
         }
 
-
         public bool IsPlayerReady(ulong playerId) => playerReadyDictionary.ContainsKey(playerId) && playerReadyDictionary[playerId];
-
-
     }
 }

@@ -10,7 +10,6 @@ namespace BulletHaunter.UI
     {
         [SerializeField] private Button backMainMenuButton;
 
-
         private void Awake()
         {
             backMainMenuButton.onClick.AddListener(() =>
@@ -28,10 +27,13 @@ namespace BulletHaunter.UI
             Hide();
         }
 
-        private void NetworkManager_OnClientDisconnectCallback(ulong clientId)
+        private void OnDestroy()
         {
-            Show();
+            NetworkManager.Singleton.OnClientDisconnectCallback -= NetworkManager_OnClientDisconnectCallback;
         }
+
+        private void NetworkManager_OnClientDisconnectCallback(ulong clientId) => Show();
+      
 
         private void Hide() => gameObject.SetActive(false);
 

@@ -9,12 +9,18 @@ namespace BulletHaunter
 {
     public class GameManager: NetworkBehaviour
     {
+        public const string PLAYER_PREFS_SHOW_PLAYER_NICK = "showPlayerNick";
+
         public static GameManager Instance { get; private set; }
 
         public event EventHandler<OnGameStartWaitedEventArgs> OnGameStartWaited;
         public event EventHandler OnGameStarted;
+        public event EventHandler OnTeamPointsChanged;
+        public event EventHandler<OnShowPlayerNickChangedEventArgs> OnShowPlayerNickChanged;
 
         public class OnGameStartWaitedEventArgs : EventArgs { public float timerValue; };
+
+        public class OnShowPlayerNickChangedEventArgs : EventArgs { public bool isShow; }
 
         [SerializeField] private PlayerController playerPrefab;
         [SerializeField] private List<Transform> playerSpawnPointsList;
@@ -23,7 +29,7 @@ namespace BulletHaunter
         private GameState gameState = GameState.Start;
         private GameState previousGameState;
 
-        public bool showPlayerName;
+        public bool ShowPlayerName { get; private set; }
 
         [SerializeField] private List<WeaponSO> weaponSOList;
 
@@ -32,7 +38,6 @@ namespace BulletHaunter
         [SerializeField] private int[] playerTeamLayerMask;
 
         private NetworkList<ulong> spawnedPlayerIdList;
-        public event EventHandler OnTeamPointsChanged;
         public SortedDictionary<int, int> TeamPointsDictionary;
 
 
@@ -58,6 +63,7 @@ namespace BulletHaunter
             {
                 TeamPointsDictionary[i] = 0;
             }
+
         }
 
         public override void OnNetworkSpawn()
@@ -76,6 +82,7 @@ namespace BulletHaunter
                 PlayerStats.OnAnyPlayerSpawn += PlayerStats_OnAnyPlayerSpawn;
             }
 
+            SetShowPlayerNick(PlayerPrefs.GetInt(PLAYER_PREFS_SHOW_PLAYER_NICK, 0) == 1);
             StartCoroutine(StartGame());
         }
 
@@ -208,5 +215,11 @@ namespace BulletHaunter
 
             return false;
         }
+
+        public void SetShowPlayerNick(bool isShowPlayerNick) 
+        {
+            ShowPlayerName = isShowPlayerNick;
+            OnShowPlayerNickChanged?.Invoke(this, new OnShowPlayerNickChangedEventArgs { isShow = isShowPlayerNick });
+        } 
     }
 }

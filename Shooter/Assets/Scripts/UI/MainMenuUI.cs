@@ -10,11 +10,10 @@ namespace BulletHaunter.UI
         [SerializeField] private Button playButton;
         [SerializeField] private Button settingsButton;
         [SerializeField] private Button exitButton;
+        [SerializeField] private Button characterSelectButton;
 
         [SerializeField] private SettingsUI settingsUI;
         [SerializeField] private LobbyUI lobbyUI;
-
-        [SerializeField] private Button characterSelectButton;
 
         private void Start()
         {

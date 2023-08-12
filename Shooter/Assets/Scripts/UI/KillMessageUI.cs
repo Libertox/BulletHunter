@@ -13,7 +13,7 @@ namespace BulletHaunter
         [SerializeField] private CanvasGroup canvasGroup;
         private bool show;
         private float displayTimer;
-        private float cooldownShowText = 5f;
+        private readonly float cooldownShowText = 5f;
 
         private void Start()
         {
@@ -26,7 +26,6 @@ namespace BulletHaunter
                 PlayerStats.OnAnyPlayerSpawn += PlayerStats_OnAnyPlayerSpawn;
             }
             
-
             PlayerShoot.OnAnyPlayerKilled += PlayerShoot_OnAnyPlayerKilled;
  
             Hide();
@@ -43,28 +42,26 @@ namespace BulletHaunter
 
         private void PlayerShoot_OnAnyPlayerKilled(object sender, PlayerShoot.OnAnyPlayerKilledEventArgs e)
         {
-            Show();
-            show = true;
-            PlayerData playerData = GameManagerMultiplayer.Instance.GetPlayerDataFromClientId(e.targetId);
-            killMessageText.color = GameManagerMultiplayer.Instance.GetTeamColor(playerData.teamColorId);
-            killMessageText.SetText("YOU KILLED " + playerData.playerName.ToString());
+            SetMessageText("YOU KILLED ", e.targetId);
         }
 
         private void PlayerStats_OnDeathed(object sender, PlayerStats.OnDeathedEventArgs e)
         {
+            SetMessageText("KILLED BY ", e.targetId);
+        }
+
+        private void SetMessageText(string message, ulong clientId)
+        {
             Show();
             show = true;
-            PlayerData playerData = GameManagerMultiplayer.Instance.GetPlayerDataFromClientId(e.targetId);
+            PlayerData playerData = GameManagerMultiplayer.Instance.GetPlayerDataFromClientId(clientId);
             killMessageText.color = GameManagerMultiplayer.Instance.GetTeamColor(playerData.teamColorId);
-            killMessageText.SetText("KILLED BY " + playerData.playerName.ToString());
+            killMessageText.SetText(message + playerData.playerName.ToString());
         }
 
+        private void Show() => gameObject.SetActive(true);
 
-
-        private void Show()
-        {
-            gameObject.SetActive(true);
-        }
+        private void Hide() => gameObject.SetActive(false);
 
         private void Update()
         {
@@ -86,11 +83,6 @@ namespace BulletHaunter
             }
 
         }
-
-        private void Hide() => gameObject.SetActive(false);
-
-       
-
 
     }
 }

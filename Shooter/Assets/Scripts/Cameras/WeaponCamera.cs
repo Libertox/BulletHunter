@@ -9,11 +9,8 @@ namespace BulletHaunter
     {
         private Camera weaponCamera;
 
-        private void Awake()
-        {
-            weaponCamera = GetComponent<Camera>();
-        }
-
+        private void Awake() => weaponCamera = GetComponent<Camera>();
+        
         private void Start()
         {
             if (!IsOwner)
@@ -22,10 +19,14 @@ namespace BulletHaunter
                 return;
             }
 
+            SetCullingMask();
+        }
+
+        private void SetCullingMask()
+        {
             int index = GameManagerMultiplayer.Instance.GetPlayerDataIndexFromClientId(OwnerClientId);
             LayerMask gunLayerMask = GameManager.Instance.GetPlayerGunLayerMask(index);
             weaponCamera.cullingMask |= (1 << gunLayerMask);
         }
-
     }
 }

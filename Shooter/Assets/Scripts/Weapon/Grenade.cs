@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace BulletHaunter
 {
@@ -11,7 +10,7 @@ namespace BulletHaunter
     {
         [SerializeField] private Rigidbody rgb;
         [SerializeField] private GameObject explosionParticleEffect;
-        [SerializeField] private float rotationForce;
+
         [SerializeField] private float explosionTime;
         [SerializeField] private float baseDamage;
         [SerializeField] private float explosionRange;
@@ -19,14 +18,16 @@ namespace BulletHaunter
         [SerializeField] private LayerMask targerLayerMask;
 
         private readonly float maxDistance = 3f;
+        private ulong ownerGrenadeID;
         private GameObject prefab;
 
         [field: SerializeField] public float ThrowForce { get; private set; }
         public float Mass => rgb.mass;
 
-        public ulong playerid;
-
+        
         public void SetPrefab(GameObject gameObject) => prefab = gameObject;
+
+        public void SetOwnerGrenadeId(ulong ownerId) => ownerGrenadeID = ownerId;
 
         public void Throw(Vector3 direction)
         {
@@ -55,18 +56,11 @@ namespace BulletHaunter
         }
 
         [ServerRpc(RequireOwnership = false)]
-        private void PlayExplosionSoundServerRpc(float x, float y, float z)
-        {
-            PlayExplosionSoundClientRpc(x, y, z);
-        }
-
+        private void PlayExplosionSoundServerRpc(float x, float y, float z) => PlayExplosionSoundClientRpc(x, y, z);
+      
         [ClientRpc]
-        private void PlayExplosionSoundClientRpc(float x, float y, float z)
-        {
-            SoundManager.Instance.PlayGrenadeExplosionSound(new Vector3(x, y, z));
-        }
-
-
+        private void PlayExplosionSoundClientRpc(float x, float y, float z) => SoundManager.Instance.PlayGrenadeExplosionSound(new Vector3(x, y, z));
+        
         [ServerRpc(RequireOwnership = false)]
         private void HurtAllTargetServerRpc() => HurtAllTargetClientRpc();
        
@@ -80,7 +74,7 @@ namespace BulletHaunter
                 {
                     float distanceFromExplosionCenter = Vector3.Distance(hit.transform.position, transform.position);
                     float damage = explosionRange  / distanceFromExplosionCenter + baseDamage;
-                    damageable.TakeDamage(damage, playerid);
+                    damageable.TakeDamage(damage, ownerGrenadeID);
                 }
             }
         }

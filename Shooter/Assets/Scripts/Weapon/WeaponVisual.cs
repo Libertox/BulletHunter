@@ -42,16 +42,11 @@ namespace BulletHaunter
         }
 
 
-        public void SwapWeaponModel(WeaponSO useWeapon)
-        {
-            SwapWeaponModelServerRpc(GameManager.Instance.GetWeaponSOIndex(useWeapon));
-        }
-
+        public void SwapWeaponModel(WeaponSO useWeapon) => SwapWeaponModelServerRpc(GameManager.Instance.GetWeaponSOIndex(useWeapon));
+        
         [ServerRpc(RequireOwnership = false)]
-        private void SwapWeaponModelServerRpc(int weaponSOIndex)
-        {
-            SwapWeaponModelClientRpc(weaponSOIndex);
-        }
+        private void SwapWeaponModelServerRpc(int weaponSOIndex) => SwapWeaponModelClientRpc(weaponSOIndex);
+       
 
         [ClientRpc()]
         private void SwapWeaponModelClientRpc(int weaponSOIndex)

@@ -33,9 +33,6 @@ namespace BulletHaunter
             };
 
         }
-
-
-
         private void OnMouseDrag()
         {
             if (!isDrag)
@@ -44,17 +41,15 @@ namespace BulletHaunter
                 isDrag = true;
             }
 
+            float rotationSpeed = .5f;
+
             if (previousMousePosition > Input.mousePosition.x)
-                transform.Rotate(new Vector3(0, -.5f, 0));
+                transform.Rotate(new Vector3(0, -rotationSpeed, 0));
             else
-                transform.Rotate(new Vector3(0, .5f, 0));
+                transform.Rotate(new Vector3(0, rotationSpeed, 0));
         }
 
-        private void OnMouseUp()
-        {
-            isDrag = false;
-        }
-
-
+        private void OnMouseUp() => isDrag = false;
+ 
     }
 }

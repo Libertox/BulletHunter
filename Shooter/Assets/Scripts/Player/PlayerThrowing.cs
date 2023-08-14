@@ -39,22 +39,23 @@ namespace BulletHaunter
             {
                 isThrowed = false;
                 trajectoryLine.Hide();
-                ThowGrenadeServerRpc();
+                ThowGrenadeServerRpc(playerCamera.transform.forward.x, playerCamera.transform.forward.y, playerCamera.transform.forward.z);
                 InventoryManager.Instance.SubstractGranade();
             }
         }
 
         [ServerRpc(RequireOwnership = false)]
-        private void ThowGrenadeServerRpc(ServerRpcParams serverRpcParams = default)
+        private void ThowGrenadeServerRpc(float x, float y, float z, ServerRpcParams serverRpcParams = default)
         {
             NetworkObject networkObject = NetworkObjectPool.Singleton.GetNetworkObject(grenadePrefab.gameObject, throwTransform.position, Quaternion.identity);
             Grenade grenade = networkObject.GetComponent<Grenade>();
-            grenade.Throw(playerCamera.transform.forward);
+            grenade.Throw(new Vector3(x,y,z));
             grenade.SetPrefab(grenadePrefab.gameObject);
-            grenade.playerid = serverRpcParams.Receive.SenderClientId;
+            grenade.SetOwnerGrenadeId(serverRpcParams.Receive.SenderClientId);
             networkObject.Spawn(true);
         }
 
+     
         private void GameInput_OnThrowed(object sender, EventArgs e)
         {
             if(InventoryManager.Instance.CanThrowGrenade())

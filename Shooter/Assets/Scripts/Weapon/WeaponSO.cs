@@ -17,9 +17,8 @@ namespace BulletHaunter
         [field: SerializeField] public int AmmoInMagazine { get; private set; }
         [field: SerializeField] public float WeaponRange { get; private set; }
         [field: SerializeField] public float WeaponZoom { get; private set; }
-
         [field: SerializeField] public float ReloadTime { get; private set; }
-
+        [field: SerializeField] public float ShootSpeed { get; private set; }
         [field: SerializeField] public float Damage { get; private set; }
 
 

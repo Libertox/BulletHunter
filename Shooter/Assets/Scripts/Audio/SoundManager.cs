@@ -27,11 +27,8 @@ namespace BulletHaunter
             SoundEffectVolume = PlayerPrefs.GetFloat(PLAYER_PREFS_SOUND_EFFECT_VOLUME, defaultSoundEffectVolume);
         }
 
-        private void Start()
-        {
-            PlayerController.OnJumped += PlayerController_OnJumped;
-        }
-
+        private void Start() => PlayerController.OnJumped += PlayerController_OnJumped;
+      
         private void PlayerController_OnJumped(object sender, PlayerController.OnStateChangedEventArgs e)
         {
             if (!e.state) return;
@@ -71,24 +68,12 @@ namespace BulletHaunter
             AudioSource.PlayClipAtPoint(audioClipsSO.ExplosionSound[explosionClipIndex], playPoint, SoundEffectVolume);
         }
      
-        public void PlayPlayerWalkSound(Vector3 playPoint)
-        {
-            AudioSource.PlayClipAtPoint(audioClipsSO.WalkSound, playPoint, SoundEffectVolume);
-        }
-
-        public void PlayPlayerJumpSound(Vector3 playPoint)
-        {
-            AudioSource.PlayClipAtPoint(audioClipsSO.JumpSound, playPoint, SoundEffectVolume);
-        }
-
-        public void PlayPickupObjectSound(Vector3 playpoint)
-        {
-            AudioSource.PlayClipAtPoint(audioClipsSO.PickupObjectSound, playpoint, SoundEffectVolume);
-        }
-
-        public void PlayPlayerTakeDamageSound(Vector3 playPoint)
-        {
-            AudioSource.PlayClipAtPoint(audioClipsSO.TakeDamageSound, playPoint, SoundEffectVolume);
-        }
+        public void PlayPlayerWalkSound(Vector3 playPoint) => AudioSource.PlayClipAtPoint(audioClipsSO.WalkSound, playPoint, SoundEffectVolume);
+ 
+        public void PlayPlayerJumpSound(Vector3 playPoint) => AudioSource.PlayClipAtPoint(audioClipsSO.JumpSound, playPoint, SoundEffectVolume);
+   
+        public void PlayPickupObjectSound(Vector3 playpoint) => AudioSource.PlayClipAtPoint(audioClipsSO.PickupObjectSound, playpoint, SoundEffectVolume);
+  
+        public void PlayPlayerTakeDamageSound(Vector3 playPoint) => AudioSource.PlayClipAtPoint(audioClipsSO.TakeDamageSound, playPoint, SoundEffectVolume);
     }
 }

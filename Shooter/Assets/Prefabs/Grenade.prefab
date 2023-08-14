@@ -52,8 +52,7 @@ MonoBehaviour:
   rgb: {fileID: 3137053889801675482}
   explosionParticleEffect: {fileID: 1126181125208960, guid: 9cabb3ba184901748857eecc4d42cb63,
     type: 3}
-  rotationForce: 0.01
-  explosionTime: 3
+  explosionTime: 3.5
   baseDamage: 4
   explosionRange: 2.5
   targerLayerMask:

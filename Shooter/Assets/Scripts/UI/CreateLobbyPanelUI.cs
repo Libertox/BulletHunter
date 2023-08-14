@@ -22,7 +22,8 @@ namespace BulletHaunter.UI
             createLobby.onClick.AddListener(() => 
             {
                 bool isPrivate = gameAccessDropdown.value != 0;
-                GameManagerMultiplayer.Instance.SetGameSettings(maxPlayerDropdown.value + 1, maxTeamDropdown.value + 1, int.Parse(pointsToWinInputField.text));
+                GameManagerMultiplayer.Instance.SetPointsToWin(int.Parse(pointsToWinInputField.text));
+                GameManagerMultiplayer.Instance.SetMaxTeam(maxTeamDropdown.value + 1);
                 LobbyManager.Instance.CreateLobby(lobbyNameInputField.text, isPrivate, maxPlayerDropdown.value + 1);
                 SoundManager.Instance.PlayButtonSound();
             });

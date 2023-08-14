@@ -20,8 +20,7 @@ namespace BulletHaunter
 
         private bool isShoot;
         private float shootTimerCooldown;
-        private readonly float shootTimerCooldownMax = 0.2f;
-
+  
         private void Start()
         {
             if (IsOwner)
@@ -45,11 +44,11 @@ namespace BulletHaunter
     
         private void Update()
         {
-            if (!isShoot || !IsOwner) return;
+            if (!isShoot || !IsOwner || !InventoryManager.Instance.CanShoot()) return;
 
             shootTimerCooldown += Time.deltaTime;
 
-            if (shootTimerCooldown > shootTimerCooldownMax)
+            if (shootTimerCooldown > InventoryManager.Instance.UseWeapon.WeaponSO.ShootSpeed)
             {
                 Shoot();
                 shootTimerCooldown = 0;

@@ -14,6 +14,7 @@ namespace BulletHaunter
         private const int maxRifleMagazine = 6;
         private const int maxSniperMagazine = 3;
         private const int maxGrenadeMagazine = 5;
+        public const int Max_Number_Weapon  = 4;
 
         public static InventoryManager Instance { get; private set; }
 
@@ -26,23 +27,17 @@ namespace BulletHaunter
         public class OnSelectedWeaponChangedEventArgs : EventArgs { public WeaponInstance selectedWeapon; }
         public class OnGrenadeAmountChangedEventArgs : EventArgs { public int grenadeAmount; }
 
-        public static int MaxNumberWeapon { get; private set; } = 4;
         public WeaponInstance UseWeapon { get; private set; }
 
         private WeaponInstance[] ownedWeapon;
         private int useWeaponIndex;
 
+        public WeaponReloading WeaponReloading { get; private set; }
+
         public int GrenadeAmount { get; private set; }
 
-        public Dictionary<WeaponType, int> MagazineAmount { get; private set; } = new Dictionary<WeaponType, int>
-        {
-            {WeaponType.Gun,0 },
-            {WeaponType.Rifle,0 },
-            {WeaponType.Sniper,0 },
-            {WeaponType.Shoutgun,0 },
-        };
-
-
+        public Dictionary<WeaponType, int> MagazineAmount { get; private set; }
+      
         private Dictionary<WeaponType, int> maxAmmoMagazine = new Dictionary<WeaponType, int>
         {
                 {WeaponType.Gun,maxGunMagazine },
@@ -56,7 +51,10 @@ namespace BulletHaunter
         {
             Instance = this;
 
-            ownedWeapon = new WeaponInstance[MaxNumberWeapon];
+            WeaponReloading = GetComponent<WeaponReloading>();
+            ResetMagazineAmount();
+
+            ownedWeapon = new WeaponInstance[Max_Number_Weapon];
 
         }
         private void Start()
@@ -65,13 +63,9 @@ namespace BulletHaunter
             GameInput.Instance.OnWeaponDroped += GameInput_OnWeaponDroped;
 
             if(PlayerStats.Instance != null)
-            {
                 PlayerStats.Instance.OnDeathed += PlayerStats_OnDeathed;
-            }
             else
-            {
                 PlayerStats.OnAnyPlayerSpawn += PlayerStats_OnAnyPlayerSpawn;
-            }
         }
 
         private void PlayerStats_OnAnyPlayerSpawn(object sender, EventArgs e)
@@ -86,10 +80,22 @@ namespace BulletHaunter
         private void PlayerStats_OnDeathed(object sender, EventArgs e)
         {
             foreach (WeaponInstance weaponInstance in ownedWeapon)
-            {
                 DropUseWeapon(weaponInstance);
+
+            ownedWeapon = new WeaponInstance[Max_Number_Weapon];
+            ResetMagazineAmount();
+            UseWeapon = null;
+            OnAmmoChanged?.Invoke(this, EventArgs.Empty);
+            while (GrenadeAmount != 0)
+            {
+                GrenadeAmount--;
+                OnGrenadeSubstracted?.Invoke(this, new OnGrenadeAmountChangedEventArgs { grenadeAmount = GrenadeAmount });
             }
-            ownedWeapon = new WeaponInstance[MaxNumberWeapon];
+
+        }
+
+        private void ResetMagazineAmount()
+        {
             MagazineAmount = new Dictionary<WeaponType, int>
             {
                 {WeaponType.Gun,0 },
@@ -97,15 +103,6 @@ namespace BulletHaunter
                 {WeaponType.Sniper,0 },
                 {WeaponType.Shoutgun,0 },
             };
-            UseWeapon = null;
-            //OnSelectedWeaponChanged?.Invoke(this, new OnSelectedWeaponChangedEventArgs { selectedWeapon = UseWeapon });
-            OnAmmoChanged?.Invoke(this, EventArgs.Empty);
-            while(GrenadeAmount != 0)
-            {
-                GrenadeAmount--;
-                OnGrenadeSubstracted?.Invoke(this, new OnGrenadeAmountChangedEventArgs { grenadeAmount = GrenadeAmount });
-            }
-            
         }
 
         private void GameInput_OnWeaponDroped(object sender, EventArgs e) => DropUseWeapon(UseWeapon);
@@ -187,13 +184,8 @@ namespace BulletHaunter
        
         }
 
-        public bool CanShoot()
-        {
-            if (UseWeapon == null || UseWeapon.AmmoAmount <= 0) return false;
-
-            return true;
-        }
-
+        public bool CanShoot() => UseWeapon != null && UseWeapon.AmmoAmount > 0;
+     
         public bool CanThrowGrenade() => GrenadeAmount > 0;
 
         public void Reload()

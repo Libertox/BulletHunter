@@ -404,10 +404,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lobbyNameInputField: {fileID: 2066259411}
+  pointsToWinInputField: {fileID: 1749323091}
   gameAccessDropdown: {fileID: 1688865895}
   maxPlayerDropdown: {fileID: 1539130971}
   maxTeamDropdown: {fileID: 471685399}
-  pointsToWinInputField: {fileID: 1749323091}
   createLobby: {fileID: 2071214974}
 --- !u!1 &56609371
 GameObject:
@@ -10552,9 +10552,9 @@ MonoBehaviour:
   playButton: {fileID: 561337661}
   settingsButton: {fileID: 1964779623}
   exitButton: {fileID: 1287899706}
+  characterSelectButton: {fileID: 1295136684}
   settingsUI: {fileID: 1860870756}
   lobbyUI: {fileID: 367992846}
-  characterSelectButton: {fileID: 1295136684}
 --- !u!1 &1893659596
 GameObject:
   m_ObjectHideFlags: 0

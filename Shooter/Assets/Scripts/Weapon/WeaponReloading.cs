@@ -6,8 +6,8 @@ namespace BulletHaunter
 {
     public class WeaponReloading : MonoBehaviour
     {
-        public static event EventHandler<OnReloadedEventArgs> OnReloaded;
-        public static event EventHandler OnCanelReloaded;
+        public event EventHandler<OnReloadedEventArgs> OnReloaded;
+        public event EventHandler OnCanelReloaded;
 
         public class OnReloadedEventArgs : EventArgs { public float reloadTime; }
 
@@ -16,11 +16,8 @@ namespace BulletHaunter
 
         private InventoryManager inventory;
 
-        private void Awake()
-        {
-            inventory = GetComponent<InventoryManager>();
-        }
-
+        private void Awake() => inventory = GetComponent<InventoryManager>();
+      
         private void Start()
         {
             GameInput.Instance.OnReloaded += GameInput_OnReloaded;
@@ -29,13 +26,9 @@ namespace BulletHaunter
             GameInput.Instance.OnShooted += GameInput_OnShooted;
 
             if(PlayerStats.Instance != null)
-            {
                 PlayerStats.Instance.OnDeathed += PlayerStats_OnDeathed;
-            }
             else
-            {
                 PlayerStats.OnAnyPlayerSpawn += PlayerStats_OnAnyPlayerSpawn;
-            }
         }
 
         private void PlayerStats_OnAnyPlayerSpawn(object sender, EventArgs e)
@@ -47,11 +40,8 @@ namespace BulletHaunter
             }
         }
 
-        private void PlayerStats_OnDeathed(object sender, EventArgs e)
-        {
-            CancelReload();
-        }
-
+        private void PlayerStats_OnDeathed(object sender, EventArgs e) => CancelReload();
+      
         private void GameInput_OnShooted(object sender, EventArgs e)
         {
             if (inventory.UseWeapon != null && inventory.UseWeapon.AmmoAmount <= 0)
@@ -64,11 +54,8 @@ namespace BulletHaunter
                 CancelReload();
         }
 
-        private void GameInput_OnWeaponSelected(object sender, GameInput.OnWeaponSelectedEventArgs e)
-        {
-            CancelReload();
-        }
-
+        private void GameInput_OnWeaponSelected(object sender, GameInput.OnWeaponSelectedEventArgs e) => CancelReload();
+       
         private void GameInput_OnReloaded(object sender, EventArgs e)
         {
             if (inventory.UseWeapon != null)
@@ -93,19 +80,11 @@ namespace BulletHaunter
 
         private bool CanReload() => isReload && inventory.UseWeapon != null && inventory.GetUseMagazine() > 0;
 
-
         private void CancelReload()
         {
             isReload = false;
             time = 0;
             OnCanelReloaded?.Invoke(this, EventArgs.Empty);
-        }
-
-        public static void ResetStaticData()
-        {
-            OnReloaded = null;
-            OnCanelReloaded = null;
-        }
-
+        }  
     }
 }

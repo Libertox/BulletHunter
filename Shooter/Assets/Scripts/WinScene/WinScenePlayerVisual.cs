@@ -11,11 +11,8 @@ namespace BulletHaunter
         [SerializeField] private TextMeshPro playerNameText;
         [SerializeField] private SkinnedMeshRenderer playerSkinnedMeshRenderer;
 
-        private void Start()
-        {
-            UpdatePlayer();
-        }
-
+        private void Start() => UpdatePlayer();
+      
         private void UpdatePlayer()
         {
             if (!GameManagerMultiplayer.Instance.IsPlayerIndexConnected(playerIndex)) 

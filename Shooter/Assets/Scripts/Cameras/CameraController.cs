@@ -8,20 +8,24 @@ namespace BulletHaunter
     {
         [SerializeField] private float maxAngleY;
         [SerializeField] private float unzoomValue;
+        [SerializeField] private float movementSpeed;
+
         [SerializeField] private PlayerController playerController;
+
+        [SerializeField] private Transform uprightCameraPosition;
+        [SerializeField] private Transform squatCameraPosition;
 
         private float rotationY;
         private float rotationX;
         private Camera cameraToControl;
 
-        private void Awake() 
-        {
-            cameraToControl = GetComponent<Camera>();
-        }
+        private bool isSquatPosition;
 
+        private void Awake() => cameraToControl = GetComponent<Camera>();
+        
         private void Start()
         {
-            if (!IsOwner) 
+            if (!IsOwner)
             {
                 Hide();
                 return;
@@ -31,27 +35,35 @@ namespace BulletHaunter
             GameInput.Instance.OnCancelAimed += GameInput_OnCancelAimed;
             GameInput.Instance.OnWeaponDroped += GameInput_OnCancelAimed;
 
-            if(PlayerStats.Instance != null)
+            PlayerController.OnSquated += PlayerController_OnSquated;
+
+            if (PlayerStats.Instance != null)
             {
                 PlayerStats.Instance.OnDeathed += PlayerStats_OnDeathed;
                 PlayerStats.Instance.OnRestored += PlayerStats_OnRestored;
-            }   
+            }
             else
                 PlayerStats.OnAnyPlayerSpawn += PlayerStats_OnAnyPlayerSpawn;
 
+            SetCullingMask();
+        }
+
+        private void PlayerController_OnSquated(object sender, PlayerController.OnStateChangedEventArgs e)
+        {
+            isSquatPosition = e.state;
+        }
+
+        private void SetCullingMask()
+        {
             int index = GameManagerMultiplayer.Instance.GetPlayerDataIndexFromClientId(OwnerClientId);
             LayerMask playerMask = GameManager.Instance.GetPlayerLayerMask(index);
             LayerMask gunLayerMask = GameManager.Instance.GetPlayerGunLayerMask(index);
             cameraToControl.cullingMask &= ~(1 << playerMask);
             cameraToControl.cullingMask &= ~(1 << gunLayerMask);
-
         }
 
-        private void PlayerStats_OnRestored(object sender, EventArgs e)
-        {
-            Show();
-        }
-
+        private void PlayerStats_OnRestored(object sender, EventArgs e) => Show();
+       
         private void PlayerStats_OnAnyPlayerSpawn(object sender, EventArgs e)
         {
             if (PlayerStats.Instance != null)
@@ -75,7 +87,15 @@ namespace BulletHaunter
                 Zoom();
         }
 
-        private void Update() => Rotate();
+        private void Update() 
+        {
+            Rotate();
+
+            if (isSquatPosition)
+                transform.position = Vector3.LerpUnclamped(transform.position, squatCameraPosition.position, Time.deltaTime * movementSpeed);
+            else
+                transform.position = Vector3.LerpUnclamped(transform.position, uprightCameraPosition.position, Time.deltaTime * movementSpeed);
+        } 
      
         private void Rotate()
         {
@@ -87,16 +107,10 @@ namespace BulletHaunter
             playerController.HandleRotate(new Vector3(0, rotationX, 0));
         }
 
-        private void Zoom() 
-        {
-            cameraToControl.fieldOfView = InventoryManager.Instance.UseWeapon.WeaponSO.WeaponZoom;
-        }
-
-        private void Unzoom() 
-        {
-            cameraToControl.fieldOfView = unzoomValue;
-        }
-
+        private void Zoom() => cameraToControl.fieldOfView = InventoryManager.Instance.UseWeapon.WeaponSO.WeaponZoom;
+      
+        private void Unzoom() => cameraToControl.fieldOfView = unzoomValue;
+      
         private void Hide() => gameObject.SetActive(false);
 
         private void Show() => gameObject.SetActive(true);

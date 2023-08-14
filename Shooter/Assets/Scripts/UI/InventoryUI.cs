@@ -19,8 +19,8 @@ namespace BulletHaunter.UI
             InventoryManager.Instance.OnAmmoChanged += Inventory_OnAmmoChanged;
             InventoryManager.Instance.OnSelectedWeaponChanged += Inventory_OnSelectedWeaponChanged;
 
-            WeaponReloading.OnReloaded += WeaponReloading_OnReloaded;
-            WeaponReloading.OnCanelReloaded += WeaponReloading_OnCanelReloaded;
+            InventoryManager.Instance.WeaponReloading.OnReloaded += WeaponReloading_OnReloaded;
+            InventoryManager.Instance.WeaponReloading.OnCanelReloaded += WeaponReloading_OnCanelReloaded;
             InventoryManager.Instance.OnSelectedWeaponDroped += Inventory_OnSelectedWeaponDroped;
 
             InventoryManager.Instance.OnGrenadeAdded += Inventory_OnGrenadeAmountChanged;

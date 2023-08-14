@@ -13,7 +13,7 @@ namespace BulletHaunter
         [SerializeField] private int numberOfMagazine;
         [SerializeField] private int ammoAmount;
 
-        private float lifeTime = 48;
+        private readonly float lifeTime = 48;
 
         public void Drop() => DropServerRpc();
       
@@ -23,7 +23,8 @@ namespace BulletHaunter
         [ClientRpc()]
         private void DropClientRpc()
         {
-            rgb.AddForce(Vector3.down * 2f, ForceMode.Impulse);
+            float dropForce = 2f;
+            rgb.AddForce(Vector3.down * dropForce, ForceMode.Impulse);
             Destroy(gameObject, lifeTime);
         }
 
@@ -42,10 +43,8 @@ namespace BulletHaunter
         [ServerRpc(RequireOwnership = false)]
         private void DestroySelfServerRpc() => DestroySelfClientRpc();
       
-
         [ClientRpc()]
         private void DestroySelfClientRpc() => Destroy(gameObject);
       
-
     }
 }

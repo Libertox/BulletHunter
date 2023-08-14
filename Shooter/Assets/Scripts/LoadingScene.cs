@@ -20,16 +20,10 @@ namespace BulletHaunter.UI
             time.Value += Time.deltaTime;
             ChangeProgressBarClientRpc();
             if (time.Value > loadTime)
-            {
-                SceneLoader.LoadNetwork(SceneLoader.GameScene.Game);
-            }     
+                SceneLoader.LoadNetwork(SceneLoader.GameScene.Game);    
         }
 
         [ClientRpc()]
-        private void ChangeProgressBarClientRpc()
-        {
-            loadingBar.ChangeFillAmountImmediately(time.Value / loadTime);
-        }
-
+        private void ChangeProgressBarClientRpc() => loadingBar.ChangeFillAmountImmediately(time.Value / loadTime);
     }
 }

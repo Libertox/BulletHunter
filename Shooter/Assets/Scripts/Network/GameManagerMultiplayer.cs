@@ -10,28 +10,23 @@ namespace BulletHaunter
     {
         public static GameManagerMultiplayer Instance { get; private set; }
 
-        private const string PLAYER_PREFS_PLAYER_NAME = "PlayerName";
-        private const string PLAYER_PREFS_CHOOSE_SKIN_INDEX = "ChooseSkinIndex";
+        public const string PLAYER_PREFS_PLAYER_NAME = "PlayerName";
+        public const string PLAYER_PREFS_CHOOSE_SKIN_INDEX = "ChooseSkinIndex";
+        public const string Default_Player_Name = "Player";
 
         public event EventHandler OnPlayerDataNetworkListChanged;
-
-
         private NetworkList<PlayerData> playerDataNetworkList;
 
         [SerializeField] private List<Color> teamColorList;
         [SerializeField] private List<string> teamNameList;
-
-       
-
-        public int MaxPlayer { get; private set; }
-        public NetworkVariable<int> MaxTeam { get; private set; } = new NetworkVariable<int>();
-        public int PointsToWin { get; private set; }
-
-        public string PlayerName { get; private set; }
-        private int playerSkin;
         [SerializeField] private PlayerSkinsSO playerSkinsSO;
 
-        public int WinningTeam;
+        public NetworkVariable<int> MaxTeam { get; private set; } = new NetworkVariable<int>();
+        public int PointsToWin { get; private set; }
+        public int WinningTeam { get; private set; }
+
+        private string playerName;
+        private int playerSkin;
 
         private void Awake()
         {
@@ -40,17 +35,12 @@ namespace BulletHaunter
             playerDataNetworkList = new NetworkList<PlayerData>();
             playerDataNetworkList.OnListChanged += PlayerDataNetworkList_OnListChanged;
 
-            PlayerName = PlayerPrefs.GetString(PLAYER_PREFS_PLAYER_NAME,"Player");
+            playerName = PlayerPrefs.GetString(PLAYER_PREFS_PLAYER_NAME, Default_Player_Name);
             playerSkin = PlayerPrefs.GetInt(PLAYER_PREFS_CHOOSE_SKIN_INDEX);
-
-          
 
             DontDestroyOnLoad(gameObject);
 
         }
-
-       
-
 
         private void PlayerDataNetworkList_OnListChanged(NetworkListEvent<PlayerData> changeEvent)
         {
@@ -62,8 +52,7 @@ namespace BulletHaunter
             NetworkManager.Singleton.OnClientConnectedCallback += NetworkManager_OnClientConnectedCallback;
             NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_Server_OnClientDisconnectCallback;
 
-            NetworkManager.Singleton.StartHost();
-            
+            NetworkManager.Singleton.StartHost();      
         }
 
         private void NetworkManager_Server_OnClientDisconnectCallback(ulong clientId)
@@ -87,7 +76,7 @@ namespace BulletHaunter
             });
 
             SetPlayerIdServerRpc(AuthenticationService.Instance.PlayerId);
-            SetPlayerNameServerRpc(PlayerName);
+            SetPlayerNameServerRpc(playerName);
             SetPlayerSkinIdServerRpc(playerSkin);
         }
 
@@ -95,13 +84,12 @@ namespace BulletHaunter
         {
             NetworkManager.Singleton.OnClientConnectedCallback += NetworkManager_Client_OnClientConnectedCallback;
             NetworkManager.Singleton.StartClient();
-
         }
 
         private void NetworkManager_Client_OnClientConnectedCallback(ulong obj)
         {
             SetPlayerIdServerRpc(AuthenticationService.Instance.PlayerId);
-            SetPlayerNameServerRpc(PlayerName);
+            SetPlayerNameServerRpc(playerName);
             SetPlayerSkinIdServerRpc(playerSkin);
         }
 
@@ -153,7 +141,6 @@ namespace BulletHaunter
             return -1;
         }
 
-
         public PlayerData GetPlayerDataFromIndex(int playerIndex) => playerDataNetworkList[playerIndex];
 
         public Color GetTeamColor(int teamId) => teamColorList[teamId];
@@ -161,6 +148,8 @@ namespace BulletHaunter
         public string GetTeamName(int teamId) => teamNameList[teamId];
 
         public Material GetPlayerMaterial(int skinIndex) => playerSkinsSO.PlayerSkinList[skinIndex];
+
+        public PlayerData GetPlayerData() => GetPlayerDataFromClientId(NetworkManager.Singleton.LocalClientId);
 
         public PlayerData GetPlayerDataFromClientId(ulong clientId)
         {
@@ -173,13 +162,8 @@ namespace BulletHaunter
         }
 
    
-        public PlayerData GetPlayerData() => GetPlayerDataFromClientId(NetworkManager.Singleton.LocalClientId);
-
-        public void ChangePlayerTeamColor(int teamColorId)
-        {
-            ChangePlayerTeamColorServerRpc(teamColorId);
-        }
-
+        public void ChangePlayerTeamColor(int teamColorId) => ChangePlayerTeamColorServerRpc(teamColorId);
+     
         [ServerRpc(RequireOwnership = false)]
         private void ChangePlayerTeamColorServerRpc(int teamColorId, ServerRpcParams serverRpcParams = default)
         {
@@ -198,13 +182,10 @@ namespace BulletHaunter
         }
 
 
-        public void SetGameSettings(int maxPlayer, int maxTeam, int pointsToWin)
-        {
-            MaxPlayer = maxPlayer;
-            MaxTeam.Value = maxTeam;
-            PointsToWin = pointsToWin;
-        }
+        public void SetPointsToWin(int pointsToWin) => PointsToWin = pointsToWin;
+        public void SetMaxTeam(int maxTeam) => MaxTeam.Value = maxTeam;
 
-       
+        public void SetWinningTeam(int winningTeam) => WinningTeam = winningTeam;
+
     }
 }

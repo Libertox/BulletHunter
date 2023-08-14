@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -209,7 +208,7 @@ namespace BulletHaunter
             if (GameManager.Instance != null && !GameManager.Instance.CanInputAction()) return;
 
             var readValue = obj.ReadValue<float>();
-            int inventorySize = InventoryManager.MaxNumberWeapon - 1;
+            int inventorySize = InventoryManager.Max_Number_Weapon - 1;
             if(readValue > 0)
             {
                 if(selectedWeapon.selectWeaponIndex < inventorySize)

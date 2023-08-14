@@ -9,6 +9,6 @@ PhysicMaterial:
   m_Name: GrenadeBounce
   dynamicFriction: 0.8
   staticFriction: 1
-  bounciness: 1
+  bounciness: 0.7
   frictionCombine: 0
   bounceCombine: 0

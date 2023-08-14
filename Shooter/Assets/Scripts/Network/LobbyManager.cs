@@ -15,7 +15,10 @@ namespace BulletHaunter
         private Lobby joinedLobby;
 
         private float heartbeatTimer;
+        private readonly float heartbearTimerMax = 15f;
+
         private float listLobbiesTimer;
+        private readonly float listLobbiesTimerMax = 3f;
 
         public event EventHandler<OnLobbyListChangedEventArgs> OnLobbyListChanged;
 
@@ -62,8 +65,7 @@ namespace BulletHaunter
 
             listLobbiesTimer -= Time.deltaTime;
             if (listLobbiesTimer <= 0f)
-            {
-                float listLobbiesTimerMax = 3f;
+            { 
                 listLobbiesTimer = listLobbiesTimerMax;
                 ListLobbies();
             }
@@ -75,8 +77,7 @@ namespace BulletHaunter
             {
                 heartbeatTimer -= Time.deltaTime;
                 if (heartbeatTimer <= 0f)
-                {
-                    float heartbearTimerMax = 15f;
+                {                  
                     heartbeatTimer = heartbearTimerMax;
 
                     LobbyService.Instance.SendHeartbeatPingAsync(joinedLobby.Id);
@@ -84,11 +85,8 @@ namespace BulletHaunter
             }
         }
 
-        private bool IsLobbyHost()
-        {
-            return joinedLobby != null && joinedLobby.HostId == AuthenticationService.Instance.PlayerId;
-        }
-
+        private bool IsLobbyHost() => joinedLobby != null && joinedLobby.HostId == AuthenticationService.Instance.PlayerId;
+      
         private async void ListLobbies()
         {
             try

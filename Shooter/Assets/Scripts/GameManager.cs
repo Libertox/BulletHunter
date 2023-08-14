@@ -10,6 +10,7 @@ namespace BulletHaunter
     public class GameManager: NetworkBehaviour
     {
         public const string PLAYER_PREFS_SHOW_PLAYER_NICK = "showPlayerNick";
+        private const int gameStartCoolDown = 30;
 
         public static GameManager Instance { get; private set; }
 
@@ -37,7 +38,6 @@ namespace BulletHaunter
         [SerializeField] private int[] playerGunLayerMask;
         [SerializeField] private int[] playerTeamLayerMask;
 
-        private NetworkList<ulong> spawnedPlayerIdList;
         public SortedDictionary<int, int> TeamPointsDictionary;
 
 
@@ -55,8 +55,6 @@ namespace BulletHaunter
 
             usedPointsIndexList = new List<int>();
 
-            spawnedPlayerIdList = new NetworkList<ulong>();
-
             TeamPointsDictionary = new SortedDictionary<int, int>();
 
             for (int i = 0; i < GameManagerMultiplayer.Instance.MaxTeam.Value; i++)
@@ -69,18 +67,12 @@ namespace BulletHaunter
         public override void OnNetworkSpawn()
         {
             if (IsServer)
-            {
                 NetworkManager.Singleton.SceneManager.OnLoadEventCompleted += SceneManager_OnLoadEventCompleted;
-            }
 
             if(PlayerStats.Instance != null)
-            {
                 PlayerStats.Instance.OnDeathed += PlayerStats_OnDeathed;
-            }
             else
-            {
                 PlayerStats.OnAnyPlayerSpawn += PlayerStats_OnAnyPlayerSpawn;
-            }
 
             SetShowPlayerNick(PlayerPrefs.GetInt(PLAYER_PREFS_SHOW_PLAYER_NICK, 0) == 1);
             StartCoroutine(StartGame());
@@ -88,10 +80,8 @@ namespace BulletHaunter
 
         public override void OnDestroy()
         {
-            if (IsServer)
-            {
+            if (IsServer && NetworkManager.Singleton != null)
                 NetworkManager.Singleton.SceneManager.OnLoadEventCompleted -= SceneManager_OnLoadEventCompleted;
-            }
         }
       
         private void PlayerStats_OnAnyPlayerSpawn(object sender, EventArgs e)
@@ -113,19 +103,14 @@ namespace BulletHaunter
         {
             foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
             {
-                if (!spawnedPlayerIdList.Contains(clientId))
-                {
-                    PlayerController playerController = Instantiate(playerPrefab);
-                    playerController.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true);
-                    spawnedPlayerIdList.Add(clientId);
-                }
+                PlayerController playerController = Instantiate(playerPrefab);
+                playerController.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true);      
             }
-
         }
 
         private IEnumerator StartGame()
         {
-            float startTimer = 30;
+            float startTimer = gameStartCoolDown;
             OnGameStartWaited?.Invoke(this, new OnGameStartWaitedEventArgs { timerValue = startTimer });
             while (startTimer > 0)
             {
@@ -136,7 +121,6 @@ namespace BulletHaunter
             OnGameStarted?.Invoke(this, EventArgs.Empty);
             gameState = GameState.Play; 
         }
-
 
         public void SetGameState(GameState gameState) 
         {
@@ -163,18 +147,10 @@ namespace BulletHaunter
             return playerSpawnPointsList[randomIndex].position;
 
         }
-
-        public int GetWeaponSOIndex(WeaponSO weaponSO)
-        {
-            return weaponSOList.IndexOf(weaponSO);
-        }
-
-        public WeaponSO GetWeaponSOFromIndex(int index)
-        {
-            return weaponSOList[index];
-        }
-
-
+        public int GetWeaponSOIndex(WeaponSO weaponSO) => weaponSOList.IndexOf(weaponSO);
+      
+        public WeaponSO GetWeaponSOFromIndex(int index) => weaponSOList[index];
+ 
         public LayerMask GetPlayerLayerMask(int index) => playerLayerMask[index];
 
         public LayerMask GetPlayerGunLayerMask(int index) => playerGunLayerMask[index];
@@ -201,21 +177,13 @@ namespace BulletHaunter
 
             if (CheckAnyoneWin(teamId))
             {
-                GameManagerMultiplayer.Instance.WinningTeam = teamId;
+                GameManagerMultiplayer.Instance.SetWinningTeam(teamId);
                 SceneLoader.LoadNetwork(SceneLoader.GameScene.WinningScene);
             }
         }
 
-        private bool CheckAnyoneWin(int teamId)
-        {
-            if (TeamPointsDictionary[teamId] >= GameManagerMultiplayer.Instance.PointsToWin)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
+        private bool CheckAnyoneWin(int teamId) => TeamPointsDictionary[teamId] >= GameManagerMultiplayer.Instance.PointsToWin;
+     
         public void SetShowPlayerNick(bool isShowPlayerNick) 
         {
             ShowPlayerName = isShowPlayerNick;

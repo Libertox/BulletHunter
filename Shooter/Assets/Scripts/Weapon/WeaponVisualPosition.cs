@@ -27,6 +27,7 @@ namespace BulletHaunter
             Down,
             Up,
         }
+
         private void Start()
         {
             InventoryManager.Instance.OnSelectedWeaponChanged += Inventory_OnSelectedWeaponChanged;
@@ -69,9 +70,7 @@ namespace BulletHaunter
                     break;
                 case PositionState.Up:
                     if (MoveUp())
-                    {
                         isChangePosition = false;
-                    }
                     break;
 
             }
@@ -90,22 +89,14 @@ namespace BulletHaunter
         public bool MoveDown()
         {
             transform.position = Vector3.Lerp(transform.position, downPointTransform.position, Time.deltaTime * swapModelSpeed);
-            if (transform.position == downPointTransform.position)
-            {
-                return true;
-            }
-            return false;
+            return transform.position == downPointTransform.position;
+
         }
 
         public bool MoveUp()
         {
             transform.position = Vector3.Lerp(transform.position, upPointTransform.position, Time.deltaTime * swapModelSpeed);
-            if (transform.position == upPointTransform.position)
-            {
-                return true;
-            }
-
-            return false;
+            return transform.position == upPointTransform.position;   
         }
     }
 }

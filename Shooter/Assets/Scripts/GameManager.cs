@@ -18,16 +18,19 @@ namespace BulletHaunter
         public event EventHandler OnGameStarted;
         public event EventHandler OnTeamPointsChanged;
         public event EventHandler<OnShowPlayerNickChangedEventArgs> OnShowPlayerNickChanged;
+        public event EventHandler<OnGameFinishedEventArgs> OnGameFinished;
 
         public class OnGameStartWaitedEventArgs : EventArgs { public float timerValue; };
 
         public class OnShowPlayerNickChangedEventArgs : EventArgs { public bool isShow; }
 
+        public class OnGameFinishedEventArgs:EventArgs { public Action gameFinishAction; }
+
         [SerializeField] private PlayerController playerPrefab;
         [SerializeField] private List<Transform> playerSpawnPointsList;
        
         private NetworkList<int> usedPointsIndexList;
-        private GameState gameState = GameState.Start;
+        [SerializeField] private GameState gameState = GameState.Start;
         private GameState previousGameState;
 
         public bool ShowPlayerName { get; private set; }
@@ -186,9 +189,17 @@ namespace BulletHaunter
             if (CheckAnyoneWin(teamId))
             {
                 GameManagerMultiplayer.Instance.SetWinningTeam(teamId);
-                SceneLoader.LoadNetwork(SceneLoader.GameScene.WinningScene);
-            }
+                OnGameFinished?.Invoke(this, new OnGameFinishedEventArgs
+                {
+                    gameFinishAction = () =>
+                    {
+                        SceneLoader.LoadNetwork(SceneLoader.GameScene.WinningScene);
+                    }
+                });
+            }  
         }
+
+
 
         private bool CheckAnyoneWin(int teamId) => TeamPointsDictionary[teamId] >= GameManagerMultiplayer.Instance.PointsToWin;
      

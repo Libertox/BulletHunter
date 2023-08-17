@@ -54,12 +54,28 @@ namespace BulletHaunter
 
         private void Start()
         {
+            if (!IsOwner) return;
+
             GameInput.Instance.OnJumped += GameInput_OnJumped;
             GameInput.Instance.OnSquat += GameInput_OnSquat;
 
-            transform.position = GameManager.Instance.GetRandomPosition();
+            PlayerStats.OnDeathed += PlayerStats_OnDeathed;
+            PlayerStats.OnRestored += PlayerStats_OnRestored;
         }
-    
+
+        private void PlayerStats_OnRestored(object sender, EventArgs e)
+        {
+            rgb.useGravity = true;
+            isSquat = false;
+            OnSquated?.Invoke(this, new OnStateChangedEventArgs
+            {
+                state = isSquat
+            });
+
+        }
+
+        private void PlayerStats_OnDeathed(object sender, PlayerStats.OnDeathedEventArgs e) => rgb.useGravity = false;
+      
         private void GameInput_OnSquat(object sender, System.EventArgs e) => HandleSquat();
        
         private void GameInput_OnJumped(object sender, System.EventArgs e) => HandleJump();

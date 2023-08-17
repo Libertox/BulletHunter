@@ -26,7 +26,7 @@ namespace BulletHaunter
         [SerializeField] private PlayerController playerPrefab;
         [SerializeField] private List<Transform> playerSpawnPointsList;
        
-        private List<int> usedPointsIndexList;
+        private NetworkList<int> usedPointsIndexList;
         private GameState gameState = GameState.Start;
         private GameState previousGameState;
 
@@ -53,7 +53,7 @@ namespace BulletHaunter
         {
             Instance = this;
 
-            usedPointsIndexList = new List<int>();
+            usedPointsIndexList = new NetworkList<int>();
 
             TeamPointsDictionary = new SortedDictionary<int, int>();
 
@@ -103,9 +103,10 @@ namespace BulletHaunter
         {
             foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
             {
-                PlayerController playerController = Instantiate(playerPrefab);
+                PlayerController playerController = Instantiate(playerPrefab, GetRandomPosition(), Quaternion.identity);
                 playerController.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true);      
             }
+            ResetUsedPointsIndexList();
         }
 
         private IEnumerator StartGame()
@@ -139,14 +140,21 @@ namespace BulletHaunter
         public Vector3 GetRandomPosition()
         {
             int randomIndex = UnityEngine.Random.Range(0, playerSpawnPointsList.Capacity);
-            while (usedPointsIndexList.Contains(randomIndex) && usedPointsIndexList.Capacity < playerSpawnPointsList.Capacity)
+            ResetUsedPointsIndexList();
+            while (usedPointsIndexList.Contains(randomIndex))
             {
                 randomIndex = UnityEngine.Random.Range(0, playerSpawnPointsList.Capacity);
             }
             usedPointsIndexList.Add(randomIndex);
             return playerSpawnPointsList[randomIndex].position;
-
         }
+
+        private void ResetUsedPointsIndexList()
+        {
+            if (usedPointsIndexList.Count < playerSpawnPointsList.Capacity)
+                usedPointsIndexList.Clear();
+        }
+
         public int GetWeaponSOIndex(WeaponSO weaponSO) => weaponSOList.IndexOf(weaponSO);
       
         public WeaponSO GetWeaponSOFromIndex(int index) => weaponSOList[index];

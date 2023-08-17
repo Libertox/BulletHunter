@@ -30,6 +30,8 @@ namespace BulletHaunter
 
         private void Start()
         {
+            if (!IsOwner) return;
+
             InventoryManager.Instance.OnSelectedWeaponChanged += Inventory_OnSelectedWeaponChanged;
 
             GameInput.Instance.OnAimed += GameInput_OnAimed;

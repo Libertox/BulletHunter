@@ -11,19 +11,20 @@ namespace BulletHaunter.UI
         [SerializeField] private float loadTime;
         [SerializeField] private BarUI loadingBar;
 
-        private NetworkVariable<float> time = new NetworkVariable<float>();
+        private readonly NetworkVariable<float> time = new NetworkVariable<float>();
 
+        private void Start() => time.OnValueChanged += OnValueChanged;
+      
+        private void OnValueChanged(float previousValue, float newValue) => loadingBar.ChangeFillAmountImmediately(newValue / loadTime);
+      
         private void Update()
         {
             if (!NetworkManager.Singleton.IsServer) return;
 
             time.Value += Time.deltaTime;
-            ChangeProgressBarClientRpc();
             if (time.Value > loadTime)
-                SceneLoader.LoadNetwork(SceneLoader.GameScene.Game);    
+                SceneLoader.LoadNetwork(SceneLoader.GameScene.Game);                 
         }
 
-        [ClientRpc()]
-        private void ChangeProgressBarClientRpc() => loadingBar.ChangeFillAmountImmediately(time.Value / loadTime);
     }
 }

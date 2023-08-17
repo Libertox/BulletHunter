@@ -61,7 +61,7 @@ namespace BulletHaunter
 
             if (Input.GetKeyDown(KeyCode.X))
             {
-                TakeDamage(2f, 0);
+                transform.position = GameManager.Instance.GetRandomPosition();
             }
                 
         }
@@ -229,6 +229,11 @@ namespace BulletHaunter
         }
 
         public NetworkObject GetNetworkObject() => NetworkObject;
+
+        public static void ResetStaticData()
+        {
+            OnAnyPlayerSpawn = null;
+        }
        
     }
 }

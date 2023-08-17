@@ -43,7 +43,11 @@ namespace BulletHaunter.UI
             Hide();
         }
 
-        public void Show() => gameObject.SetActive(true);
+        public void Show() 
+        {
+            gameObject.SetActive(true);
+            createGameButton.Select();
+        } 
 
         private void Hide() => gameObject.SetActive(false);
     }

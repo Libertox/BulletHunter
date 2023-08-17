@@ -93,7 +93,11 @@ namespace BulletHaunter
 
         private void GameInput_OnPaused(object sender, EventArgs e) => Hide();
 
-        public void Show() => gameObject.SetActive(true);
+        public void Show() 
+        {
+            gameObject.SetActive(true);
+            gameplaySettingsButton.Select();
+        } 
 
         public  void Hide() => gameObject.SetActive(false);
 

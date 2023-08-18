@@ -61,7 +61,7 @@ namespace BulletHaunter
 
             if (Input.GetKeyDown(KeyCode.X))
             {
-                transform.position = GameManager.Instance.GetRandomPosition();
+                //transform.position = GameManager.Instance.GetRandomPosition();
             }
                 
         }

@@ -216,6 +216,7 @@ namespace BulletHaunter
                 rgb.velocity = getOffLaderSpeed * inputVector.y * (Vector3.up  + orientationPoint.forward);   
         }
 
+       
         public static void ResetStaticData()
         {
             OnSquated = null;

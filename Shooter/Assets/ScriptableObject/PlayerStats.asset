@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PlayerStats
   m_EditorClassIdentifier: 
   <MaxHealth>k__BackingField: 20
-  <MaxStamina>k__BackingField: 5
+  <MaxStamina>k__BackingField: 8
   <MaxArmor>k__BackingField: 10
-  <RestoreCooldown>k__BackingField: 10
-  <InvulnerabilityCooldown>k__BackingField: 10
+  <RestoreCooldown>k__BackingField: 8
+  <InvulnerabilityCooldown>k__BackingField: 8

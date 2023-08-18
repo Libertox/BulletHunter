@@ -27,7 +27,18 @@ namespace BulletHaunter
             {
                 GameInput.Instance.OnShooted += GameInput_OnShooted;
                 GameInput.Instance.OnCancelShooted += GameInput_OnCancelShooted;
-            }     
+
+                
+            }
+            SetShootLayerMask();
+        }
+
+        private void SetShootLayerMask()
+        {
+            int index = GameManagerMultiplayer.Instance.GetPlayerDataIndexFromClientId(OwnerClientId);
+            LayerMask playerLayerMask = GameManager.Instance.GetPlayerLayerMask(index);
+
+            shootLayerMask &= ~(1 << playerLayerMask);
         }
 
         private void GameInput_OnCancelShooted(object sender, EventArgs e) 

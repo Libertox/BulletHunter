@@ -12,6 +12,8 @@ namespace BulletHaunter
         [SerializeField] private SkinnedMeshRenderer playerSkinnedMeshRenderer;
         [SerializeField] private TextMeshPro playerNickText;
 
+        [SerializeField] private GameObject root;
+
         private void Start()
         {
             GameManager.Instance.OnShowPlayerNickChanged += GameManager_OnShowPlayerNickChanged;
@@ -19,6 +21,7 @@ namespace BulletHaunter
             int index = GameManagerMultiplayer.Instance.GetPlayerDataIndexFromClientId(OwnerClientId);
             LayerMask playerLayerMask = GameManager.Instance.GetPlayerLayerMask(index);
             SetGameLayerRecursive(gameObject, playerLayerMask);
+            root.layer = playerLayerMask;
 
             SetPlayerSkin();
             SetPlayerNick();

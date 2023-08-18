@@ -57,7 +57,7 @@ MonoBehaviour:
   explosionRange: 2.5
   targerLayerMask:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 133693568
   <ThrowForce>k__BackingField: 15
 --- !u!54 &3137053889801675482
 Rigidbody:

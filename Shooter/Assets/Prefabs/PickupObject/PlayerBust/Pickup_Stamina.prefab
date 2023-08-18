@@ -84,7 +84,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbd3428fbf723de43a069862737d6463, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  staminaValue: 5
+  staminaValue: 8
   bustDuration: 6
 --- !u!114 &3174337446784318276
 MonoBehaviour:

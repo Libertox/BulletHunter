@@ -127,7 +127,7 @@ namespace BulletHaunter
             if (!IsOwner) return;
 
             if (collider.GetComponent<Ladder>())
-                playerController.GetOffLader();      
+                playerController.GetOffLader();
         }
 
         public bool GroundCheck()

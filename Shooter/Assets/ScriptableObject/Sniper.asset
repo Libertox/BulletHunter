@@ -32,6 +32,6 @@ MonoBehaviour:
   <AmmoInMagazine>k__BackingField: 9
   <WeaponRange>k__BackingField: 35
   <WeaponZoom>k__BackingField: 20
-  <ReloadTime>k__BackingField: 6
+  <ReloadTime>k__BackingField: 5
   <ShootSpeed>k__BackingField: 0.3
-  <Damage>k__BackingField: 5
+  <Damage>k__BackingField: 4

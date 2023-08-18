@@ -29,7 +29,7 @@ namespace BulletHaunter
         [SerializeField] private PlayerController playerPrefab;
         [SerializeField] private List<Transform> playerSpawnPointsList;
        
-        private NetworkList<int> usedPointsIndexList;
+        private List<int> usedPointsIndexList;
         [SerializeField] private GameState gameState = GameState.Start;
         private GameState previousGameState;
 
@@ -56,7 +56,7 @@ namespace BulletHaunter
         {
             Instance = this;
 
-            usedPointsIndexList = new NetworkList<int>();
+            usedPointsIndexList = new List<int>();
 
             TeamPointsDictionary = new SortedDictionary<int, int>();
 
@@ -65,6 +65,15 @@ namespace BulletHaunter
                 TeamPointsDictionary[i] = 0;
             }
 
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                foreach (var item in usedPointsIndexList)
+                    Debug.Log(item);
+            }
         }
 
         public override void OnNetworkSpawn()
@@ -148,13 +157,19 @@ namespace BulletHaunter
             {
                 randomIndex = UnityEngine.Random.Range(0, playerSpawnPointsList.Capacity);
             }
-            usedPointsIndexList.Add(randomIndex);
+            AddIndexToUsedPointsListClientRpc(randomIndex);
             return playerSpawnPointsList[randomIndex].position;
         }
 
+        [ClientRpc()]
+        private void AddIndexToUsedPointsListClientRpc(int index) 
+        {
+            usedPointsIndexList.Add(index);
+        } 
+
         private void ResetUsedPointsIndexList()
         {
-            if (usedPointsIndexList.Count < playerSpawnPointsList.Capacity)
+            if (usedPointsIndexList.Count >= playerSpawnPointsList.Count)
                 usedPointsIndexList.Clear();
         }
 

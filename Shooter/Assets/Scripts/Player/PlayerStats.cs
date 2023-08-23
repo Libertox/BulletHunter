@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using Unity.Netcode;
-using UnityEditor.Rendering;
 using UnityEngine;
 
 
@@ -34,11 +32,10 @@ namespace BulletHaunter
         private float health;
         private float armor;
         
-
         private bool isInvulnerable;
         private bool haveStaminaBust;
 
-        private ulong lastPlayerHitId;
+        private ulong opponentHitId;
 
         private void Start()
         {
@@ -49,19 +46,11 @@ namespace BulletHaunter
         private void Update()
         {
             if (!IsOwner) return;
-
-            if (Input.GetKeyDown(KeyCode.Z))
-            {
-                /*OnDeathed?.Invoke(this, new OnDeathedEventArgs());
-                StartCoroutine(Restore());
-                GameManager.Instance.SetGameState(GameManager.GameState.Respawn);*/
-                // StartCoroutine(InvulnerabilityCountdown());
-                IncreaseHealth(5f);
-            }
-
+     
             if (Input.GetKeyDown(KeyCode.X))
             {
                 //transform.position = GameManager.Instance.GetRandomPosition();
+                DecreaseHealth(100f);
             }
                 
         }
@@ -114,7 +103,7 @@ namespace BulletHaunter
                 ChnageHealthValue();
                 if (health <= 0)
                 {
-                    OnDeathed?.Invoke(this, new OnDeathedEventArgs { targetId = lastPlayerHitId , ownerId = OwnerClientId});
+                    OnDeathed?.Invoke(this, new OnDeathedEventArgs { targetId = opponentHitId , ownerId = OwnerClientId});
                     StartCoroutine(RestoreCoroutine());
                     health = 0;
                     return true;
@@ -184,8 +173,7 @@ namespace BulletHaunter
 
             OnRestored?.Invoke(this, EventArgs.Empty);
             IncreaseHealth(playerStatsSO.MaxHealth);
-            GameManager.Instance.SetGameState(GameManager.GameState.Play);
-            transform.position = GameManager.Instance.GetRandomPosition();
+         
             StartCoroutine(InvulnerabilityCountdownCoroutine());
         }
 
@@ -216,24 +204,23 @@ namespace BulletHaunter
 
         public bool TakeDamage(float damage, ulong clientId)
         {
-            if(!GameManager.Instance.IsStartState() && !isInvulnerable)
+            if (CanTakeDamage())
             {
-                lastPlayerHitId = clientId;
+                opponentHitId = clientId;
                 SoundManager.Instance.PlayPlayerTakeDamageSound(transform.position);
+
                 if (armor <= 0)
-                     return DecreaseHealth(damage);
+                    return DecreaseHealth(damage);
                 else
                     DecreaseArmor(damage);
             }
-            return false;    
+            return false;
         }
 
+        private bool CanTakeDamage() => !GameManager.Instance.IsStartState() && !isInvulnerable;
+       
         public NetworkObject GetNetworkObject() => NetworkObject;
 
-        public static void ResetStaticData()
-        {
-            OnAnyPlayerSpawn = null;
-        }
-       
+        public static void ResetStaticData() => OnAnyPlayerSpawn = null;     
     }
 }

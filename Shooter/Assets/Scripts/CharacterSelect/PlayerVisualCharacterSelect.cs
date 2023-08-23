@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace BulletHaunter
+namespace BulletHaunter.CharacterSelect
 {
     public class PlayerVisualCharacterSelect:MonoBehaviour
     {
@@ -15,7 +15,6 @@ namespace BulletHaunter
         {
             CharacterSelectManager.Instance.OnSkinChanged += CharacterSelectManager_OnSkinChanged;
             SetSkinnedMeshRendererMaterials(CharacterSelectManager.Instance.GetChooseMaterial()); 
-
         }
 
         private void CharacterSelectManager_OnSkinChanged(object sender, CharacterSelectManager.OnSkinChangedEventArgs e)

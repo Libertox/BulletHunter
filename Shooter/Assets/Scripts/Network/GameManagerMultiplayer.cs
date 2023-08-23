@@ -15,6 +15,7 @@ namespace BulletHaunter
         public const string Default_Player_Name = "Player";
 
         public event EventHandler OnPlayerDataNetworkListChanged;
+
         private NetworkList<PlayerData> playerDataNetworkList;
 
         [SerializeField] private List<Color> teamColorList;
@@ -161,7 +162,6 @@ namespace BulletHaunter
             return default;
         }
 
-   
         public void ChangePlayerTeamColor(int teamColorId) => ChangePlayerTeamColorServerRpc(teamColorId);
      
         [ServerRpc(RequireOwnership = false)]
@@ -174,15 +174,14 @@ namespace BulletHaunter
             playerDataNetworkList[playerDataIndex] = playerData;
         }
 
-
         public void KickPlayer(ulong clientId)
         {
             NetworkManager.Singleton.DisconnectClient(clientId);
             NetworkManager_Server_OnClientDisconnectCallback(clientId);
         }
 
-
         public void SetPointsToWin(int pointsToWin) => PointsToWin = pointsToWin;
+
         public void SetMaxTeam(int maxTeam) => MaxTeam.Value = maxTeam;
 
         public void SetWinningTeam(int winningTeam) => WinningTeam = winningTeam;

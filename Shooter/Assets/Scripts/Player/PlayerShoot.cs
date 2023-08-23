@@ -28,11 +28,12 @@ namespace BulletHaunter
                 GameInput.Instance.OnShooted += GameInput_OnShooted;
                 GameInput.Instance.OnCancelShooted += GameInput_OnCancelShooted;
 
-                
+                GameInput.Instance.OnPaused += GameInput_OnCancelShooted;
             }
             SetShootLayerMask();
         }
 
+   
         private void SetShootLayerMask()
         {
             int index = GameManagerMultiplayer.Instance.GetPlayerDataIndexFromClientId(OwnerClientId);
@@ -55,7 +56,7 @@ namespace BulletHaunter
     
         private void Update()
         {
-            if (!isShoot || !IsOwner || !InventoryManager.Instance.CanShoot()) return;
+            if (!IsOwner || !isShoot || !InventoryManager.Instance.CanShoot()) return;
 
             shootTimerCooldown += Time.deltaTime;
 

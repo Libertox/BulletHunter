@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace BulletHaunter
+namespace BulletHaunter.CharacterSelect
 {
     public class CharacterSelectManager:MonoBehaviour
     {
@@ -29,9 +29,6 @@ namespace BulletHaunter
            PlayerPrefs.Save();
         }
 
-        public string GetPlayerName() => PlayerPrefs.GetString(GameManagerMultiplayer.PLAYER_PREFS_PLAYER_NAME, GameManagerMultiplayer.Default_Player_Name);
-      
-
         public void SetNextSkin()
         {
             ChooseSkinIndex++;
@@ -50,9 +47,9 @@ namespace BulletHaunter
             OnSkinChanged?.Invoke(this, new OnSkinChangedEventArgs { material = GetChooseMaterial() });
         }
 
-        public void SetChooseSkinIndex(int newIndex) 
+        public void SetSpecificSkin(int skinIndex) 
         {
-            ChooseSkinIndex = newIndex;
+            ChooseSkinIndex = skinIndex;
 
             OnSkinChanged?.Invoke(this, new OnSkinChangedEventArgs { material = GetChooseMaterial() });
         }

@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
+using Unity.Netcode;
 
 namespace BulletHaunter.UI
 {
-    public class KickPlayerUI: MonoBehaviour
+    public class HostDisconnectedUI:MonoBehaviour
     {
+
         [SerializeField] private Button backMainMenuButton;
 
         private void Awake()
         {
             backMainMenuButton.onClick.AddListener(() =>
             {
-                LobbyManager.Instance.LeaveLobby();
                 SoundManager.Instance.PlayButtonSound();
                 SceneLoader.Load(SceneLoader.GameScene.MainMenu);
             });
@@ -29,20 +29,23 @@ namespace BulletHaunter.UI
 
         private void OnDestroy()
         {
-            if(NetworkManager.Singleton != null)
+            if (NetworkManager.Singleton != null)
                 NetworkManager.Singleton.OnClientDisconnectCallback -= NetworkManager_OnClientDisconnectCallback;
         }
 
-        private void NetworkManager_OnClientDisconnectCallback(ulong clientId) 
+        private void NetworkManager_OnClientDisconnectCallback(ulong clientId)
         {
-            if(!NetworkManager.Singleton.IsServer)
+            if (clientId == 0)
+            {
                 Show();
-        } 
-      
+                Cursor.lockState = CursorLockMode.None;
+                GameManager.Instance.SetGameState(GameManager.GameState.HostExit);
+            }
+                
+        }
+
         private void Hide() => gameObject.SetActive(false);
 
         private void Show() => gameObject.SetActive(true);
-
-
     }
 }

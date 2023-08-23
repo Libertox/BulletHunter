@@ -47,6 +47,8 @@ namespace BulletHaunter.UI
        
         private void Show()
         {
+            if (!GameManager.Instance.CanPauseGame()) return;
+
             isShow = !isShow;
 
             if (GameManager.Instance.IsPauseState())
@@ -65,7 +67,6 @@ namespace BulletHaunter.UI
         }
 
         private void Hide() => gameObject.SetActive(false);
-
 
     }
 }

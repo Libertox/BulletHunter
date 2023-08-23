@@ -131,6 +131,9 @@ namespace BulletHaunter
         private void Pause_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
         {
             OnPaused?.Invoke(this, EventArgs.Empty);
+
+            OnCancelAimed?.Invoke(this, EventArgs.Empty);
+            OnCancelShooted?.Invoke(this, EventArgs.Empty);
         }
 
         private void Throw_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)

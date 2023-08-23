@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using BulletHaunter.CharacterSelect;
 
 namespace BulletHaunter.UI
 {
@@ -46,7 +45,8 @@ namespace BulletHaunter.UI
                     ResetPointsButtonColor();
 
                     int chooseSkinIndex = (CharacterSelectManager.Instance.ChooseSkinIndex / pointsButton.Length) * pointsButton.Length + index;
-                    CharacterSelectManager.Instance.SetChooseSkinIndex(chooseSkinIndex);
+                    pointsButton[index].image.color = Color.gray;
+                    CharacterSelectManager.Instance.SetSpecificSkin(chooseSkinIndex);
                     SoundManager.Instance.PlayButtonSound();
                 });
             }
@@ -54,7 +54,7 @@ namespace BulletHaunter.UI
 
         private void Start()
         {
-            playerNameInputField.text = CharacterSelectManager.Instance.GetPlayerName();
+            playerNameInputField.text = PlayerPrefs.GetString(GameManagerMultiplayer.PLAYER_PREFS_PLAYER_NAME, GameManagerMultiplayer.Default_Player_Name); ;
             UpdatePointsButton();
         }
 

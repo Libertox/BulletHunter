@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-namespace BulletHaunter
+namespace BulletHaunter.Cameras
 {
     public class TeamPlayerCamera:NetworkBehaviour
     {

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace BulletHaunter
 {
@@ -9,9 +7,11 @@ namespace BulletHaunter
         public static MusicManager Instance { get; private set; }
 
         private const string PLAYER_PREFS_MUSIC_VOLUME = "MusicVolume";
+
+        private readonly float volumeScale = 10f;
         private readonly float defaultMusicVolume = .5f;
 
-        public float MusicVolume => musicSource.volume * 10f;
+        public float MusicVolume => musicSource.volume * volumeScale;
 
         [SerializeField] private AudioSource musicSource;
 

@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 
@@ -89,11 +87,12 @@ namespace BulletHaunter
 
             if (!isGround && rgb.velocity.y < 0)
             {
-                OnFalled?.Invoke(this, trueState);
                 OnJumped?.Invoke(this, falseState);
-            }
+                OnFalled?.Invoke(this, trueState);
+            }  
             else
                 OnFalled?.Invoke(this, falseState);
+               
         }
 
         private void FixedUpdate() 
@@ -105,7 +104,7 @@ namespace BulletHaunter
 
         private void HandleMovement()
         {
-            if (isClimb || !playerInteract.GroundCheck()) return;
+            if (isClimb || !isGround) return;
        
             Vector2 inputVector = GameInput.Instance.GetMovementVectorNormalized();
 
@@ -161,18 +160,14 @@ namespace BulletHaunter
 
         private void HandleJump()
         {
-            if (isSquat) return;
+            if (isSquat || !isGround) return;
 
             Vector2 inputVector = GameInput.Instance.GetMovementVectorNormalized();
             moveDirection = (orientationPoint.forward.normalized * inputVector.y + orientationPoint.right.normalized * inputVector.x) * baseSpeed;
             Vector3 jumpDirection = new Vector3(moveDirection.x, jumpForce, moveDirection.z);
-
-            if (isGround)
-            {
-                rgb.AddForce(jumpDirection, ForceMode.Impulse);
-                OnJumped?.Invoke(this, trueState);
-            }
-                         
+   
+            rgb.AddForce(jumpDirection, ForceMode.Impulse);
+            OnJumped?.Invoke(this, trueState);               
         }
 
         public void HandleRotate(Vector3 angle) => transform.eulerAngles = angle;
@@ -192,12 +187,16 @@ namespace BulletHaunter
         public void ClimbOnLadder()
         {
             rgb.useGravity = false;
+
+            OnJumped?.Invoke(this, falseState);
+            OnWalked?.Invoke(this, falseState);
             
             Vector2 inputVector = GameInput.Instance.GetMovementVectorNormalized();
 
             moveDirection = (orientationPoint.right.normalized * inputVector.x) * baseSpeed;
 
             rgb.velocity = new Vector3(moveDirection.x, inputVector.y, moveDirection.z);
+
             if (!isGround || inputVector.y >= 0)
                 isClimb = true;
             else

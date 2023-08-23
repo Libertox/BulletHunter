@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 
-namespace BulletHaunter
+namespace BulletHaunter.Cameras
 {
     public class WeaponCamera: NetworkBehaviour
     {

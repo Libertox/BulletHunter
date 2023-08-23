@@ -50,6 +50,7 @@ namespace BulletHaunter
             Play,
             Respawn,
             Start,
+            HostExit,
         }
 
         private void Awake()
@@ -65,15 +66,6 @@ namespace BulletHaunter
                 TeamPointsDictionary[i] = 0;
             }
 
-        }
-
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.X))
-            {
-                foreach (var item in usedPointsIndexList)
-                    Debug.Log(item);
-            }
         }
 
         public override void OnNetworkSpawn()
@@ -100,9 +92,20 @@ namespace BulletHaunter
         {
             if (PlayerStats.Instance != null)
             {
+                PlayerStats.Instance.OnRestored -= PlayerStats_OnRestored;
+                PlayerStats.Instance.OnRestored += PlayerStats_OnRestored;
+
+
                 PlayerStats.Instance.OnDeathed -= PlayerStats_OnDeathed;
                 PlayerStats.Instance.OnDeathed += PlayerStats_OnDeathed;
             }
+        }
+
+        private void PlayerStats_OnRestored(object sender, EventArgs e)
+        {
+            PlayerStats playerController = sender as PlayerStats;
+            playerController.transform.position = GetRandomPosition();
+            SetGameState(GameState.Play);
         }
 
         private void PlayerStats_OnDeathed(object sender, PlayerStats.OnDeathedEventArgs e)
@@ -149,6 +152,8 @@ namespace BulletHaunter
 
         public bool CanInputAction() => gameState == GameState.Play || gameState == GameState.Start;
 
+        public bool CanPauseGame() => gameState != GameState.HostExit;
+
         public Vector3 GetRandomPosition()
         {
             int randomIndex = UnityEngine.Random.Range(0, playerSpawnPointsList.Capacity);
@@ -193,25 +198,29 @@ namespace BulletHaunter
 
             if(targetplayerData.teamColorId != ownerPlayerData.teamColorId)
                 SetPointsForTeamClientRpc(targetplayerData.teamColorId);
+
+            if (CheckAnyoneWin(targetplayerData.teamColorId))
+                FinishGameClientRpc(targetplayerData.teamColorId);
         }
 
         [ClientRpc()]
         private void SetPointsForTeamClientRpc(int teamId)
         {
             TeamPointsDictionary[teamId]++;
-            OnTeamPointsChanged?.Invoke(this, EventArgs.Empty);
+            OnTeamPointsChanged?.Invoke(this, EventArgs.Empty); 
+        }
 
-            if (CheckAnyoneWin(teamId))
+        [ClientRpc]
+        private void FinishGameClientRpc(int winningTeam)
+        {
+            GameManagerMultiplayer.Instance.SetWinningTeam(winningTeam);
+            OnGameFinished?.Invoke(this, new OnGameFinishedEventArgs
             {
-                GameManagerMultiplayer.Instance.SetWinningTeam(teamId);
-                OnGameFinished?.Invoke(this, new OnGameFinishedEventArgs
+                gameFinishAction = () =>
                 {
-                    gameFinishAction = () =>
-                    {
-                        SceneLoader.LoadNetwork(SceneLoader.GameScene.WinningScene);
-                    }
-                });
-            }  
+                    SceneLoader.LoadNetwork(SceneLoader.GameScene.WinningScene);
+                }
+            });
         }
 
 

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Unity.Netcode;
-using Unity.Services.Lobbies.Models;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 
 namespace BulletHaunter
 {
@@ -44,36 +39,39 @@ namespace BulletHaunter
             PlayerPrefs.Save();
         }
 
+
         public void PlayButtonSound()
         {
-            int buttonClipIndex = UnityEngine.Random.Range(0, audioClipsSO.ButtonSound.Length);
+            int buttonClipIndex = Random.Range(0, audioClipsSO.ButtonSound.Length);
             soundEffectSource.PlayOneShot(audioClipsSO.ButtonSound[buttonClipIndex],SoundEffectVolume);
         }
 
-        public void PlayShootSound(Vector3 playPoint)
+
+
+        public void PlayShootSound(Vector3 audioSourcePosition)
         {
-            int shootClipIndex = UnityEngine.Random.Range(0, audioClipsSO.ShootSound.Length);
-            AudioSource.PlayClipAtPoint(audioClipsSO.ShootSound[shootClipIndex], playPoint, SoundEffectVolume);
+            int shootClipIndex = Random.Range(0, audioClipsSO.ShootSound.Length);
+            AudioSource.PlayClipAtPoint(audioClipsSO.ShootSound[shootClipIndex], audioSourcePosition, SoundEffectVolume);
         }
 
-        public void PlayBulletImpactSound(Vector3 playPoint)
+        public void PlayBulletImpactSound(Vector3 audioSourcePosition)
         {
-            int bulletImpactClipIndex = UnityEngine.Random.Range(0, audioClipsSO.BulletImpactSound.Length);
-            AudioSource.PlayClipAtPoint(audioClipsSO.BulletImpactSound[bulletImpactClipIndex], playPoint, SoundEffectVolume);
+            int bulletImpactClipIndex = Random.Range(0, audioClipsSO.BulletImpactSound.Length);
+            AudioSource.PlayClipAtPoint(audioClipsSO.BulletImpactSound[bulletImpactClipIndex], audioSourcePosition, SoundEffectVolume);
         }
 
-        public void PlayGrenadeExplosionSound(Vector3 playPoint)
+        public void PlayGrenadeExplosionSound(Vector3 audioSourcePosition)
         {
-            int explosionClipIndex = UnityEngine.Random.Range(0, audioClipsSO.ExplosionSound.Length);
-            AudioSource.PlayClipAtPoint(audioClipsSO.ExplosionSound[explosionClipIndex], playPoint, SoundEffectVolume);
+            int explosionClipIndex = Random.Range(0, audioClipsSO.ExplosionSound.Length);
+            AudioSource.PlayClipAtPoint(audioClipsSO.ExplosionSound[explosionClipIndex], audioSourcePosition, SoundEffectVolume);
         }
      
-        public void PlayPlayerWalkSound(Vector3 playPoint) => AudioSource.PlayClipAtPoint(audioClipsSO.WalkSound, playPoint, SoundEffectVolume);
+        public void PlayPlayerWalkSound(Vector3 audioSourcePosition) => AudioSource.PlayClipAtPoint(audioClipsSO.WalkSound, audioSourcePosition, SoundEffectVolume);
  
-        public void PlayPlayerJumpSound(Vector3 playPoint) => AudioSource.PlayClipAtPoint(audioClipsSO.JumpSound, playPoint, SoundEffectVolume);
+        public void PlayPlayerJumpSound(Vector3 audioSourcePosition) => AudioSource.PlayClipAtPoint(audioClipsSO.JumpSound, audioSourcePosition, SoundEffectVolume);
    
-        public void PlayPickupObjectSound(Vector3 playpoint) => AudioSource.PlayClipAtPoint(audioClipsSO.PickupObjectSound, playpoint, SoundEffectVolume);
+        public void PlayPickupObjectSound(Vector3 audioSourcePosition) => AudioSource.PlayClipAtPoint(audioClipsSO.PickupObjectSound, audioSourcePosition, SoundEffectVolume);
   
-        public void PlayPlayerTakeDamageSound(Vector3 playPoint) => AudioSource.PlayClipAtPoint(audioClipsSO.TakeDamageSound, playPoint, SoundEffectVolume);
+        public void PlayPlayerTakeDamageSound(Vector3 audioSourcePosition) => AudioSource.PlayClipAtPoint(audioClipsSO.TakeDamageSound, audioSourcePosition, SoundEffectVolume);
     }
 }

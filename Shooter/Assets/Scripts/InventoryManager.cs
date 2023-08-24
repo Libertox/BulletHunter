@@ -32,8 +32,7 @@ namespace BulletHaunter
         private WeaponInstance[] ownedWeapon;
         private int useWeaponIndex;
 
-        public WeaponReloading WeaponReloading { get; private set; }
-
+   
         public int GrenadeAmount { get; private set; }
 
         public Dictionary<WeaponType, int> MagazineAmount { get; private set; }
@@ -50,8 +49,6 @@ namespace BulletHaunter
         private void Awake()
         {
             Instance = this;
-
-            WeaponReloading = GetComponent<WeaponReloading>();
             ResetMagazineAmount();
 
             ownedWeapon = new WeaponInstance[Max_Number_Weapon];

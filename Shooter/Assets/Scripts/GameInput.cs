@@ -130,6 +130,8 @@ namespace BulletHaunter
 
         private void Pause_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
         {
+            if (GameManager.Instance != null && !GameManager.Instance.CanPauseGame()) return;
+
             OnPaused?.Invoke(this, EventArgs.Empty);
 
             OnCancelAimed?.Invoke(this, EventArgs.Empty);

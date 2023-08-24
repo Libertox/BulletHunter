@@ -20,11 +20,10 @@ namespace BulletHaunter
         [SerializeField] private Camera playerCamera;
 
         private void Start()
-        {
-            GameInput.Instance.OnInteract += GameInput_OnInteract;
-
+        {      
             if (IsOwner) 
             {
+                GameInput.Instance.OnInteract += GameInput_OnInteract;
                 PlayerController.OnSquated += PlayerController_OnSquated;
 
                 if (PlayerStats.Instance != null)

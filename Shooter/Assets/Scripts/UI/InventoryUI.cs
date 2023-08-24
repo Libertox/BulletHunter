@@ -19,14 +19,20 @@ namespace BulletHaunter.UI
             InventoryManager.Instance.OnAmmoChanged += Inventory_OnAmmoChanged;
             InventoryManager.Instance.OnSelectedWeaponChanged += Inventory_OnSelectedWeaponChanged;
 
-            InventoryManager.Instance.WeaponReloading.OnReloaded += WeaponReloading_OnReloaded;
-            InventoryManager.Instance.WeaponReloading.OnCanelReloaded += WeaponReloading_OnCanelReloaded;
+            PlayerReloading.OnReloaded += WeaponReloading_OnReloaded;
+            PlayerReloading.OnCanelReloaded += WeaponReloading_OnCanelReloaded;
             InventoryManager.Instance.OnSelectedWeaponDroped += Inventory_OnSelectedWeaponDroped;
 
             InventoryManager.Instance.OnGrenadeAdded += Inventory_OnGrenadeAmountChanged;
             InventoryManager.Instance.OnGrenadeSubstracted += Inventory_OnGrenadeSubstracted;
 
             Hide();
+        }
+
+        private void OnDestroy()
+        {
+            PlayerReloading.OnReloaded -= WeaponReloading_OnReloaded;
+            PlayerReloading.OnCanelReloaded -= WeaponReloading_OnCanelReloaded;
         }
 
         private void Inventory_OnGrenadeSubstracted(object sender, InventoryManager.OnGrenadeAmountChangedEventArgs e)
@@ -43,7 +49,7 @@ namespace BulletHaunter.UI
 
         private void WeaponReloading_OnCanelReloaded(object sender, EventArgs e) => weaponReloadBar.Hide();
 
-        private void WeaponReloading_OnReloaded(object sender, WeaponReloading.OnReloadedEventArgs e)
+        private void WeaponReloading_OnReloaded(object sender, PlayerReloading.OnReloadedEventArgs e)
         {
             weaponReloadBar.ChangeFillAmountImmediately(e.reloadTime);
             weaponReloadBar.Show();

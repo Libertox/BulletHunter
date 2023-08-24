@@ -16,6 +16,8 @@ namespace BulletHaunter.UI
             backMainMenuButton.onClick.AddListener(() =>
             {
                 SoundManager.Instance.PlayButtonSound();
+                PlayerController.ResetStaticData();
+                PlayerStats.ResetStaticData();
                 SceneLoader.Load(SceneLoader.GameScene.MainMenu);
             });
         }
@@ -23,7 +25,7 @@ namespace BulletHaunter.UI
         private void Start()
         {
             NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_OnClientDisconnectCallback;
-
+    
             Hide();
         }
 
@@ -35,13 +37,12 @@ namespace BulletHaunter.UI
 
         private void NetworkManager_OnClientDisconnectCallback(ulong clientId)
         {
-            if (clientId == 0)
+            if(clientId == NetworkManager.ServerClientId)
             {
                 Show();
                 Cursor.lockState = CursorLockMode.None;
                 GameManager.Instance.SetGameState(GameManager.GameState.HostExit);
-            }
-                
+            }  
         }
 
         private void Hide() => gameObject.SetActive(false);

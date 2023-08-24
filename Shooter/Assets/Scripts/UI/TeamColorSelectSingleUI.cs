@@ -29,6 +29,11 @@ namespace BulletHaunter.UI
             UpdateIsSelected();
         }
 
+        private void OnDestroy()
+        {
+            GameManagerMultiplayer.Instance.OnPlayerDataNetworkListChanged -= GameManagerMultiplayer_OnPlayerDataNetworkListChanged;
+        }
+
         private void GameManagerMultiplayer_OnPlayerDataNetworkListChanged(object sender, EventArgs e) => UpdateIsSelected();
        
         private void UpdateIsSelected()

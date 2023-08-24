@@ -13,8 +13,6 @@ namespace BulletHaunter
         [SerializeField] private MeshFilter weaponMeshFiler;
         [SerializeField] private MeshRenderer weaponMeshRender;
 
-        [SerializeField] private Transform dropWeaponPosition;
-
         private void Start()
         {
             if (IsOwner)
@@ -22,27 +20,11 @@ namespace BulletHaunter
 
             SetWeaponLayerMask();
         }
-
-     
+   
         private void Inventory_OnSelectedWeaponDroped(object sender, InventoryManager.OnSelectedWeaponChangedEventArgs e)
         {
-            DropWeaponServerRpc(GameManager.Instance.GetWeaponSOIndex(e.selectedWeapon.WeaponSO), e.selectedWeapon.AmmoAmount);
             SwapWeaponModel(null);
         }
-
-        [ServerRpc(RequireOwnership = false)]
-        private void DropWeaponServerRpc(int weaponSOIndex , int ammoAmount)
-        {
-            WeaponSO weaponSO = GameManager.Instance.GetWeaponSOFromIndex(weaponSOIndex);
-            Gun gun = Instantiate(weaponSO.WeaponPrefab,dropWeaponPosition.position,Quaternion.identity);
-
-            NetworkObject networkObject = gun.GetComponent<NetworkObject>();
-            networkObject.Spawn(true);
-
-            gun.SetAmmoAmount(ammoAmount);
-            gun.Drop();
-        }
-
 
         public void SwapWeaponModel(WeaponSO useWeapon) => SwapWeaponModelServerRpc(GameManager.Instance.GetWeaponSOIndex(useWeapon));
         

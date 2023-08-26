@@ -19,7 +19,8 @@ namespace BulletHaunter
         public static LobbyManager Instance { get; private set; }
 
         private const string KEY_RELAY_JOIN_CODE = "RelayJoinCode";
-
+        private const string LOBBY_DATA_AVAILABLE = "Available";
+        private const string LOBBY_NOT_AVAILABLE = "Not available";
         private Lobby joinedLobby;
 
         private float heartbeatTimer;
@@ -27,6 +28,8 @@ namespace BulletHaunter
 
         private float listLobbiesTimer;
         private readonly float listLobbiesTimerMax = 3f;
+
+        private List<string> joinedLobbiesIdList;
 
         public event EventHandler<OnLobbyListChangedEventArgs> OnLobbyListChanged;
 
@@ -42,23 +45,11 @@ namespace BulletHaunter
         {
             Instance = this;
 
+            joinedLobby = null;
+
             DontDestroyOnLoad(gameObject);
 
-            InitializeUnityAuthentication();
-        }
-
-        private async void InitializeUnityAuthentication()
-        {
-            if (UnityServices.State != ServicesInitializationState.Initialized)
-            {
-                InitializationOptions initializationOptions = new InitializationOptions();
-                initializationOptions.SetProfile(UnityEngine.Random.Range(0, 1000).ToString());
-
-                await UnityServices.InitializeAsync(initializationOptions);
-
-                await AuthenticationService.Instance.SignInAnonymouslyAsync();
-            }
-
+            joinedLobbiesIdList = new List<string>();
         }
 
         private void Update()
@@ -70,6 +61,7 @@ namespace BulletHaunter
         private void HandlePeriodListLobbies()
         {
             if (joinedLobby != null || !AuthenticationService.Instance.IsSignedIn) return;
+
 
             listLobbiesTimer -= Time.deltaTime;
             if (listLobbiesTimer <= 0f)
@@ -103,7 +95,8 @@ namespace BulletHaunter
                 {
                     Filters = new List<QueryFilter>
                     {
-                       new QueryFilter(QueryFilter.FieldOptions.AvailableSlots,"0",QueryFilter.OpOptions.GT)
+                       new QueryFilter(QueryFilter.FieldOptions.AvailableSlots,"0",QueryFilter.OpOptions.GT),
+                       new QueryFilter(QueryFilter.FieldOptions.S1,LOBBY_DATA_AVAILABLE,QueryFilter.OpOptions.EQ)
                     }
                 };
 
@@ -175,7 +168,11 @@ namespace BulletHaunter
             {
                 joinedLobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, playerNumber, new CreateLobbyOptions
                 {
-                    IsPrivate = isPrivate
+                    IsPrivate = isPrivate,
+                    Data = new Dictionary<string, DataObject>
+                    {
+                        {LOBBY_DATA_AVAILABLE,new DataObject(DataObject.VisibilityOptions.Public,LOBBY_DATA_AVAILABLE,DataObject.IndexOptions.S1)}
+                    }
                 });
                 Allocation allocation = await AllocateRelay(playerNumber);
                 string relayJoinCode =  await GetRelayJoinCode(allocation);
@@ -228,6 +225,13 @@ namespace BulletHaunter
             try
             {
                 joinedLobby = await LobbyService.Instance.JoinLobbyByCodeAsync(lobbyCode);
+
+                if (joinedLobby.Data[LOBBY_DATA_AVAILABLE].Value == LOBBY_NOT_AVAILABLE)
+                {
+                    LeaveLobby();
+                    OnJoinedLobbyFailed?.Invoke(this, EventArgs.Empty);
+                    return;
+                }
 
                 string relayJoinCode = joinedLobby.Data[KEY_RELAY_JOIN_CODE].Value;
                 JoinAllocation joinAllocation = await JoinRelay(relayJoinCode);
@@ -319,5 +323,60 @@ namespace BulletHaunter
 
         public Lobby GetLobby() => joinedLobby;
 
+        public void UpdateLobbyData()
+        {
+            try
+            {
+                LobbyService.Instance.UpdateLobbyAsync(joinedLobby.Id, new UpdateLobbyOptions
+                {
+                    IsPrivate = true,
+                    Data = new Dictionary<string, DataObject>
+                    {
+                        {LOBBY_DATA_AVAILABLE,new DataObject(DataObject.VisibilityOptions.Public,LOBBY_NOT_AVAILABLE,DataObject.IndexOptions.S1)}
+                    }
+                });
+            }
+            catch(LobbyServiceException e)
+            {
+                Debug.Log(e);
+            }
+        }
+
+        public async Task<bool> HasActiveLobby()
+        {
+            try
+            {
+                joinedLobbiesIdList = await LobbyService.Instance.GetJoinedLobbiesAsync();
+                return joinedLobbiesIdList.Count > 0;
+            }
+            catch (LobbyServiceException e)
+            {
+                Debug.Log(e);
+                return false;
+            }
+            
+        }
+
+        public async void RejoinLobby()
+        {
+            OnJoinedLobby?.Invoke(this, EventArgs.Empty);
+            try
+            {
+                joinedLobby = await LobbyService.Instance.ReconnectToLobbyAsync(joinedLobbiesIdList[0]);
+
+                string relayJoinCode = joinedLobby.Data[KEY_RELAY_JOIN_CODE].Value;
+                JoinAllocation joinAllocation = await JoinRelay(relayJoinCode);
+
+                NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(joinAllocation, "dtls"));
+
+                GameManagerMultiplayer.Instance.StartClient();
+
+            }
+            catch(LobbyServiceException e)
+            {
+                Debug.Log(e);
+                OnJoinedLobbyFailed?.Invoke(this, EventArgs.Empty);
+            }
+        }
     }
 }

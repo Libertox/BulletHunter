@@ -45,6 +45,8 @@ namespace BulletHaunter.Cameras
             else
                 PlayerStats.OnAnyPlayerSpawn += PlayerStats_OnAnyPlayerSpawn;
 
+            GameManagerMultiplayer.Instance.OnPlayerDataNetworkListChanged += GameManagerMultiplayer_OnPlayerDataNetworkListChanged;
+
             SetCullingMask();
         }
 
@@ -53,13 +55,36 @@ namespace BulletHaunter.Cameras
             isSquatPosition = e.state;
         }
 
+        private void GameManagerMultiplayer_OnPlayerDataNetworkListChanged(object sender, EventArgs e)
+        {
+            ResetCullingMask();
+            SetCullingMask();
+        }
+
+        public override void OnDestroy()
+        {
+            GameManagerMultiplayer.Instance.OnPlayerDataNetworkListChanged -= GameManagerMultiplayer_OnPlayerDataNetworkListChanged;
+        }
+
         private void SetCullingMask()
         {
             int index = GameManagerMultiplayer.Instance.GetPlayerDataIndexFromClientId(OwnerClientId);
+
+            if (index == -1) 
+                return;
+
             LayerMask playerMask = GameManager.Instance.GetPlayerLayerMask(index);
             LayerMask gunLayerMask = GameManager.Instance.GetPlayerGunLayerMask(index);
             cameraToControl.cullingMask &= ~(1 << playerMask);
             cameraToControl.cullingMask &= ~(1 << gunLayerMask);
+        }
+        private void ResetCullingMask()
+        {
+            for (int i = 0; i < GameManager.Instance.GetPlayerGunLayerMaskLength(); i++)
+            {
+                cameraToControl.cullingMask |= (1 << GameManager.Instance.GetPlayerGunLayerMask(i));
+                cameraToControl.cullingMask |= (1 << GameManager.Instance.GetPlayerLayerMask(i));
+            }
         }
 
         private void PlayerStats_OnRestored(object sender, EventArgs e) => Show();

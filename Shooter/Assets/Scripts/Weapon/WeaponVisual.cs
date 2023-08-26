@@ -18,19 +18,31 @@ namespace BulletHaunter
             if (IsOwner)
                 InventoryManager.Instance.OnSelectedWeaponDroped += Inventory_OnSelectedWeaponDroped;
 
+            GameManagerMultiplayer.Instance.OnPlayerDataNetworkListChanged += GameManagerMultiplayer_OnPlayerDataNetworkListChanged;
+
             SetWeaponLayerMask();
         }
-   
+
+        private void GameManagerMultiplayer_OnPlayerDataNetworkListChanged(object sender, EventArgs e)
+        {
+            SetWeaponLayerMask();
+        }
+
+        public override void OnDestroy()
+        {
+            GameManagerMultiplayer.Instance.OnPlayerDataNetworkListChanged -= GameManagerMultiplayer_OnPlayerDataNetworkListChanged;
+        }
+
         private void Inventory_OnSelectedWeaponDroped(object sender, InventoryManager.OnSelectedWeaponChangedEventArgs e)
         {
             SwapWeaponModel(null);
         }
 
         public void SwapWeaponModel(WeaponSO useWeapon) => SwapWeaponModelServerRpc(GameManager.Instance.GetWeaponSOIndex(useWeapon));
-        
+
         [ServerRpc(RequireOwnership = false)]
         private void SwapWeaponModelServerRpc(int weaponSOIndex) => SwapWeaponModelClientRpc(weaponSOIndex);
-       
+
 
         [ClientRpc()]
         private void SwapWeaponModelClientRpc(int weaponSOIndex)
@@ -60,9 +72,18 @@ namespace BulletHaunter
             weaponMeshFiler.gameObject.SetActive(true);
         }
 
-        private void SetWeaponLayerMask()
+        private void SetWeaponLayerMask() => SetWeaponLayerMaskServerRpc();
+     
+
+        [ServerRpc(RequireOwnership = false)]
+        private void SetWeaponLayerMaskServerRpc() => SetWeaponLayerMaskClientRpc();
+      
+
+        [ClientRpc]
+        private void SetWeaponLayerMaskClientRpc()
         {
             int index = GameManagerMultiplayer.Instance.GetPlayerDataIndexFromClientId(OwnerClientId);
+            if (index == -1) return;
             LayerMask gunLayerMask = GameManager.Instance.GetPlayerGunLayerMask(index);
 
             scopeMeshFilter.gameObject.layer = gunLayerMask;

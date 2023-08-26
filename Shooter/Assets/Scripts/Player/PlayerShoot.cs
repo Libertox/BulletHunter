@@ -20,7 +20,7 @@ namespace BulletHaunter
 
         private bool isShoot;
         private float shootTimerCooldown;
-  
+
         private void Start()
         {
             if (IsOwner)
@@ -30,16 +30,36 @@ namespace BulletHaunter
 
                 GameInput.Instance.OnPaused += GameInput_OnCancelShooted;
             }
+
+            GameManagerMultiplayer.Instance.OnPlayerDataNetworkListChanged += GameManagerMultiplayer_OnPlayerDataNetworkListChanged;
             SetShootLayerMask();
+
+         
         }
 
-   
+        private void GameManagerMultiplayer_OnPlayerDataNetworkListChanged(object sender, EventArgs e)
+        {
+            ResetCullingMask();
+            SetShootLayerMask();
+        }
+        public override void OnDestroy()
+        {
+            GameManagerMultiplayer.Instance.OnPlayerDataNetworkListChanged -= GameManagerMultiplayer_OnPlayerDataNetworkListChanged;
+        }
+
         private void SetShootLayerMask()
         {
             int index = GameManagerMultiplayer.Instance.GetPlayerDataIndexFromClientId(OwnerClientId);
+            if (index == -1) return;
             LayerMask playerLayerMask = GameManager.Instance.GetPlayerLayerMask(index);
 
             shootLayerMask &= ~(1 << playerLayerMask);
+        }
+
+        private void ResetCullingMask()
+        {
+            for (int i = 0; i < GameManager.Instance.GetPlayerLayerMaskLength(); i++)
+                shootLayerMask |= (1 << GameManager.Instance.GetPlayerLayerMask(i));
         }
 
         private void GameInput_OnCancelShooted(object sender, EventArgs e) 

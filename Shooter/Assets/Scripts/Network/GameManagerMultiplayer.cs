@@ -12,6 +12,7 @@ namespace BulletHaunter
 
         public const string PLAYER_PREFS_PLAYER_NAME = "PlayerName";
         public const string PLAYER_PREFS_CHOOSE_SKIN_INDEX = "ChooseSkinIndex";
+        public const string PLAYER_PREFS_CHOOSE_TEAM = "ChooseTeam";
         public const string Default_Player_Name = "Player";
 
         public event EventHandler OnPlayerDataNetworkListChanged;
@@ -40,7 +41,6 @@ namespace BulletHaunter
             playerSkin = PlayerPrefs.GetInt(PLAYER_PREFS_CHOOSE_SKIN_INDEX);
 
             DontDestroyOnLoad(gameObject);
-
         }
 
         private void PlayerDataNetworkList_OnListChanged(NetworkListEvent<PlayerData> changeEvent)
@@ -52,8 +52,15 @@ namespace BulletHaunter
         {
             NetworkManager.Singleton.OnClientConnectedCallback += NetworkManager_OnClientConnectedCallback;
             NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_Server_OnClientDisconnectCallback;
+            NetworkManager.Singleton.OnServerStopped += NetworkManager_OnServerStopped;    
 
-            NetworkManager.Singleton.StartHost();      
+            NetworkManager.Singleton.StartHost();
+    
+        }
+
+        private void NetworkManager_OnServerStopped(bool obj)
+        {
+            LobbyManager.Instance.DeleteLobby();
         }
 
         private void NetworkManager_Server_OnClientDisconnectCallback(ulong clientId)
@@ -79,7 +86,10 @@ namespace BulletHaunter
             SetPlayerIdServerRpc(AuthenticationService.Instance.PlayerId);
             SetPlayerNameServerRpc(playerName);
             SetPlayerSkinIdServerRpc(playerSkin);
+            SetPlayerTeamIdServerRpc(PlayerPrefs.GetInt(PLAYER_PREFS_CHOOSE_TEAM, 0));
         }
+
+     
 
         public void StartClient()
         {
@@ -92,6 +102,19 @@ namespace BulletHaunter
             SetPlayerIdServerRpc(AuthenticationService.Instance.PlayerId);
             SetPlayerNameServerRpc(playerName);
             SetPlayerSkinIdServerRpc(playerSkin);
+            SetPlayerTeamIdServerRpc(PlayerPrefs.GetInt(PLAYER_PREFS_CHOOSE_TEAM, 0));
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void SetPlayerTeamIdServerRpc(int teamId, ServerRpcParams serverRpcParams = default)
+        {
+            int playerDataIndex = GetPlayerDataIndexFromClientId(serverRpcParams.Receive.SenderClientId);
+
+            PlayerData playerData = playerDataNetworkList[playerDataIndex];
+
+            playerData.teamColorId = teamId;
+
+            playerDataNetworkList[playerDataIndex] = playerData;
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -162,7 +185,11 @@ namespace BulletHaunter
             return default;
         }
 
-        public void ChangePlayerTeamColor(int teamColorId) => ChangePlayerTeamColorServerRpc(teamColorId);
+        public void ChangePlayerTeamColor(int teamColorId) 
+        {
+            PlayerPrefs.SetInt(PLAYER_PREFS_CHOOSE_TEAM, teamColorId);
+            ChangePlayerTeamColorServerRpc(teamColorId);
+        } 
      
         [ServerRpc(RequireOwnership = false)]
         private void ChangePlayerTeamColorServerRpc(int teamColorId, ServerRpcParams serverRpcParams = default)
@@ -185,6 +212,8 @@ namespace BulletHaunter
         public void SetMaxTeam(int maxTeam) => MaxTeam.Value = maxTeam;
 
         public void SetWinningTeam(int winningTeam) => WinningTeam = winningTeam;
+
+        public void ResetPlayerTeam() => PlayerPrefs.DeleteKey(PLAYER_PREFS_CHOOSE_TEAM);
 
     }
 }

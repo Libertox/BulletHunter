@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
@@ -17,8 +18,25 @@ namespace BulletHaunter
         private void Start()
         {
             GameManager.Instance.OnShowPlayerNickChanged += GameManager_OnShowPlayerNickChanged;
+            GameManagerMultiplayer.Instance.OnPlayerDataNetworkListChanged += GameManagerMultiplayer_OnPlayerDataNetworkListChanged;
 
+            UpdatePlayerVisual();
+        }
+
+        private void GameManagerMultiplayer_OnPlayerDataNetworkListChanged(object sender, EventArgs e) => SetPlayerVisualServerRpc();
+      
+        [ServerRpc(RequireOwnership = false)]
+        private void SetPlayerVisualServerRpc() => SetPlayerVisualClientRpc();
+     
+        [ClientRpc]
+        private void SetPlayerVisualClientRpc() => UpdatePlayerVisual();
+      
+
+        private void UpdatePlayerVisual()
+        {
             int index = GameManagerMultiplayer.Instance.GetPlayerDataIndexFromClientId(OwnerClientId);
+            if (index == -1) return;
+
             LayerMask playerLayerMask = GameManager.Instance.GetPlayerLayerMask(index);
             SetGameLayerRecursive(gameObject, playerLayerMask);
             root.layer = playerLayerMask;
@@ -33,6 +51,12 @@ namespace BulletHaunter
             SetPlayerNickShow(e.isShow);
         }
 
+        public override void OnDestroy()
+        {
+            GameManagerMultiplayer.Instance.OnPlayerDataNetworkListChanged -= GameManagerMultiplayer_OnPlayerDataNetworkListChanged;
+        }
+
+     
         private void SetGameLayerRecursive(GameObject gameobject, int layer)
         {
             gameobject.layer = layer;

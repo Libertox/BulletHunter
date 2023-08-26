@@ -45,7 +45,7 @@ namespace BulletHaunter
             }
             NetworkManager.Singleton.SceneManager.LoadScene(sceneTarget.ToString(), LoadSceneMode.Single);
         }
-       
+
         public enum GameScene
         {
             Game,

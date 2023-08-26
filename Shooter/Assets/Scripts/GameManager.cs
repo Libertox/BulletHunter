@@ -1,13 +1,13 @@
-﻿
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
+
 namespace BulletHaunter
 {
-    public class GameManager: NetworkBehaviour
+    public class GameManager : NetworkBehaviour
     {
         public const string PLAYER_PREFS_SHOW_PLAYER_NICK = "showPlayerNick";
         private const int gameStartCoolDown = 30;
@@ -24,11 +24,11 @@ namespace BulletHaunter
 
         public class OnShowPlayerNickChangedEventArgs : EventArgs { public bool isShow; }
 
-        public class OnGameFinishedEventArgs:EventArgs { public Action gameFinishAction; }
+        public class OnGameFinishedEventArgs : EventArgs { public Action gameFinishAction; }
 
         [SerializeField] private PlayerController playerPrefab;
         [SerializeField] private List<Transform> playerSpawnPointsList;
-       
+
         private List<int> usedPointsIndexList;
         [SerializeField] private GameState gameState = GameState.Start;
         private GameState previousGameState;
@@ -42,7 +42,6 @@ namespace BulletHaunter
         [SerializeField] private int[] playerTeamLayerMask;
 
         public SortedDictionary<int, int> TeamPointsDictionary;
-
 
         public enum GameState
         {
@@ -71,15 +70,25 @@ namespace BulletHaunter
         public override void OnNetworkSpawn()
         {
             if (IsServer)
+            {
                 NetworkManager.Singleton.SceneManager.OnLoadEventCompleted += SceneManager_OnLoadEventCompleted;
+                NetworkManager.Singleton.OnClientConnectedCallback += NetworkManager_OnClientConnectedCallback;
+                StartCoroutine(StartGameCoroutine());
+            }
 
-            if(PlayerStats.Instance != null)
+
+            if (PlayerStats.Instance != null)
                 PlayerStats.Instance.OnDeathed += PlayerStats_OnDeathed;
             else
                 PlayerStats.OnAnyPlayerSpawn += PlayerStats_OnAnyPlayerSpawn;
 
             SetShowPlayerNick(PlayerPrefs.GetInt(PLAYER_PREFS_SHOW_PLAYER_NICK, 0) == 1);
-            StartCoroutine(StartGame());
+        }
+
+        private void NetworkManager_OnClientConnectedCallback(ulong clientId)
+        {
+            PlayerController playerController = Instantiate(playerPrefab, GetRandomPosition(), Quaternion.identity);
+            playerController.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true);
         }
 
         public override void OnDestroy()
@@ -119,12 +128,12 @@ namespace BulletHaunter
             foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
             {
                 PlayerController playerController = Instantiate(playerPrefab, GetRandomPosition(), Quaternion.identity);
-                playerController.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true);      
+                playerController.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true);
             }
             ResetUsedPointsIndexList();
         }
 
-        private IEnumerator StartGame()
+        private IEnumerator StartGameCoroutine()
         {
             float startTimer = gameStartCoolDown;
             OnGameStartWaited?.Invoke(this, new OnGameStartWaitedEventArgs { timerValue = startTimer });
@@ -184,7 +193,11 @@ namespace BulletHaunter
  
         public LayerMask GetPlayerLayerMask(int index) => playerLayerMask[index];
 
+        public int GetPlayerLayerMaskLength() => playerLayerMask.Length;
+
         public LayerMask GetPlayerGunLayerMask(int index) => playerGunLayerMask[index];
+
+        public int GetPlayerGunLayerMaskLength() => playerGunLayerMask.Length;
 
         public LayerMask GetPlayerTeamLayerMask(int index) => playerTeamLayerMask[index];
 
@@ -200,7 +213,11 @@ namespace BulletHaunter
                 SetPointsForTeamClientRpc(targetplayerData.teamColorId);
 
             if (CheckAnyoneWin(targetplayerData.teamColorId))
+            {
                 FinishGameClientRpc(targetplayerData.teamColorId);
+                LobbyManager.Instance.DeleteLobby();
+            }
+                
         }
 
         [ClientRpc()]

@@ -40,7 +40,7 @@ namespace BulletHaunter
 
             if (allClientsReady)
             {
-                LobbyManager.Instance.DeleteLobby();
+                LobbyManager.Instance.UpdateLobbyData();
                 SceneLoader.LoadNetwork(SceneLoader.GameScene.LoadingScene);
             }
 

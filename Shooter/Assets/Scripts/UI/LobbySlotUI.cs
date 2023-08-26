@@ -21,6 +21,7 @@ namespace BulletHaunter
             {
                 LobbyManager.Instance.JoinWithId(lobby.Id);
                 SoundManager.Instance.PlayButtonSound();
+                GameManagerMultiplayer.Instance.ResetPlayerTeam();
             });
         }
 

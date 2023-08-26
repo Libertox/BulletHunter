@@ -24,12 +24,14 @@ namespace BulletHaunter.UI
             {
                 LobbyManager.Instance.QuickJoin();
                 SoundManager.Instance.PlayButtonSound();
+                GameManagerMultiplayer.Instance.ResetPlayerTeam();
             });
 
             joinByCodeButton.onClick.AddListener(() => 
             {
                 LobbyManager.Instance.JoinWithCode(joinCodeInputField.text);
                 SoundManager.Instance.PlayButtonSound();
+                GameManagerMultiplayer.Instance.ResetPlayerTeam();
             });
         }
 

@@ -4945,7 +4945,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifeTime: 1.5
-  prefab: {fileID: 3835748407868109026}
 --- !u!114 &3676183018183985907
 MonoBehaviour:
   m_ObjectHideFlags: 0

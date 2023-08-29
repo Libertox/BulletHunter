@@ -16,11 +16,19 @@ namespace BulletHaunter
         private void Start()
         {
             if (IsOwner)
+            {
                 InventoryManager.Instance.OnSelectedWeaponDroped += Inventory_OnSelectedWeaponDroped;
-
-            GameManagerMultiplayer.Instance.OnPlayerDataNetworkListChanged += GameManagerMultiplayer_OnPlayerDataNetworkListChanged;
-
+                GameManager.Instance.OnPlayerReconnected += GameManager_OnPlayerReconnected;
+            }
+                
+           GameManagerMultiplayer.Instance.OnPlayerDataNetworkListChanged += GameManagerMultiplayer_OnPlayerDataNetworkListChanged;
+           
             SetWeaponLayerMask();
+        }
+
+        private void GameManager_OnPlayerReconnected(object sender, EventArgs e)
+        {
+            SwapWeaponModel(InventoryManager.Instance.UseWeapon?.WeaponSO);
         }
 
         private void GameManagerMultiplayer_OnPlayerDataNetworkListChanged(object sender, EventArgs e)
@@ -39,6 +47,7 @@ namespace BulletHaunter
         }
 
         public void SwapWeaponModel(WeaponSO useWeapon) => SwapWeaponModelServerRpc(GameManager.Instance.GetWeaponSOIndex(useWeapon));
+
 
         [ServerRpc(RequireOwnership = false)]
         private void SwapWeaponModelServerRpc(int weaponSOIndex) => SwapWeaponModelClientRpc(weaponSOIndex);

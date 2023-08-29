@@ -97,7 +97,7 @@ namespace BulletHaunter
             if (Physics.Raycast(ray, out RaycastHit raycastHit, InventoryManager.Instance.UseWeapon.WeaponSO.WeaponRange, shootLayerMask))
             {
                 if (raycastHit.transform.TryGetComponent(out IDamageable damageable))
-                    HitObjectServerRpc(damageable.GetNetworkObject(), InventoryManager.Instance.UseWeapon.WeaponSO.Damage);
+                    HitObjectServerRpc(damageable.GetNetworkObject(), InventoryManager.Instance.UseWeapon.WeaponSO.Damage);                 
                 else
                     SpawnShootEffectServerRpc(raycastHit.point.x, raycastHit.point.y, raycastHit.point.z);
             }

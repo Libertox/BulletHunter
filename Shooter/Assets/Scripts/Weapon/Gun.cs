@@ -15,6 +15,13 @@ namespace BulletHaunter
 
         private readonly float lifeTime = 48;
 
+        private void Start() => GameManager.Instance.OnPlayerReconnected += GameManager_OnPlayerReconnected;
+        
+        private void GameManager_OnPlayerReconnected(object sender, EventArgs e) => SetAmmoAmount(ammoAmount);
+       
+        public override void OnDestroy() => GameManager.Instance.OnPlayerReconnected -= GameManager_OnPlayerReconnected;
+
+       
         public void Drop() => DropServerRpc();
       
         [ServerRpc(RequireOwnership = false)]

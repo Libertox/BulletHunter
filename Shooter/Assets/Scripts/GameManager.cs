@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -30,8 +31,9 @@ namespace BulletHaunter
         [SerializeField] private List<Transform> playerSpawnPointsList;
 
         private List<int> usedPointsIndexList;
-        [SerializeField] private GameState gameState = GameState.Start;
+        private GameState gameState = GameState.Play;
         private GameState previousGameState;
+        private NetworkVariable<float> startGameTimer = new NetworkVariable<float>(0f);
 
         public bool ShowPlayerName { get; private set; }
 
@@ -41,14 +43,16 @@ namespace BulletHaunter
         [SerializeField] private int[] playerGunLayerMask;
         [SerializeField] private int[] playerTeamLayerMask;
 
-        public SortedDictionary<int, int> TeamPointsDictionary;
+        public SortedDictionary<int, int> TeamPointsDictionary { get; private set; }
+
+        public event EventHandler OnPlayerReconnected;
 
         public enum GameState
         {
             Pause,
             Play,
             Respawn,
-            Start,
+            WaitingGame,
             HostExit,
         }
 
@@ -76,6 +80,7 @@ namespace BulletHaunter
                 StartCoroutine(StartGameCoroutine());
             }
 
+            startGameTimer.OnValueChanged += StartGameTimer_OnValueChanged;
 
             if (PlayerStats.Instance != null)
                 PlayerStats.Instance.OnDeathed += PlayerStats_OnDeathed;
@@ -85,10 +90,51 @@ namespace BulletHaunter
             SetShowPlayerNick(PlayerPrefs.GetInt(PLAYER_PREFS_SHOW_PLAYER_NICK, 0) == 1);
         }
 
+      
+        private void StartGameTimer_OnValueChanged(float previousValue, float newValue)
+        {
+            if(newValue > 0)
+            {
+                OnGameStartWaited?.Invoke(this, new OnGameStartWaitedEventArgs { timerValue = newValue });
+
+                if (gameState == GameState.Play)
+                    gameState = GameState.WaitingGame;
+            }   
+            else
+            {
+                OnGameStarted?.Invoke(this, EventArgs.Empty);
+                if (IsPauseState())
+                {
+                    gameState = GameState.Pause;
+                    previousGameState = GameState.Play;
+                }
+                else
+                {
+                    gameState = GameState.Play;
+                }               
+            }
+        }
+
         private void NetworkManager_OnClientConnectedCallback(ulong clientId)
         {
-            PlayerController playerController = Instantiate(playerPrefab, GetRandomPosition(), Quaternion.identity);
+            PlayerController playerController = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
             playerController.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true);
+
+            PlayerReconnectedClientRpc();
+            SendTeamPointsValueClientRpc(TeamPointsDictionary.Values.ToArray());      
+        }
+
+        [ClientRpc]
+        private void PlayerReconnectedClientRpc()
+        {
+            OnPlayerReconnected?.Invoke(this, EventArgs.Empty);    
+        }
+
+        [ClientRpc]
+        private void SendTeamPointsValueClientRpc(int[] teamPointsValue)
+        {
+            for (int i = 0; i < GameManagerMultiplayer.Instance.MaxTeam.Value; i++)
+                TeamPointsDictionary[i] = teamPointsValue[i];
         }
 
         public override void OnDestroy()
@@ -127,7 +173,7 @@ namespace BulletHaunter
         {
             foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
             {
-                PlayerController playerController = Instantiate(playerPrefab, GetRandomPosition(), Quaternion.identity);
+                PlayerController playerController = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
                 playerController.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true);
             }
             ResetUsedPointsIndexList();
@@ -135,16 +181,12 @@ namespace BulletHaunter
 
         private IEnumerator StartGameCoroutine()
         {
-            float startTimer = gameStartCoolDown;
-            OnGameStartWaited?.Invoke(this, new OnGameStartWaitedEventArgs { timerValue = startTimer });
-            while (startTimer > 0)
+            startGameTimer.Value = gameStartCoolDown;
+            while (startGameTimer.Value > 0)
             {
                 yield return new WaitForSeconds(1);
-                startTimer--;
-                OnGameStartWaited?.Invoke(this, new OnGameStartWaitedEventArgs { timerValue = startTimer });
+                startGameTimer.Value--;
             }
-            OnGameStarted?.Invoke(this, EventArgs.Empty);
-            gameState = GameState.Play; 
         }
 
         public void SetGameState(GameState gameState) 
@@ -157,9 +199,9 @@ namespace BulletHaunter
 
         public bool IsPauseState() => gameState == GameState.Pause;
 
-        public bool IsStartState() => gameState == GameState.Start;
+        public bool IsStartState() => gameState == GameState.WaitingGame || previousGameState == GameState.WaitingGame;
 
-        public bool CanInputAction() => gameState == GameState.Play || gameState == GameState.Start;
+        public bool CanInputAction() => gameState == GameState.Play || gameState == GameState.WaitingGame;
 
         public bool CanPauseGame() => gameState != GameState.HostExit;
 

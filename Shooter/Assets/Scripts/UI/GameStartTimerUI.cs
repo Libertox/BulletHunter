@@ -19,7 +19,6 @@ namespace BulletHaunter.UI
 
         private void GameManager_OnGameStarted(object sender, EventArgs e) => Hide();
       
-
         private void GameManager_OnGameStartWaited(object sender, GameManager.OnGameStartWaitedEventArgs e)
         {
             Show();

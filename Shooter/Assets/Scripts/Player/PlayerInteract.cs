@@ -25,7 +25,7 @@ namespace BulletHaunter
             {
                 GameInput.Instance.OnInteract += GameInput_OnInteract;
                 PlayerController.OnSquated += PlayerController_OnSquated;
-
+                GameManager.Instance.OnPlayerReconnected += GameManager_OnPlayerReconnected;
                 if (PlayerStats.Instance != null)
                 {
                     PlayerStats.Instance.OnDeathed += PlayerStats_OnDeathed;
@@ -34,9 +34,15 @@ namespace BulletHaunter
                 else
                     PlayerStats.OnAnyPlayerSpawn += PlayerStats_OnAnyPlayerSpawn;
             }
-               
+            
         }
 
+        private void GameManager_OnPlayerReconnected(object sender, EventArgs e)
+        {
+            SendColiderStatusServerRpc(uprightColider.enabled, squatColider.enabled, deathColider.enabled);
+        }
+
+   
         private void PlayerStats_OnAnyPlayerSpawn(object sender, EventArgs e)
         {
             if (PlayerStats.Instance != null)
@@ -50,54 +56,31 @@ namespace BulletHaunter
                 
         }
 
-        private void PlayerStats_OnDeathed(object sender, EventArgs e) => ChangeDeathColiderServerRpc();
+        private void PlayerStats_OnDeathed(object sender, EventArgs e) => SendColiderStatusServerRpc(false, false, true);
        
-        private void PlayerStats_OnRestored(object sender, EventArgs e) => SetUprightColiderServerRpc();
-        
+        private void PlayerStats_OnRestored(object sender, EventArgs e) => SendColiderStatusServerRpc(true, false, false);
 
-        [ServerRpc(RequireOwnership = false)]
-        private void ChangeDeathColiderServerRpc() => ChangeDeathColiderClientRpc();
-       
 
-        [ClientRpc()]
-        private void ChangeDeathColiderClientRpc()
+        private void PlayerController_OnSquated(object sender, PlayerController.OnStateChangedEventArgs e) 
         {
-            uprightColider.enabled = false;
-            squatColider.enabled = false;
-            deathColider.enabled = true;
-        }
-
-        [ServerRpc(RequireOwnership = false)]
-        private void SetUprightColiderServerRpc() => SetUprightColiderClientRpc();
-        
-        [ClientRpc]
-        private void SetUprightColiderClientRpc()
-        {
-            uprightColider.enabled = true;
-            squatColider.enabled = false;
-            deathColider.enabled = false;
-        }
-
-        private void PlayerController_OnSquated(object sender, PlayerController.OnStateChangedEventArgs e) => ChangeSquatColiderServerRpc(e.state);
-        
-
-        [ServerRpc()]
-        private void ChangeSquatColiderServerRpc(bool isSquat) => ChangeSquatColiderClientRpc(isSquat);
-       
-
-        [ClientRpc()]
-        private void ChangeSquatColiderClientRpc(bool isSquat)
-        {
-            if (isSquat)
-            {
-                uprightColider.enabled = false;
-                squatColider.enabled = true;
-            }
+            if (e.state)
+                SendColiderStatusServerRpc(false, true, false);
             else
-            {
-                uprightColider.enabled = true;
-                squatColider.enabled = false;
-            }
+                SendColiderStatusServerRpc(true, false, false);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void SendColiderStatusServerRpc(bool uprightColiderStatus, bool squatColiderStatus, bool deathColiderStatus)
+        {
+            SendColiderStatusClientRpc(uprightColiderStatus, squatColiderStatus, deathColiderStatus);
+        }
+
+        [ClientRpc()]
+        private void SendColiderStatusClientRpc(bool uprightColiderStatus, bool squatColiderStatus, bool deathColiderStatus)
+        {
+            uprightColider.enabled = uprightColiderStatus;
+            squatColider.enabled = squatColiderStatus;
+            deathColider.enabled = deathColiderStatus;
         }
 
         private void GameInput_OnInteract(object sender, EventArgs e)

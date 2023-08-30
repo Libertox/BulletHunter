@@ -30,6 +30,7 @@ namespace BulletHaunter
 
         public bool ShowPlayerName { get; private set; }
 
+        
         public SortedDictionary<int, int> TeamPointsDictionary { get; private set; }
 
         [SerializeField] private PlayerController playerPrefab;

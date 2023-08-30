@@ -42,7 +42,7 @@ namespace BulletHaunter.UI
             while (newValue > barImage.fillAmount)
             {
                 barImage.fillAmount += Time.deltaTime * 2;
-
+ 
                 yield return new WaitForSeconds(Time.deltaTime);
             }
         }

@@ -40,11 +40,9 @@ namespace BulletHaunter.Cameras
             SetCullingMask();
         }
 
-        public override void OnDestroy()
-        {
+        public override void OnDestroy() =>
             GameManagerMultiplayer.Instance.OnPlayerDataNetworkListChanged -= GameManagerMultiplayer_OnPlayerDataNetworkListChanged;
-        }
-
+      
 
         private void SetCullingMask()
         {

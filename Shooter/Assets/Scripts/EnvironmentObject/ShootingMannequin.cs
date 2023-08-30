@@ -8,7 +8,6 @@ namespace BulletHaunter
 {
     public class ShootingMannequin:NetworkBehaviour, IDamageable
     {
-
         private const string ANIM_IS_SHOOT = "isShoot";
 
         private Animator animator;

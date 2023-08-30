@@ -33,6 +33,8 @@ namespace BulletHaunter.UI
 
             if (await LobbyManager.Instance.HasActiveLobby())
                 Show();
+            else
+                Hide();
        }
 
         private void Show() => gameObject.SetActive(true);

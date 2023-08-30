@@ -11,6 +11,7 @@ namespace BulletHaunter
     public class TeamSelectUI:MonoBehaviour
     {
         [SerializeField] private Button readyButton;
+        [SerializeField] private Button unreadyButton;
         [SerializeField] private Button mainMenuButton;
 
         [SerializeField] private TextMeshProUGUI lobbyNameText;
@@ -24,8 +25,21 @@ namespace BulletHaunter
             readyButton.onClick.AddListener(() => 
             {
                 SoundManager.Instance.PlayButtonSound();
-                TeamSelectManager.Instance.SetPlayerReady();      
+                TeamSelectManager.Instance.SetPlayerReady();
+
+                unreadyButton.gameObject.SetActive(true);
+                readyButton.gameObject.SetActive(false);
             });
+
+            unreadyButton.onClick.AddListener(() =>
+            {
+                SoundManager.Instance.PlayButtonSound();
+                TeamSelectManager.Instance.SetPlayerUnready();
+
+                unreadyButton.gameObject.SetActive(false);
+                readyButton.gameObject.SetActive(true);
+            });
+
 
             mainMenuButton.onClick.AddListener(() =>
             {

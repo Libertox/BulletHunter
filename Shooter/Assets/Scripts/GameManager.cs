@@ -11,7 +11,7 @@ namespace BulletHaunter
     public class GameManager : NetworkBehaviour
     {
         public const string PLAYER_PREFS_SHOW_PLAYER_NICK = "showPlayerNick";
-        private const int gameStartCoolDown = 30;
+        public const int GameStartCoolDown = 30;
 
         public static GameManager Instance { get; private set; }
 
@@ -20,6 +20,7 @@ namespace BulletHaunter
         public event EventHandler OnTeamPointsChanged;
         public event EventHandler<OnShowPlayerNickChangedEventArgs> OnShowPlayerNickChanged;
         public event EventHandler<OnGameFinishedEventArgs> OnGameFinished;
+        public event EventHandler OnPlayerReconnected;
 
         public class OnGameStartWaitedEventArgs : EventArgs { public float timerValue; };
 
@@ -27,15 +28,12 @@ namespace BulletHaunter
 
         public class OnGameFinishedEventArgs : EventArgs { public Action gameFinishAction; }
 
+        public bool ShowPlayerName { get; private set; }
+
+        public SortedDictionary<int, int> TeamPointsDictionary { get; private set; }
+
         [SerializeField] private PlayerController playerPrefab;
         [SerializeField] private List<Transform> playerSpawnPointsList;
-
-        private List<int> usedPointsIndexList;
-        private GameState gameState = GameState.Play;
-        private GameState previousGameState;
-        private NetworkVariable<float> startGameTimer = new NetworkVariable<float>(0f);
-
-        public bool ShowPlayerName { get; private set; }
 
         [SerializeField] private List<WeaponSO> weaponSOList;
 
@@ -43,9 +41,10 @@ namespace BulletHaunter
         [SerializeField] private int[] playerGunLayerMask;
         [SerializeField] private int[] playerTeamLayerMask;
 
-        public SortedDictionary<int, int> TeamPointsDictionary { get; private set; }
-
-        public event EventHandler OnPlayerReconnected;
+        private List<int> usedPointsIndexList;
+        private GameState gameState = GameState.Play;
+        private GameState previousGameState;
+        private NetworkVariable<float> startGameTimer = new NetworkVariable<float>(0f);
 
         public enum GameState
         {
@@ -65,10 +64,7 @@ namespace BulletHaunter
             TeamPointsDictionary = new SortedDictionary<int, int>();
 
             for (int i = 0; i < GameManagerMultiplayer.Instance.MaxTeam.Value; i++)
-            {
                 TeamPointsDictionary[i] = 0;
-            }
-
         }
 
         public override void OnNetworkSpawn()
@@ -90,7 +86,67 @@ namespace BulletHaunter
             SetShowPlayerNick(PlayerPrefs.GetInt(PLAYER_PREFS_SHOW_PLAYER_NICK, 0) == 1);
         }
 
-      
+        private void SceneManager_OnLoadEventCompleted(string sceneName, UnityEngine.SceneManagement.LoadSceneMode loadSceneMode, List<ulong> clientsCompleted, List<ulong> clientsTimedOut)
+        {
+            foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
+            {
+                PlayerController playerController = Instantiate(playerPrefab, GetRandomPosition(), Quaternion.identity);
+                playerController.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true);
+            }
+            ResetUsedPointsIndexList();
+        }
+
+        private Vector3 GetRandomPosition()
+        {
+            int randomIndex = UnityEngine.Random.Range(0, playerSpawnPointsList.Capacity);
+            ResetUsedPointsIndexList();
+            while (usedPointsIndexList.Contains(randomIndex))
+            {
+                randomIndex = UnityEngine.Random.Range(0, playerSpawnPointsList.Capacity);
+            }
+            AddIndexToUsedPointsListClientRpc(randomIndex);
+            return playerSpawnPointsList[randomIndex].position;
+        }
+
+        [ClientRpc()]
+        private void AddIndexToUsedPointsListClientRpc(int index) => usedPointsIndexList.Add(index);
+       
+        private void ResetUsedPointsIndexList()
+        {
+            if (usedPointsIndexList.Count >= playerSpawnPointsList.Count)
+                usedPointsIndexList.Clear();
+        }
+
+        private void NetworkManager_OnClientConnectedCallback(ulong clientId)
+        {
+            PlayerController playerController = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
+            playerController.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true);
+
+            PlayerReconnectedClientRpc();
+            SendTeamPointsValueClientRpc(TeamPointsDictionary.Values.ToArray());
+        }
+
+        [ClientRpc]
+        private void PlayerReconnectedClientRpc() => OnPlayerReconnected?.Invoke(this, EventArgs.Empty);
+
+
+        [ClientRpc]
+        private void SendTeamPointsValueClientRpc(int[] teamPointsValue)
+        {
+            for (int i = 0; i < GameManagerMultiplayer.Instance.MaxTeam.Value; i++)
+                TeamPointsDictionary[i] = teamPointsValue[i];
+        }
+
+        private IEnumerator StartGameCoroutine()
+        {
+            startGameTimer.Value = GameStartCoolDown;
+            while (startGameTimer.Value > 0)
+            {
+                yield return new WaitForSeconds(1);
+                startGameTimer.Value--;
+            }
+        }
+
         private void StartGameTimer_OnValueChanged(float previousValue, float newValue)
         {
             if(newValue > 0)
@@ -103,46 +159,13 @@ namespace BulletHaunter
             else
             {
                 OnGameStarted?.Invoke(this, EventArgs.Empty);
-                if (IsPauseState())
-                {
-                    gameState = GameState.Pause;
-                    previousGameState = GameState.Play;
-                }
-                else
-                {
-                    gameState = GameState.Play;
-                }               
+
+                gameState = IsPauseState() ? GameState.Pause : GameState.Play;
+
+                previousGameState = GameState.Play;
             }
         }
 
-        private void NetworkManager_OnClientConnectedCallback(ulong clientId)
-        {
-            PlayerController playerController = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
-            playerController.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true);
-
-            PlayerReconnectedClientRpc();
-            SendTeamPointsValueClientRpc(TeamPointsDictionary.Values.ToArray());      
-        }
-
-        [ClientRpc]
-        private void PlayerReconnectedClientRpc()
-        {
-            OnPlayerReconnected?.Invoke(this, EventArgs.Empty);    
-        }
-
-        [ClientRpc]
-        private void SendTeamPointsValueClientRpc(int[] teamPointsValue)
-        {
-            for (int i = 0; i < GameManagerMultiplayer.Instance.MaxTeam.Value; i++)
-                TeamPointsDictionary[i] = teamPointsValue[i];
-        }
-
-        public override void OnDestroy()
-        {
-            if (IsServer && NetworkManager.Singleton != null)
-                NetworkManager.Singleton.SceneManager.OnLoadEventCompleted -= SceneManager_OnLoadEventCompleted;
-        }
-      
         private void PlayerStats_OnAnyPlayerSpawn(object sender, EventArgs e)
         {
             if (PlayerStats.Instance != null)
@@ -165,30 +188,9 @@ namespace BulletHaunter
 
         private void PlayerStats_OnDeathed(object sender, PlayerStats.OnDeathedEventArgs e)
         {
-            SetPointForTeam(e.targetId,e.ownerId);
+            SetPointForTeam(e.targetId, e.ownerId);
             SetGameState(GameState.Respawn);
         }
-
-        private void SceneManager_OnLoadEventCompleted(string sceneName, UnityEngine.SceneManagement.LoadSceneMode loadSceneMode, List<ulong> clientsCompleted, List<ulong> clientsTimedOut)
-        {
-            foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
-            {
-                PlayerController playerController = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
-                playerController.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true);
-            }
-            ResetUsedPointsIndexList();
-        }
-
-        private IEnumerator StartGameCoroutine()
-        {
-            startGameTimer.Value = gameStartCoolDown;
-            while (startGameTimer.Value > 0)
-            {
-                yield return new WaitForSeconds(1);
-                startGameTimer.Value--;
-            }
-        }
-
         public void SetGameState(GameState gameState) 
         {
             previousGameState = this.gameState;
@@ -197,36 +199,51 @@ namespace BulletHaunter
 
         public void SetGameStateToPreviousGameState() => gameState = previousGameState;
 
-        public bool IsPauseState() => gameState == GameState.Pause;
+        public void SetPointForTeam(ulong targetId, ulong ownerId) => SetPointsForTeamServerRpc(targetId, ownerId);
 
-        public bool IsStartState() => gameState == GameState.WaitingGame || previousGameState == GameState.WaitingGame;
-
-        public bool CanInputAction() => gameState == GameState.Play || gameState == GameState.WaitingGame;
-
-        public bool CanPauseGame() => gameState != GameState.HostExit;
-
-        public Vector3 GetRandomPosition()
+        [ServerRpc(RequireOwnership = false)]
+        private void SetPointsForTeamServerRpc(ulong targetId, ulong ownerId)
         {
-            int randomIndex = UnityEngine.Random.Range(0, playerSpawnPointsList.Capacity);
-            ResetUsedPointsIndexList();
-            while (usedPointsIndexList.Contains(randomIndex))
+            PlayerData targetplayerData = GameManagerMultiplayer.Instance.GetPlayerDataFromClientId(targetId);
+            PlayerData ownerPlayerData = GameManagerMultiplayer.Instance.GetPlayerDataFromClientId(ownerId);
+
+            if (targetplayerData.teamColorId != ownerPlayerData.teamColorId)
+                SetPointsForTeamClientRpc(targetplayerData.teamColorId);
+
+            if (CheckAnyoneWin(targetplayerData.teamColorId))
             {
-                randomIndex = UnityEngine.Random.Range(0, playerSpawnPointsList.Capacity);
+                FinishGameClientRpc(targetplayerData.teamColorId);
+                LobbyManager.Instance.DeleteLobby();
             }
-            AddIndexToUsedPointsListClientRpc(randomIndex);
-            return playerSpawnPointsList[randomIndex].position;
+
         }
 
         [ClientRpc()]
-        private void AddIndexToUsedPointsListClientRpc(int index) 
+        private void SetPointsForTeamClientRpc(int teamId)
         {
-            usedPointsIndexList.Add(index);
-        } 
+            TeamPointsDictionary[teamId]++;
+            OnTeamPointsChanged?.Invoke(this, EventArgs.Empty);
+        }
 
-        private void ResetUsedPointsIndexList()
+        private bool CheckAnyoneWin(int teamId) => TeamPointsDictionary[teamId] >= GameManagerMultiplayer.Instance.PointsToWin;
+
+        [ClientRpc]
+        private void FinishGameClientRpc(int winningTeam)
         {
-            if (usedPointsIndexList.Count >= playerSpawnPointsList.Count)
-                usedPointsIndexList.Clear();
+            GameManagerMultiplayer.Instance.SetWinningTeam(winningTeam);
+            OnGameFinished?.Invoke(this, new OnGameFinishedEventArgs
+            {
+                gameFinishAction = () =>
+                {
+                    SceneLoader.LoadNetwork(SceneLoader.GameScene.WinningScene);
+                }
+            });
+        }
+
+        public void SetShowPlayerNick(bool isShowPlayerNick)
+        {
+            ShowPlayerName = isShowPlayerNick;
+            OnShowPlayerNickChanged?.Invoke(this, new OnShowPlayerNickChangedEventArgs { isShow = isShowPlayerNick });
         }
 
         public int GetWeaponSOIndex(WeaponSO weaponSO) => weaponSOList.IndexOf(weaponSO);
@@ -243,53 +260,18 @@ namespace BulletHaunter
 
         public LayerMask GetPlayerTeamLayerMask(int index) => playerTeamLayerMask[index];
 
-        public void SetPointForTeam(ulong targetId, ulong ownerId) => SetPointsForTeamServerRpc(targetId, ownerId);
+        public bool IsPauseState() => gameState == GameState.Pause;
 
-        [ServerRpc(RequireOwnership = false)]
-        private void SetPointsForTeamServerRpc(ulong targetId, ulong ownerId)
+        public bool IsStartState() => gameState == GameState.WaitingGame || previousGameState == GameState.WaitingGame;
+
+        public bool CanInputAction() => gameState == GameState.Play || gameState == GameState.WaitingGame;
+
+        public bool CanPauseGame() => gameState != GameState.HostExit;
+
+        public override void OnDestroy()
         {
-            PlayerData targetplayerData = GameManagerMultiplayer.Instance.GetPlayerDataFromClientId(targetId);
-            PlayerData ownerPlayerData = GameManagerMultiplayer.Instance.GetPlayerDataFromClientId(ownerId);
-
-            if(targetplayerData.teamColorId != ownerPlayerData.teamColorId)
-                SetPointsForTeamClientRpc(targetplayerData.teamColorId);
-
-            if (CheckAnyoneWin(targetplayerData.teamColorId))
-            {
-                FinishGameClientRpc(targetplayerData.teamColorId);
-                LobbyManager.Instance.DeleteLobby();
-            }
-                
+            if (IsServer && NetworkManager.Singleton != null)
+                NetworkManager.Singleton.SceneManager.OnLoadEventCompleted -= SceneManager_OnLoadEventCompleted;
         }
-
-        [ClientRpc()]
-        private void SetPointsForTeamClientRpc(int teamId)
-        {
-            TeamPointsDictionary[teamId]++;
-            OnTeamPointsChanged?.Invoke(this, EventArgs.Empty); 
-        }
-
-        [ClientRpc]
-        private void FinishGameClientRpc(int winningTeam)
-        {
-            GameManagerMultiplayer.Instance.SetWinningTeam(winningTeam);
-            OnGameFinished?.Invoke(this, new OnGameFinishedEventArgs
-            {
-                gameFinishAction = () =>
-                {
-                    SceneLoader.LoadNetwork(SceneLoader.GameScene.WinningScene);
-                }
-            });
-        }
-
-
-
-        private bool CheckAnyoneWin(int teamId) => TeamPointsDictionary[teamId] >= GameManagerMultiplayer.Instance.PointsToWin;
-     
-        public void SetShowPlayerNick(bool isShowPlayerNick) 
-        {
-            ShowPlayerName = isShowPlayerNick;
-            OnShowPlayerNickChanged?.Invoke(this, new OnShowPlayerNickChangedEventArgs { isShow = isShowPlayerNick });
-        } 
     }
 }

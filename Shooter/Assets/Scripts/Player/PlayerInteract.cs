@@ -70,10 +70,9 @@ namespace BulletHaunter
         }
 
         [ServerRpc(RequireOwnership = false)]
-        private void SendColiderStatusServerRpc(bool uprightColiderStatus, bool squatColiderStatus, bool deathColiderStatus)
-        {
+        private void SendColiderStatusServerRpc(bool uprightColiderStatus, bool squatColiderStatus, bool deathColiderStatus) => 
             SendColiderStatusClientRpc(uprightColiderStatus, squatColiderStatus, deathColiderStatus);
-        }
+       
 
         [ClientRpc()]
         private void SendColiderStatusClientRpc(bool uprightColiderStatus, bool squatColiderStatus, bool deathColiderStatus)

@@ -26,25 +26,19 @@ namespace BulletHaunter
             SetWeaponLayerMask();
         }
 
-        private void GameManager_OnPlayerReconnected(object sender, EventArgs e)
-        {
+        private void GameManager_OnPlayerReconnected(object sender, EventArgs e) => 
             SwapWeaponModel(InventoryManager.Instance.UseWeapon?.WeaponSO);
-        }
+       
 
-        private void GameManagerMultiplayer_OnPlayerDataNetworkListChanged(object sender, EventArgs e)
-        {
+        private void GameManagerMultiplayer_OnPlayerDataNetworkListChanged(object sender, EventArgs e) => 
             SetWeaponLayerMask();
-        }
+       
 
-        public override void OnDestroy()
-        {
+        public override void OnDestroy() => 
             GameManagerMultiplayer.Instance.OnPlayerDataNetworkListChanged -= GameManagerMultiplayer_OnPlayerDataNetworkListChanged;
-        }
-
-        private void Inventory_OnSelectedWeaponDroped(object sender, InventoryManager.OnSelectedWeaponChangedEventArgs e)
-        {
-            SwapWeaponModel(null);
-        }
+       
+        private void Inventory_OnSelectedWeaponDroped(object sender, InventoryManager.OnSelectedWeaponChangedEventArgs e) => SwapWeaponModel(null);
+        
 
         public void SwapWeaponModel(WeaponSO useWeapon) => SwapWeaponModelServerRpc(GameManager.Instance.GetWeaponSOIndex(useWeapon));
 

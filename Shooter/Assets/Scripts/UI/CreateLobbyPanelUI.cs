@@ -22,10 +22,14 @@ namespace BulletHaunter.UI
             createLobby.onClick.AddListener(() => 
             {
                 GameManagerMultiplayer.Instance.ResetPlayerTeam();
+
                 bool isPrivate = gameAccessDropdown.value != 0;
-                GameManagerMultiplayer.Instance.SetPointsToWin(int.Parse(pointsToWinInputField.text));
+                int pointsToWin = pointsToWinInputField.text == "" ? LobbyManager.DEFAULT_TEAM_POINTS : int.Parse(pointsToWinInputField.text);
+                string lobbyName = lobbyNameInputField.text == "" ? LobbyManager.DEFAULT_LOBBY_NAME : lobbyNameInputField.text;
+
+                GameManagerMultiplayer.Instance.SetPointsToWin(pointsToWin);
                 GameManagerMultiplayer.Instance.SetMaxTeam(maxTeamDropdown.value + 1);
-                LobbyManager.Instance.CreateLobby(lobbyNameInputField.text, isPrivate, maxPlayerDropdown.value + 1);
+                LobbyManager.Instance.CreateLobby(lobbyName, isPrivate, maxPlayerDropdown.value + 1);
                 SoundManager.Instance.PlayButtonSound();
             });
         }

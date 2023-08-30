@@ -43,24 +43,29 @@ namespace BulletHaunter
             Stamina = playerStatsSO.MaxStamina;
         }
 
-        private void Update()
-        {
-            if (!IsOwner) return;
      
-            if (Input.GetKeyDown(KeyCode.X))
-            {
-                //transform.position = GameManager.Instance.GetRandomPosition();
-                DecreaseHealth(100f);
-            }
-                
-        }
-
         public override void OnNetworkSpawn()
         {
             if(IsOwner)
                 Instance = this;
  
             OnAnyPlayerSpawn?.Invoke(this, EventArgs.Empty);
+            StartCoroutine(InvulnerabilityCountdownCoroutine(GameManager.GameStartCoolDown));
+        }
+
+        private IEnumerator InvulnerabilityCountdownCoroutine(float invulnerabilityCooldown)
+        {
+            float InvulnerabilityTimer = invulnerabilityCooldown;
+            isInvulnerable = true;
+            OnInvulnerabilityChanged?.Invoke(this, new OnStatsChangedEventArgs { stats = InvulnerabilityTimer / invulnerabilityCooldown });
+            while (InvulnerabilityTimer > 0)
+            {
+                InvulnerabilityTimer -= Time.deltaTime;
+                OnInvulnerabilityChanged?.Invoke(this, new OnStatsChangedEventArgs { stats = InvulnerabilityTimer / invulnerabilityCooldown });
+                yield return new WaitForEndOfFrame();
+
+            }
+            isInvulnerable = false;
         }
 
         public void IncreaseStamina(float increaseValue)
@@ -84,6 +89,14 @@ namespace BulletHaunter
 
             ChangeStaminaValue();
         }
+        private void ChangeStaminaValue()
+        {
+            OnStaminaChanged?.Invoke(this, new OnStatsChangedEventArgs
+            {
+                stats = Stamina / playerStatsSO.MaxStamina
+            });
+        }
+
 
         public void IncreaseHealth(float increaseValue)
         {
@@ -113,6 +126,34 @@ namespace BulletHaunter
             return false;        
         }
 
+        private void ChnageHealthValue()
+        {
+            OnHealthChanged?.Invoke(this, new OnStatsChangedEventArgs
+            {
+                stats = health / playerStatsSO.MaxHealth
+            });
+        }
+
+        private IEnumerator RestoreCoroutine()
+        {
+            float restoreTimer = playerStatsSO.RestoreCooldown;
+            WaitForSeconds waitForSeconds = new WaitForSeconds(1);
+
+            OnRestoreWaited?.Invoke(this, new OnWaitedEventArgs { timerValue = restoreTimer });
+
+            while (restoreTimer > 0)
+            {
+                yield return waitForSeconds;
+                restoreTimer--;
+                OnRestoreWaited?.Invoke(this, new OnWaitedEventArgs { timerValue = restoreTimer });
+            }
+
+            OnRestored?.Invoke(this, EventArgs.Empty);
+            IncreaseHealth(playerStatsSO.MaxHealth);
+
+            StartCoroutine(InvulnerabilityCountdownCoroutine(playerStatsSO.InvulnerabilityCooldown));
+        }
+
         public void IncreaseArmor(float increaseValue)
         {
             armor += increaseValue;
@@ -133,63 +174,12 @@ namespace BulletHaunter
             ChangeArmorValue();
         }
 
-        private void ChangeStaminaValue()
-        {
-            OnStaminaChanged?.Invoke(this, new OnStatsChangedEventArgs
-            {
-                stats = Stamina / playerStatsSO.MaxStamina
-            });
-        }
-
-        private void ChnageHealthValue()
-        {
-            OnHealthChanged?.Invoke(this, new OnStatsChangedEventArgs
-            {
-                stats = health / playerStatsSO.MaxHealth
-            });
-        }
-
         private void ChangeArmorValue()
         {
             OnArmorChanged?.Invoke(this, new OnStatsChangedEventArgs
             {
                 stats = armor / playerStatsSO.MaxArmor
             });
-        }
-
-        private IEnumerator RestoreCoroutine()
-        {
-            float restoreTimer = playerStatsSO.RestoreCooldown;
-            WaitForSeconds waitForSeconds = new WaitForSeconds(1);
-
-            OnRestoreWaited?.Invoke(this, new OnWaitedEventArgs { timerValue = restoreTimer });
-
-            while (restoreTimer > 0)
-            {
-                yield return waitForSeconds;
-                restoreTimer--;
-                OnRestoreWaited?.Invoke(this, new OnWaitedEventArgs { timerValue = restoreTimer });
-            }
-
-            OnRestored?.Invoke(this, EventArgs.Empty);
-            IncreaseHealth(playerStatsSO.MaxHealth);
-         
-            StartCoroutine(InvulnerabilityCountdownCoroutine());
-        }
-
-        private IEnumerator InvulnerabilityCountdownCoroutine()
-        {
-            float InvulnerabilityTimer = playerStatsSO.InvulnerabilityCooldown;
-            isInvulnerable = true;
-            OnInvulnerabilityChanged?.Invoke(this, new OnStatsChangedEventArgs { stats = InvulnerabilityTimer / playerStatsSO.InvulnerabilityCooldown });
-            while (InvulnerabilityTimer > 0)
-            {
-                InvulnerabilityTimer -= Time.deltaTime * 2;
-                OnInvulnerabilityChanged?.Invoke(this, new OnStatsChangedEventArgs { stats = InvulnerabilityTimer / playerStatsSO.InvulnerabilityCooldown });
-                yield return new WaitForSeconds(Time.deltaTime);
-                
-            }
-            isInvulnerable = false;
         }
 
         public void SetStaminaBust(float duration) => StartCoroutine(StaminaBustCoroutine(duration));
@@ -217,7 +207,7 @@ namespace BulletHaunter
             return false;
         }
 
-        private bool CanTakeDamage() => !GameManager.Instance.IsStartState() && !isInvulnerable;
+        private bool CanTakeDamage() => !isInvulnerable;
        
         public NetworkObject GetNetworkObject() => NetworkObject;
 

@@ -23,6 +23,9 @@ namespace BulletHaunter
             UpdatePlayerVisual();
         }
 
+        private void GameManager_OnShowPlayerNickChanged(object sender, GameManager.OnShowPlayerNickChangedEventArgs e) =>
+           SetPlayerNickShow(e.isShow);
+
         private void GameManagerMultiplayer_OnPlayerDataNetworkListChanged(object sender, EventArgs e) => SetPlayerVisualServerRpc();
       
         [ServerRpc(RequireOwnership = false)]
@@ -45,18 +48,7 @@ namespace BulletHaunter
             SetPlayerNick();
             SetPlayerNickShow(GameManager.Instance.ShowPlayerName);
         }
-
-        private void GameManager_OnShowPlayerNickChanged(object sender, GameManager.OnShowPlayerNickChangedEventArgs e)
-        {
-            SetPlayerNickShow(e.isShow);
-        }
-
-        public override void OnDestroy()
-        {
-            GameManagerMultiplayer.Instance.OnPlayerDataNetworkListChanged -= GameManagerMultiplayer_OnPlayerDataNetworkListChanged;
-        }
-
-     
+        
         private void SetGameLayerRecursive(GameObject gameobject, int layer)
         {
             gameobject.layer = layer;
@@ -97,5 +89,8 @@ namespace BulletHaunter
 
             if (IsOwner) playerNickText.gameObject.SetActive(false);
         }
+
+        public override void OnDestroy() =>
+         GameManagerMultiplayer.Instance.OnPlayerDataNetworkListChanged -= GameManagerMultiplayer_OnPlayerDataNetworkListChanged;
     }
 }

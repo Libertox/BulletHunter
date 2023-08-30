@@ -1592,7 +1592,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfaa2b60d72c4524f81c5d80e279f9e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unzoomValue: 60
 --- !u!1 &4652839155741958347
 GameObject:
   m_ObjectHideFlags: 0
@@ -2505,6 +2504,7 @@ MonoBehaviour:
   playerController: {fileID: 2015763836179331713}
   uprightCameraPosition: {fileID: 2261533798157452877}
   squatCameraPosition: {fileID: 6250819363600788519}
+  teamPlayerCamera: {fileID: 6777510384582106331}
 --- !u!1 &8377313935732433865
 GameObject:
   m_ObjectHideFlags: 0

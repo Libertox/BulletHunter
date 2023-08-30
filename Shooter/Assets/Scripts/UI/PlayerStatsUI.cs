@@ -45,24 +45,19 @@ namespace BulletHaunter.UI
             }
         }
 
-        private void PlayerStats_OnHealthChanged(object sender, PlayerStats.OnStatsChangedEventArgs e)
-        {
+        private void PlayerStats_OnHealthChanged(object sender, PlayerStats.OnStatsChangedEventArgs e) => 
             healthBar.ChangeFillAmountSlowly(e.stats);
-        }
+        
 
-        private void PlayerStats_OnStaminaChanged(object sender, PlayerStats.OnStatsChangedEventArgs e)
-        {
+        private void PlayerStats_OnStaminaChanged(object sender, PlayerStats.OnStatsChangedEventArgs e) => 
             staminaBar.ChangeFillAmountImmediately(e.stats);
-        }
-
-        private void PlayerStats_OnInvulnerabilityChanged(object sender, PlayerStats.OnStatsChangedEventArgs e)
-        {
+        
+        private void PlayerStats_OnInvulnerabilityChanged(object sender, PlayerStats.OnStatsChangedEventArgs e) =>
             invulnerabilityBar.ChangeFillAmountImmediately(e.stats);
-        }
+       
 
-        private void PlayerStats_OnArmorChanged(object sender, PlayerStats.OnStatsChangedEventArgs e)
-        {
+        private void PlayerStats_OnArmorChanged(object sender, PlayerStats.OnStatsChangedEventArgs e) => 
             armorBar.ChangeFillAmountSlowly(e.stats);
-        }
+        
     }
 }

@@ -48,11 +48,8 @@ namespace BulletHaunter
                 isReload = true;
         }
 
-        private void GameInput_OnWeaponDroped(object sender, EventArgs e)
-        {
-           CancelReload();
-        }
-
+        private void GameInput_OnWeaponDroped(object sender, EventArgs e) => CancelReload();
+       
         private void GameInput_OnWeaponSelected(object sender, GameInput.OnWeaponSelectedEventArgs e) => CancelReload();
 
         private void GameInput_OnReloaded(object sender, EventArgs e)

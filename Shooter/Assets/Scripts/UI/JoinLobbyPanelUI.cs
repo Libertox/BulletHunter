@@ -29,7 +29,8 @@ namespace BulletHaunter.UI
 
             joinByCodeButton.onClick.AddListener(() => 
             {
-                LobbyManager.Instance.JoinWithCode(joinCodeInputField.text);
+                string lobbyCode = joinCodeInputField.text == "" ? "CODE" : joinCodeInputField.text;
+                LobbyManager.Instance.JoinWithCode(lobbyCode);
                 SoundManager.Instance.PlayButtonSound();
                 GameManagerMultiplayer.Instance.ResetPlayerTeam();
             });

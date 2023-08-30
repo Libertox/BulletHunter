@@ -28,15 +28,12 @@ namespace BulletHaunter
         public class OnGrenadeAmountChangedEventArgs : EventArgs { public int grenadeAmount; }
 
         public WeaponInstance UseWeapon { get; private set; }
+        public int GrenadeAmount { get; private set; }
+        public Dictionary<WeaponType, int> MagazineAmount { get; private set; }
 
         private WeaponInstance[] ownedWeapon;
         private int useWeaponIndex;
 
-   
-        public int GrenadeAmount { get; private set; }
-
-        public Dictionary<WeaponType, int> MagazineAmount { get; private set; }
-      
         private Dictionary<WeaponType, int> maxAmmoMagazine = new Dictionary<WeaponType, int>
         {
                 {WeaponType.Gun,maxGunMagazine },
@@ -65,13 +62,27 @@ namespace BulletHaunter
                 PlayerStats.OnAnyPlayerSpawn += PlayerStats_OnAnyPlayerSpawn;
         }
 
-        private void PlayerStats_OnAnyPlayerSpawn(object sender, EventArgs e)
+        private void GameInput_OnWeaponSelected(object sender, GameInput.OnWeaponSelectedEventArgs e)
         {
-            if (PlayerStats.Instance != null)
+            UseWeapon = ownedWeapon[e.selectWeaponIndex];
+            useWeaponIndex = e.selectWeaponIndex;
+            OnSelectedWeaponChanged?.Invoke(this, new OnSelectedWeaponChangedEventArgs { selectedWeapon = UseWeapon });
+        }
+
+        private void GameInput_OnWeaponDroped(object sender, EventArgs e) => DropUseWeapon(UseWeapon);
+
+        private void DropUseWeapon(WeaponInstance dropedWeapon)
+        {
+            if (dropedWeapon == null) return;
+
+            OnSelectedWeaponDroped?.Invoke(this, new OnSelectedWeaponChangedEventArgs { selectedWeapon = dropedWeapon });
+
+            if (dropedWeapon == UseWeapon)
             {
-                PlayerStats.Instance.OnDeathed -= PlayerStats_OnDeathed;
-                PlayerStats.Instance.OnDeathed += PlayerStats_OnDeathed;
+                UseWeapon = null;
+                ownedWeapon[useWeaponIndex] = null;
             }
+
         }
 
         private void PlayerStats_OnDeathed(object sender, EventArgs e)
@@ -102,19 +113,28 @@ namespace BulletHaunter
             };
         }
 
-        private void GameInput_OnWeaponDroped(object sender, EventArgs e) => DropUseWeapon(UseWeapon);
-
-        private void GameInput_OnWeaponSelected(object sender, GameInput.OnWeaponSelectedEventArgs e)
+        private void PlayerStats_OnAnyPlayerSpawn(object sender, EventArgs e)
         {
-            UseWeapon = ownedWeapon[e.selectWeaponIndex];
-            useWeaponIndex = e.selectWeaponIndex;
-            OnSelectedWeaponChanged?.Invoke(this, new OnSelectedWeaponChangedEventArgs { selectedWeapon = UseWeapon });
+            if (PlayerStats.Instance != null)
+            {
+                PlayerStats.Instance.OnDeathed -= PlayerStats_OnDeathed;
+                PlayerStats.Instance.OnDeathed += PlayerStats_OnDeathed;
+            }
         }
 
         public bool AddWeapon(WeaponInstance weaponToAdd)
         {
             for (int i = 0; i < ownedWeapon.Length; i++)
             {
+                if (ownedWeapon[useWeaponIndex] == null)
+                {
+                    ownedWeapon[useWeaponIndex] = weaponToAdd;
+                    UseWeapon = weaponToAdd;
+                    OnSelectedWeaponChanged?.Invoke(this, new OnSelectedWeaponChangedEventArgs { selectedWeapon = UseWeapon });
+                    AddMagazine(weaponToAdd.WeaponSO.WeaponType, weaponToAdd.MagazineAmount);
+                    return true;
+                }
+
                 if (ownedWeapon[i] == null)
                 {
                     ownedWeapon[i] = weaponToAdd;
@@ -132,8 +152,6 @@ namespace BulletHaunter
             return false;
         }
 
-        public int GetUseMagazine() => MagazineAmount[UseWeapon.WeaponSO.WeaponType];
-
         public void AddMagazine(WeaponType typeOfWeapon, int magazineNumber)
         {
             if (MagazineAmount[typeOfWeapon] + magazineNumber < maxAmmoMagazine[typeOfWeapon])
@@ -144,6 +162,9 @@ namespace BulletHaunter
             OnAmmoChanged?.Invoke(this, EventArgs.Empty);
         }
 
+        public int GetUseMagazine() => MagazineAmount[UseWeapon.WeaponSO.WeaponType];
+
+     
         public void AmmoChanged() => OnAmmoChanged?.Invoke(this, EventArgs.Empty);
 
         public bool AddOneGranade()
@@ -167,20 +188,7 @@ namespace BulletHaunter
             }
         }
 
-        private void DropUseWeapon(WeaponInstance dropedWeapon)
-        {
-            if (dropedWeapon == null) return;
-
-            OnSelectedWeaponDroped?.Invoke(this, new OnSelectedWeaponChangedEventArgs { selectedWeapon = dropedWeapon });
-
-            if(dropedWeapon == UseWeapon)
-            {
-                UseWeapon = null;
-                ownedWeapon[useWeaponIndex] = null;
-            }
-       
-        }
-
+      
         public bool CanShoot() => UseWeapon != null && UseWeapon.AmmoAmount > 0;
      
         public bool CanThrowGrenade() => GrenadeAmount > 0;

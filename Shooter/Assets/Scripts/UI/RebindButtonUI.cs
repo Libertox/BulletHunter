@@ -37,7 +37,8 @@ namespace BulletHaunter
 
         private void Start() => UpdateBindText();
       
-        private void UpdateBindText() => keyRebindText.SetText(GameInput.Instance.GetBindingText(inputActions.action.id.ToString(), bindingsIndex));
+        private void UpdateBindText() => 
+            keyRebindText.SetText(GameInput.Instance.GetBindingText(inputActions.action.id.ToString(), bindingsIndex));
 
         private void ShowRebindMessage() => rebindMessage.SetActive(true);
 

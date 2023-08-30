@@ -40,11 +40,9 @@ namespace BulletHaunter.UI
             grenadeAmountIcon[e.grenadeAmount].SetActive(false);
         }
 
-        private void Inventory_OnGrenadeAmountChanged(object sender, InventoryManager.OnGrenadeAmountChangedEventArgs e)
-        {
+        private void Inventory_OnGrenadeAmountChanged(object sender, InventoryManager.OnGrenadeAmountChangedEventArgs e) => 
             grenadeAmountIcon[e.grenadeAmount].SetActive(true);
-        }
-
+        
         private void Inventory_OnSelectedWeaponDroped(object sender, InventoryManager.OnSelectedWeaponChangedEventArgs e) => Hide();
 
         private void WeaponReloading_OnCanelReloaded(object sender, EventArgs e) => weaponReloadBar.Hide();
@@ -77,7 +75,8 @@ namespace BulletHaunter.UI
             ChangeAmmoValueText(inventory);
         }
 
-        private void ChangeAmmoValueText(InventoryManager inventory) => ammoAmountText.SetText($"{inventory.UseWeapon.AmmoAmount} / {inventory.GetUseMagazine()}");
+        private void ChangeAmmoValueText(InventoryManager inventory) => 
+            ammoAmountText.SetText($"{inventory.UseWeapon.AmmoAmount} / {inventory.GetUseMagazine()}");
 
         private void Hide()
         {

@@ -17,15 +17,16 @@ namespace BulletHaunter
 
         public event EventHandler OnPlayerDataNetworkListChanged;
 
-        private NetworkList<PlayerData> playerDataNetworkList;
-
-        [SerializeField] private List<Color> teamColorList;
-        [SerializeField] private List<string> teamNameList;
-        [SerializeField] private PlayerSkinsSO playerSkinsSO;
-
         public NetworkVariable<int> MaxTeam { get; private set; } = new NetworkVariable<int>();
         public int PointsToWin { get; private set; }
         public int WinningTeam { get; private set; }
+
+        [SerializeField] private List<Color> teamColorList;
+        [SerializeField] private List<string> teamNameList;
+
+        [SerializeField] private PlayerSkinsSO playerSkinsSO;
+
+        private NetworkList<PlayerData> playerDataNetworkList;
 
         private string playerName;
         private int playerSkin;
@@ -43,36 +44,16 @@ namespace BulletHaunter
             DontDestroyOnLoad(gameObject);
         }
 
-        private void PlayerDataNetworkList_OnListChanged(NetworkListEvent<PlayerData> changeEvent)
-        {
+        private void PlayerDataNetworkList_OnListChanged(NetworkListEvent<PlayerData> changeEvent) => 
             OnPlayerDataNetworkListChanged?.Invoke(this, EventArgs.Empty);
-        }
-
+       
         public void StartHost()
         {
             NetworkManager.Singleton.OnClientConnectedCallback += NetworkManager_OnClientConnectedCallback;
             NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_Server_OnClientDisconnectCallback;
             NetworkManager.Singleton.OnServerStopped += NetworkManager_OnServerStopped;    
 
-            NetworkManager.Singleton.StartHost();
-    
-        }
-
-        private void NetworkManager_OnServerStopped(bool obj)
-        {
-            LobbyManager.Instance.DeleteLobby();
-        }
-
-        private void NetworkManager_Server_OnClientDisconnectCallback(ulong clientId)
-        {
-            for (int i = 0; i < playerDataNetworkList.Count; i++)
-            {
-                PlayerData playerData = playerDataNetworkList[i];
-                if(playerData.clientId == clientId)
-                {
-                    playerDataNetworkList.RemoveAt(i);
-                }
-            }
+            NetworkManager.Singleton.StartHost(); 
         }
 
         private void NetworkManager_OnClientConnectedCallback(ulong clientId)
@@ -89,8 +70,22 @@ namespace BulletHaunter
             SetPlayerTeamIdServerRpc(PlayerPrefs.GetInt(PLAYER_PREFS_CHOOSE_TEAM, 0));
         }
 
-     
+        private void NetworkManager_Server_OnClientDisconnectCallback(ulong clientId) => RemovePlayerData(clientId);
+       
+        private void RemovePlayerData(ulong clientId)
+        {
+            for (int i = 0; i < playerDataNetworkList.Count; i++)
+            {
+                PlayerData playerData = playerDataNetworkList[i];
+                if (playerData.clientId == clientId)
+                {
+                    playerDataNetworkList.RemoveAt(i);
+                }
+            }
+        }
 
+        private void NetworkManager_OnServerStopped(bool obj) => LobbyManager.Instance.DeleteLobby();
+       
         public void StartClient()
         {
             NetworkManager.Singleton.OnClientConnectedCallback += NetworkManager_Client_OnClientConnectedCallback;
@@ -103,18 +98,6 @@ namespace BulletHaunter
             SetPlayerNameServerRpc(playerName);
             SetPlayerSkinIdServerRpc(playerSkin);
             SetPlayerTeamIdServerRpc(PlayerPrefs.GetInt(PLAYER_PREFS_CHOOSE_TEAM, 0));
-        }
-
-        [ServerRpc(RequireOwnership = false)]
-        private void SetPlayerTeamIdServerRpc(int teamId, ServerRpcParams serverRpcParams = default)
-        {
-            int playerDataIndex = GetPlayerDataIndexFromClientId(serverRpcParams.Receive.SenderClientId);
-
-            PlayerData playerData = playerDataNetworkList[playerDataIndex];
-
-            playerData.teamColorId = teamId;
-
-            playerDataNetworkList[playerDataIndex] = playerData;
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -152,6 +135,19 @@ namespace BulletHaunter
 
             playerDataNetworkList[playerDataIndex] = playerData;
         }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void SetPlayerTeamIdServerRpc(int teamId, ServerRpcParams serverRpcParams = default)
+        {
+            int playerDataIndex = GetPlayerDataIndexFromClientId(serverRpcParams.Receive.SenderClientId);
+
+            PlayerData playerData = playerDataNetworkList[playerDataIndex];
+
+            playerData.teamColorId = teamId;
+
+            playerDataNetworkList[playerDataIndex] = playerData;
+        }
+
 
         public bool IsPlayerIndexConnected(int playerIndex) => playerIndex < playerDataNetworkList.Count;
 

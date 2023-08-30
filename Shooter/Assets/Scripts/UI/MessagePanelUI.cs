@@ -31,30 +31,24 @@ namespace BulletHaunter
             Hide();
         }
 
-        private void LobbyManager_OnCreatedLobbyFailed(object sender, EventArgs e)
-        {
+        private void LobbyManager_OnCreatedLobbyFailed(object sender, EventArgs e) => 
             SetMessageText("FAILED TO CREATE LOBBY");
-        }
-
-        private void LobbyManager_OnCreatedLobby(object sender, EventArgs e)
-        {
+        
+        private void LobbyManager_OnCreatedLobby(object sender, EventArgs e) => 
             SetMessageText("CREATING LOBBY...");
-        }
+       
 
-        private void LobbyManager_OnQuickJoinedLobbyFailed(object sender, EventArgs e)
-        {
+        private void LobbyManager_OnQuickJoinedLobbyFailed(object sender, EventArgs e) => 
             SetMessageText("COULD NOT FIND A LOBBY TO JOIN");
-        }
+        
 
-        private void LobbyManager_OnJoinedLobbyFailed(object sender, EventArgs e)
-        {
+        private void LobbyManager_OnJoinedLobbyFailed(object sender, EventArgs e) => 
             SetMessageText("FAILED TO JOIN LOBBY!");
-        }
+       
 
-        private void LobbyManager_OnJoinedLobby(object sender, EventArgs e)
-        {
+        private void LobbyManager_OnJoinedLobby(object sender, EventArgs e) =>
             SetMessageText("JOINING LOBBY... ");
-        }
+        
 
         private void Show() => gameObject.SetActive(true);
 

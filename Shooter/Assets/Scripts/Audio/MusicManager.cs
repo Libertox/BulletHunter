@@ -11,9 +11,9 @@ namespace BulletHaunter
         private readonly float volumeScale = 10f;
         private readonly float defaultMusicVolume = .5f;
 
-        public float MusicVolume => musicSource.volume * volumeScale;
-
         [SerializeField] private AudioSource musicSource;
+
+        public float MusicVolume => musicSource.volume * volumeScale;
 
         private void Awake()
         {

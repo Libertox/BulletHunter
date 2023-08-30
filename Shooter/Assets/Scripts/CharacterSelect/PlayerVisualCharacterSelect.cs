@@ -17,11 +17,9 @@ namespace BulletHaunter.CharacterSelect
             SetSkinnedMeshRendererMaterials(CharacterSelectManager.Instance.GetChooseMaterial()); 
         }
 
-        private void CharacterSelectManager_OnSkinChanged(object sender, CharacterSelectManager.OnSkinChangedEventArgs e)
-        {
+        private void CharacterSelectManager_OnSkinChanged(object sender, CharacterSelectManager.OnSkinChangedEventArgs e) => 
             SetSkinnedMeshRendererMaterials(e.material);
-        }
-
+       
         private void SetSkinnedMeshRendererMaterials(Material material)
         {
             playerMeshRenderer.materials = new Material[]
@@ -30,7 +28,6 @@ namespace BulletHaunter.CharacterSelect
                 material,
                 material
             };
-
         }
         private void OnMouseDrag()
         {
@@ -40,12 +37,12 @@ namespace BulletHaunter.CharacterSelect
                 isDrag = true;
             }
 
-            float rotationSpeed = .5f;
+            float rotationSpeed = 200f;
 
             if (previousMousePosition > Input.mousePosition.x)
-                transform.Rotate(new Vector3(0, -rotationSpeed, 0));
+                transform.Rotate(new Vector3(0, -rotationSpeed, 0) * Time.deltaTime);
             else
-                transform.Rotate(new Vector3(0, rotationSpeed, 0));
+                transform.Rotate(new Vector3(0, rotationSpeed, 0) * Time.deltaTime);
         }
 
         private void OnMouseUp() => isDrag = false;

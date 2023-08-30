@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,8 +18,11 @@ namespace BulletHaunter.UI
         {
             changeTeamColorButton.onClick.AddListener(() => 
             {
-                GameManagerMultiplayer.Instance.ChangePlayerTeamColor(teamColorId);
-                SoundManager.Instance.PlayButtonSound();
+                if (!TeamSelectManager.Instance.IsPlayerReady(NetworkManager.Singleton.LocalClientId))
+                {
+                    GameManagerMultiplayer.Instance.ChangePlayerTeamColor(teamColorId);
+                    SoundManager.Instance.PlayButtonSound();
+                }               
             });
         }
 
@@ -29,10 +33,9 @@ namespace BulletHaunter.UI
             UpdateIsSelected();
         }
 
-        private void OnDestroy()
-        {
+        private void OnDestroy() => 
             GameManagerMultiplayer.Instance.OnPlayerDataNetworkListChanged -= GameManagerMultiplayer_OnPlayerDataNetworkListChanged;
-        }
+        
 
         private void GameManagerMultiplayer_OnPlayerDataNetworkListChanged(object sender, EventArgs e) => UpdateIsSelected();
        

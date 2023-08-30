@@ -41,10 +41,9 @@ namespace BulletHaunter
             }
         }
 
-        private void PlayerStats_OnRestoreWaited(object sender, PlayerStats.OnWaitedEventArgs e)
-        {
+        private void PlayerStats_OnRestoreWaited(object sender, PlayerStats.OnWaitedEventArgs e) =>
             restoreTimerText.SetText($"RESPAWN IN " + e.timerValue);
-        }
+        
 
         private void PlayerStats_OnDeathed(object sender, EventArgs e) => Show();
       

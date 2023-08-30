@@ -13,11 +13,9 @@ namespace BulletHaunter
                 InventoryManager.Instance.OnSelectedWeaponDroped += Inventory_OnSelectedWeaponDroped;      
         }
 
-        private void Inventory_OnSelectedWeaponDroped(object sender, InventoryManager.OnSelectedWeaponChangedEventArgs e)
-        {
+        private void Inventory_OnSelectedWeaponDroped(object sender, InventoryManager.OnSelectedWeaponChangedEventArgs e) => 
             DropWeaponServerRpc(GameManager.Instance.GetWeaponSOIndex(e.selectedWeapon.WeaponSO), e.selectedWeapon.AmmoAmount);
-        }
-
+       
         [ServerRpc(RequireOwnership = false)]
         private void DropWeaponServerRpc(int weaponSOIndex, int ammoAmount)
         {

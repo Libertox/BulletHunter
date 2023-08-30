@@ -9,11 +9,12 @@ namespace BulletHaunter
         private const string PLAYER_PREFS_SOUND_EFFECT_VOLUME = "SoundEffectVolume";
         private readonly float defaultSoundEffectVolume = .5f;
 
-        public float SoundEffectVolume { get; private set; }
-
         [SerializeField] private AudioSource soundEffectSource;
         [SerializeField] private AudioClipsSO audioClipsSO;
 
+        public float SoundEffectVolume { get; private set; }
+
+       
         private void Awake()
         {
             if (!Instance)
@@ -23,7 +24,10 @@ namespace BulletHaunter
         }
 
         private void Start() => PlayerController.OnJumped += PlayerController_OnJumped;
+
+        private void OnDestroy() => PlayerController.OnJumped -= PlayerController_OnJumped;
       
+
         private void PlayerController_OnJumped(object sender, PlayerController.OnStateChangedEventArgs e)
         {
             if (!e.state) return;
@@ -39,6 +43,16 @@ namespace BulletHaunter
             PlayerPrefs.Save();
         }
 
+        private void PlaySoundEffect(AudioClip audioClip, Vector3 audioEffectPosition) 
+        {
+            AudioSource.PlayClipAtPoint(audioClip, audioEffectPosition, SoundEffectVolume);
+        }
+
+        private void PlaySoundEffect(AudioClip[] audioClips, Vector3 audioEffectPosition)
+        {
+            int audioClipIndex = Random.Range(0, audioClips.Length);
+            AudioSource.PlayClipAtPoint(audioClips[audioClipIndex], audioEffectPosition, SoundEffectVolume);
+        }
 
         public void PlayButtonSound()
         {
@@ -46,32 +60,25 @@ namespace BulletHaunter
             soundEffectSource.PlayOneShot(audioClipsSO.ButtonSound[buttonClipIndex],SoundEffectVolume);
         }
 
+        public void PlayShootSound(Vector3 audioSourcePosition) => 
+            PlaySoundEffect(audioClipsSO.ShootSound, audioSourcePosition);
 
+        public void PlayBulletImpactSound(Vector3 audioSourcePosition) => 
+            PlaySoundEffect(audioClipsSO.BulletImpactSound, audioSourcePosition);
 
-        public void PlayShootSound(Vector3 audioSourcePosition)
-        {
-            int shootClipIndex = Random.Range(0, audioClipsSO.ShootSound.Length);
-            AudioSource.PlayClipAtPoint(audioClipsSO.ShootSound[shootClipIndex], audioSourcePosition, SoundEffectVolume);
-        }
+        public void PlayGrenadeExplosionSound(Vector3 audioSourcePosition) => 
+            PlaySoundEffect(audioClipsSO.ExplosionSound, audioSourcePosition);
 
-        public void PlayBulletImpactSound(Vector3 audioSourcePosition)
-        {
-            int bulletImpactClipIndex = Random.Range(0, audioClipsSO.BulletImpactSound.Length);
-            AudioSource.PlayClipAtPoint(audioClipsSO.BulletImpactSound[bulletImpactClipIndex], audioSourcePosition, SoundEffectVolume);
-        }
-
-        public void PlayGrenadeExplosionSound(Vector3 audioSourcePosition)
-        {
-            int explosionClipIndex = Random.Range(0, audioClipsSO.ExplosionSound.Length);
-            AudioSource.PlayClipAtPoint(audioClipsSO.ExplosionSound[explosionClipIndex], audioSourcePosition, SoundEffectVolume);
-        }
-     
-        public void PlayPlayerWalkSound(Vector3 audioSourcePosition) => AudioSource.PlayClipAtPoint(audioClipsSO.WalkSound, audioSourcePosition, SoundEffectVolume);
- 
-        public void PlayPlayerJumpSound(Vector3 audioSourcePosition) => AudioSource.PlayClipAtPoint(audioClipsSO.JumpSound, audioSourcePosition, SoundEffectVolume);
-   
-        public void PlayPickupObjectSound(Vector3 audioSourcePosition) => AudioSource.PlayClipAtPoint(audioClipsSO.PickupObjectSound, audioSourcePosition, SoundEffectVolume);
+        public void PlayPlayerWalkSound(Vector3 audioSourcePosition) => 
+            PlaySoundEffect(audioClipsSO.WalkSound, audioSourcePosition);
+      
+        public void PlayPlayerJumpSound(Vector3 audioSourcePosition) => 
+            PlaySoundEffect(audioClipsSO.JumpSound, audioSourcePosition);
+      
+        public void PlayPickupObjectSound(Vector3 audioSourcePosition) => 
+            PlaySoundEffect(audioClipsSO.PickupObjectSound, audioSourcePosition);
   
-        public void PlayPlayerTakeDamageSound(Vector3 audioSourcePosition) => AudioSource.PlayClipAtPoint(audioClipsSO.TakeDamageSound, audioSourcePosition, SoundEffectVolume);
+        public void PlayPlayerTakeDamageSound(Vector3 audioSourcePosition) => 
+            PlaySoundEffect(audioClipsSO.TakeDamageSound, audioSourcePosition);
     }
 }

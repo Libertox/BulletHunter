@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Unity.Services.Authentication;
-using Unity.Services.Core;
 using Unity.Services.Lobbies.Models;
 using Unity.Services.Lobbies;
 using UnityEngine;
@@ -19,8 +18,12 @@ namespace BulletHaunter
         public static LobbyManager Instance { get; private set; }
 
         private const string KEY_RELAY_JOIN_CODE = "RelayJoinCode";
-        private const string LOBBY_DATA_AVAILABLE = "Available";
+        private const string LOBBY_AVAILABLE = "Available";
         private const string LOBBY_NOT_AVAILABLE = "Not available";
+
+        public const int DEFAULT_TEAM_POINTS = 8;
+        public const string DEFAULT_LOBBY_NAME = "My Lobby";
+
         private Lobby joinedLobby;
 
         private float heartbeatTimer;
@@ -44,8 +47,6 @@ namespace BulletHaunter
         private void Awake()
         {
             Instance = this;
-
-            joinedLobby = null;
 
             DontDestroyOnLoad(gameObject);
 
@@ -96,7 +97,7 @@ namespace BulletHaunter
                     Filters = new List<QueryFilter>
                     {
                        new QueryFilter(QueryFilter.FieldOptions.AvailableSlots,"0",QueryFilter.OpOptions.GT),
-                       new QueryFilter(QueryFilter.FieldOptions.S1,LOBBY_DATA_AVAILABLE,QueryFilter.OpOptions.EQ)
+                       new QueryFilter(QueryFilter.FieldOptions.S1,LOBBY_AVAILABLE,QueryFilter.OpOptions.EQ)
                     }
                 };
 
@@ -171,7 +172,7 @@ namespace BulletHaunter
                     IsPrivate = isPrivate,
                     Data = new Dictionary<string, DataObject>
                     {
-                        {LOBBY_DATA_AVAILABLE,new DataObject(DataObject.VisibilityOptions.Public,LOBBY_DATA_AVAILABLE,DataObject.IndexOptions.S1)}
+                        {LOBBY_AVAILABLE,new DataObject(DataObject.VisibilityOptions.Public,LOBBY_AVAILABLE,DataObject.IndexOptions.S1)}
                     }
                 });
                 Allocation allocation = await AllocateRelay(playerNumber);
@@ -226,7 +227,7 @@ namespace BulletHaunter
             {
                 joinedLobby = await LobbyService.Instance.JoinLobbyByCodeAsync(lobbyCode);
 
-                if (joinedLobby.Data[LOBBY_DATA_AVAILABLE].Value == LOBBY_NOT_AVAILABLE)
+                if (joinedLobby.Data[LOBBY_AVAILABLE].Value == LOBBY_NOT_AVAILABLE)
                 {
                     LeaveLobby();
                     OnJoinedLobbyFailed?.Invoke(this, EventArgs.Empty);
@@ -332,7 +333,7 @@ namespace BulletHaunter
                     IsPrivate = true,
                     Data = new Dictionary<string, DataObject>
                     {
-                        {LOBBY_DATA_AVAILABLE,new DataObject(DataObject.VisibilityOptions.Public,LOBBY_NOT_AVAILABLE,DataObject.IndexOptions.S1)}
+                        {LOBBY_AVAILABLE,new DataObject(DataObject.VisibilityOptions.Public,LOBBY_NOT_AVAILABLE,DataObject.IndexOptions.S1)}
                     }
                 });
             }
@@ -366,6 +367,8 @@ namespace BulletHaunter
 
                 string relayJoinCode = joinedLobby.Data[KEY_RELAY_JOIN_CODE].Value;
                 JoinAllocation joinAllocation = await JoinRelay(relayJoinCode);
+
+                if (joinAllocation == null) throw new LobbyServiceException(LobbyExceptionReason.LobbyNotFound, "Lobby not exist");
 
                 NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(joinAllocation, "dtls"));
 

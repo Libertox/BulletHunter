@@ -32,6 +32,7 @@ namespace BulletHaunter.CharacterSelect
         public void SetNextSkin()
         {
             ChooseSkinIndex++;
+
             if (ChooseSkinIndex >= playerSkinsSO.PlayerSkinList.Count)
                 ChooseSkinIndex = 0;
 
@@ -41,6 +42,7 @@ namespace BulletHaunter.CharacterSelect
         public void SetPreviousSkin()
         {
             ChooseSkinIndex--;
+
             if (ChooseSkinIndex < 0)
                 ChooseSkinIndex = playerSkinsSO.PlayerSkinList.Count - 1;
 

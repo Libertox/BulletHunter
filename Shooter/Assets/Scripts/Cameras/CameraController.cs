@@ -15,6 +15,8 @@ namespace BulletHaunter.Cameras
         [SerializeField] private Transform uprightCameraPosition;
         [SerializeField] private Transform squatCameraPosition;
 
+        [SerializeField] private Camera teamPlayerCamera;
+
         private float rotationY;
         private float rotationX;
         private Camera cameraToControl;
@@ -50,27 +52,22 @@ namespace BulletHaunter.Cameras
             SetCullingMask();
         }
 
-        private void PlayerController_OnSquated(object sender, PlayerController.OnStateChangedEventArgs e)
-        {
-            isSquatPosition = e.state;
-        }
-
+        private void PlayerController_OnSquated(object sender, PlayerController.OnStateChangedEventArgs e) => isSquatPosition = e.state;
+        
         private void GameManagerMultiplayer_OnPlayerDataNetworkListChanged(object sender, EventArgs e)
         {
             ResetCullingMask();
             SetCullingMask();
         }
 
-        public override void OnDestroy()
-        {
+        public override void OnDestroy() => 
             GameManagerMultiplayer.Instance.OnPlayerDataNetworkListChanged -= GameManagerMultiplayer_OnPlayerDataNetworkListChanged;
-        }
 
         private void SetCullingMask()
         {
             int index = GameManagerMultiplayer.Instance.GetPlayerDataIndexFromClientId(OwnerClientId);
 
-            if (index == -1) 
+            if (index == -1)
                 return;
 
             LayerMask playerMask = GameManager.Instance.GetPlayerLayerMask(index);
@@ -78,6 +75,7 @@ namespace BulletHaunter.Cameras
             cameraToControl.cullingMask &= ~(1 << playerMask);
             cameraToControl.cullingMask &= ~(1 << gunLayerMask);
         }
+
         private void ResetCullingMask()
         {
             for (int i = 0; i < GameManager.Instance.GetPlayerGunLayerMaskLength(); i++)
@@ -106,11 +104,22 @@ namespace BulletHaunter.Cameras
         
         private void GameInput_OnCancelAimed(object sender, EventArgs e) => Unzoom();
 
-        private void GameInput_OnAimed(object sender, EventArgs e)
+        private void Unzoom() 
         {
-            if (InventoryManager.Instance.UseWeapon != null)
-                Zoom();
+            cameraToControl.fieldOfView = unzoomValue;
+            teamPlayerCamera.fieldOfView = unzoomValue;
         }
+
+        private void GameInput_OnAimed(object sender, EventArgs e) => Zoom();
+      
+        private void Zoom() 
+        {
+            if(InventoryManager.Instance.UseWeapon != null)
+            {
+                cameraToControl.fieldOfView = InventoryManager.Instance.UseWeapon.WeaponSO.WeaponZoom;
+                teamPlayerCamera.fieldOfView = InventoryManager.Instance.UseWeapon.WeaponSO.WeaponZoom;
+            }        
+        } 
 
         private void Update() 
         {
@@ -131,11 +140,7 @@ namespace BulletHaunter.Cameras
             transform.localEulerAngles = new Vector3(-rotationY, 0, 0);
             playerController.HandleRotate(new Vector3(0, rotationX, 0));
         }
-
-        private void Zoom() => cameraToControl.fieldOfView = InventoryManager.Instance.UseWeapon.WeaponSO.WeaponZoom;
-      
-        private void Unzoom() => cameraToControl.fieldOfView = unzoomValue;
-      
+   
         private void Hide() => gameObject.SetActive(false);
 
         private void Show() => gameObject.SetActive(true);

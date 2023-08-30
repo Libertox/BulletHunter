@@ -23,15 +23,11 @@ namespace BulletHaunter.Cameras
             SetCullingMask();
         }
 
-        private void GameManagerMultiplayer_OnPlayerDataNetworkListChanged(object sender, EventArgs e)
-        {
-            SetCullingMask();
-        }
-
-        public override void OnDestroy()
-        {
+        private void GameManagerMultiplayer_OnPlayerDataNetworkListChanged(object sender, EventArgs e) => SetCullingMask();
+       
+        public override void OnDestroy() =>
             GameManagerMultiplayer.Instance.OnPlayerDataNetworkListChanged -= GameManagerMultiplayer_OnPlayerDataNetworkListChanged;
-        }
+        
         private void SetCullingMask()
         {
             int index = GameManagerMultiplayer.Instance.GetPlayerDataIndexFromClientId(OwnerClientId);
@@ -41,6 +37,5 @@ namespace BulletHaunter.Cameras
             weaponCamera.cullingMask |= (1 << gunLayerMask);
         }
 
-     
     }
 }

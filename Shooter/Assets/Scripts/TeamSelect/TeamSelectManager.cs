@@ -56,6 +56,28 @@ namespace BulletHaunter
             OnReadyChanged?.Invoke(this, EventArgs.Empty);
         }
 
+        public void SetPlayerUnready() => SetPlayerUnreadyServerRpc();
+
+        [ServerRpc(RequireOwnership = false)]
+        private void SetPlayerUnreadyServerRpc(ServerRpcParams serverRpcParams = default)
+        {
+            SetPlayerUnreadyClientRpc(serverRpcParams.Receive.SenderClientId);
+            playerReadyDictionary[serverRpcParams.Receive.SenderClientId] = false;
+
+            OnReadyChanged?.Invoke(this, EventArgs.Empty);
+
+        }
+
+        [ClientRpc()]
+        private void SetPlayerUnreadyClientRpc(ulong clientId)
+        {
+            playerReadyDictionary[clientId] = false;
+
+            OnReadyChanged?.Invoke(this, EventArgs.Empty);
+        }
+
         public bool IsPlayerReady(ulong playerId) => playerReadyDictionary.ContainsKey(playerId) && playerReadyDictionary[playerId];
+
+
     }
 }

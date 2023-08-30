@@ -40,20 +40,16 @@ namespace BulletHaunter
             }
         }
 
-        private void OnDestroy()
-        {
-            PlayerShoot.OnAnyPlayerKilled -= PlayerShoot_OnAnyPlayerKilled;
-        }
+        private void OnDestroy() => PlayerShoot.OnAnyPlayerKilled -= PlayerShoot_OnAnyPlayerKilled;
+      
 
-        private void PlayerShoot_OnAnyPlayerKilled(object sender, PlayerShoot.OnAnyPlayerKilledEventArgs e)
-        {
+        private void PlayerShoot_OnAnyPlayerKilled(object sender, PlayerShoot.OnAnyPlayerKilledEventArgs e) => 
             SetMessageText("YOU KILLED ", e.targetId);
-        }
+        
 
-        private void PlayerStats_OnDeathed(object sender, PlayerStats.OnDeathedEventArgs e)
-        {
+        private void PlayerStats_OnDeathed(object sender, PlayerStats.OnDeathedEventArgs e) => 
             SetMessageText("KILLED BY ", e.targetId);
-        }
+       
 
         private void SetMessageText(string message, ulong clientId)
         {

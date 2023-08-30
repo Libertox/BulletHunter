@@ -42,11 +42,10 @@ namespace BulletHaunter
             ResetCullingMask();
             SetShootLayerMask();
         }
-        public override void OnDestroy()
-        {
-            GameManagerMultiplayer.Instance.OnPlayerDataNetworkListChanged -= GameManagerMultiplayer_OnPlayerDataNetworkListChanged;
-        }
 
+        public override void OnDestroy() => 
+            GameManagerMultiplayer.Instance.OnPlayerDataNetworkListChanged -= GameManagerMultiplayer_OnPlayerDataNetworkListChanged;
+       
         private void SetShootLayerMask()
         {
             int index = GameManagerMultiplayer.Instance.GetPlayerDataIndexFromClientId(OwnerClientId);

@@ -38,11 +38,6 @@ namespace BulletHaunter
             UpdatePlayer();
         }
 
-        private void OnDestroy()
-        {
-            GameManagerMultiplayer.Instance.OnPlayerDataNetworkListChanged -= GameManagerMultiplayer_OnPlayerDataNetworkListChanged;
-        }
-
         private void TeamSelectManager_OnReadyChanged(object sender, EventArgs e) => UpdatePlayer();
       
         private void GameManagerMultiplayer_OnPlayerDataNetworkListChanged(object sender, EventArgs e) => UpdatePlayer();
@@ -76,5 +71,9 @@ namespace BulletHaunter
         private void Hide() => gameObject.SetActive(false);
 
         private void Show() => gameObject.SetActive(true);
+
+        private void OnDestroy() => 
+            GameManagerMultiplayer.Instance.OnPlayerDataNetworkListChanged -= GameManagerMultiplayer_OnPlayerDataNetworkListChanged;
+
     }
 }

@@ -48,9 +48,8 @@ namespace BulletHaunter
         {
             if(IsOwner)
                 Instance = this;
- 
+            StartCoroutine(InvulnerabilityCountdownCoroutine(GameManager.Instance.StartGameTimer.Value));
             OnAnyPlayerSpawn?.Invoke(this, EventArgs.Empty);
-            StartCoroutine(InvulnerabilityCountdownCoroutine(GameManager.GameStartCoolDown));
         }
 
         private IEnumerator InvulnerabilityCountdownCoroutine(float invulnerabilityCooldown)

@@ -10,7 +10,7 @@ namespace BulletHaunter
         public static GameInput Instance { get; private set; }
 
         private const string PLAYER_PREFS_MOUSE_SENSITIVITY = "MouseSensitivity";
-        private const string PLAYER_PREFS_BINDING = "Binding";
+        public const string PLAYER_PREFS_BINDING = "Binding";
 
         public event EventHandler OnJumped;
         public event EventHandler OnSquat;
@@ -39,7 +39,8 @@ namespace BulletHaunter
 
         private PlayerInput playerInput;
         private OnWeaponSelectedEventArgs selectedWeapon;
-        
+
+        public RebindInput RebindInput { get; private set; }
 
         public float MouseSensitivity { get; private set; }
         private readonly float defaultMouseSensitivity = 50f;
@@ -52,6 +53,7 @@ namespace BulletHaunter
                 Destroy(gameObject);
 
             playerInput = new PlayerInput();
+            RebindInput = new RebindInput(playerInput);
             selectedWeapon = new OnWeaponSelectedEventArgs();
 
             MouseSensitivity = PlayerPrefs.GetFloat(PLAYER_PREFS_MOUSE_SENSITIVITY, defaultMouseSensitivity);
@@ -61,6 +63,14 @@ namespace BulletHaunter
 
             playerInput.Enable();
 
+            playerInput.UI.Pause.performed += Pause_performed;
+
+            if (!SceneLoader.IsGameScene()) return;
+ 
+            playerInput.UI.PointsTable.performed += PointsTable_performed;
+            playerInput.UI.PointsTable.canceled += PointsTable_canceled;
+
+          
             playerInput.Player.Jump.performed += Jump_performed;
             playerInput.Player.Squat.performed += Squat_performed;
             playerInput.Player.Interact.performed += Interact_performed;
@@ -80,14 +90,8 @@ namespace BulletHaunter
             playerInput.Player.Throw.performed += Throw_performed;
             playerInput.Player.Throw.canceled += Throw_canceled;
 
-            playerInput.UI.Pause.performed += Pause_performed;
-
-            playerInput.UI.PointsTable.performed += PointsTable_performed;
-            playerInput.UI.PointsTable.canceled += PointsTable_canceled;
         }
-
-     
-
+ 
         private void OnDestroy()
         {
             playerInput.Player.Jump.performed -= Jump_performed;
@@ -116,14 +120,14 @@ namespace BulletHaunter
 
         private void PointsTable_performed(InputAction.CallbackContext obj)
         {
-            if (GameManager.Instance != null && !GameManager.Instance.CanInputAction()) return;
+            if (!GameManager.Instance.CanInputAction()) return;
 
             OnTableShowed?.Invoke(this, EventArgs.Empty);
         }
 
         private void PointsTable_canceled(InputAction.CallbackContext obj)
         {
-            if (GameManager.Instance != null && !GameManager.Instance.CanInputAction()) return;
+            if (!GameManager.Instance.CanInputAction()) return;
 
             OnTableHided?.Invoke(this, EventArgs.Empty);
         }
@@ -140,62 +144,62 @@ namespace BulletHaunter
 
         private void Throw_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
         {
-            if(GameManager.Instance!= null && !GameManager.Instance.CanInputAction()) return;
+            if(!GameManager.Instance.CanInputAction()) return;
 
             OnCancelThrowed?.Invoke(this, EventArgs.Empty);
         }
 
         private void Throw_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
         {
-            if (GameManager.Instance != null && !GameManager.Instance.CanInputAction()) return;
+            if (!GameManager.Instance.CanInputAction()) return;
 
             OnThrowed?.Invoke(this, EventArgs.Empty);
         }
 
         private void Aim_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
         {
-            if (GameManager.Instance != null && !GameManager.Instance.CanInputAction()) return;
+            if (!GameManager.Instance.CanInputAction()) return;
 
             OnCancelAimed?.Invoke(this, EventArgs.Empty);
         }
 
         private void Aim_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
         {
-            if (GameManager.Instance != null && !GameManager.Instance.CanInputAction()) return;
+            if (!GameManager.Instance.CanInputAction()) return;
 
             OnAimed?.Invoke(this, EventArgs.Empty);
         }
 
         private void Reload_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) 
         {
-            if (GameManager.Instance != null && !GameManager.Instance.CanInputAction()) return;
+            if (!GameManager.Instance.CanInputAction()) return;
 
             OnReloaded?.Invoke(this, EventArgs.Empty);
         }
 
         private void Shoot_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) 
         {
-            if (GameManager.Instance != null && !GameManager.Instance.CanInputAction()) return;
+            if (!GameManager.Instance.CanInputAction()) return;
 
            OnShooted?.Invoke(this, EventArgs.Empty);
         }
 
         private void Shoot_canceled(InputAction.CallbackContext obj)
         {
-            if (GameManager.Instance != null && !GameManager.Instance.CanInputAction()) return;
+            if (!GameManager.Instance.CanInputAction()) return;
 
             OnCancelShooted?.Invoke(this, EventArgs.Empty);
         }
 
         private void DropWeapon_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
         {
-            if (GameManager.Instance != null && !GameManager.Instance.CanInputAction()) return;
+            if (!GameManager.Instance.CanInputAction()) return;
 
             OnWeaponDroped?.Invoke(this, EventArgs.Empty);
         }
         private void SelectWeapon_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
         {
-            if (GameManager.Instance != null && !GameManager.Instance.CanInputAction()) return;
+            if (!GameManager.Instance.CanInputAction()) return;
 
             for (int i = 0; i < playerInput.Player.SelectWeapon.bindings.Count; i++)
             {
@@ -210,7 +214,7 @@ namespace BulletHaunter
 
         private void SelectWeaponByScroll_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
         {
-            if (GameManager.Instance != null && !GameManager.Instance.CanInputAction()) return;
+            if (!GameManager.Instance.CanInputAction()) return;
 
             var readValue = obj.ReadValue<float>();
             int inventorySize = InventoryManager.Max_Number_Weapon - 1;
@@ -235,19 +239,19 @@ namespace BulletHaunter
 
         private void Interact_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
         {
-            if (GameManager.Instance != null && !GameManager.Instance.CanInputAction()) return;
+            if (!GameManager.Instance.CanInputAction()) return;
 
             OnInteract?.Invoke(this, EventArgs.Empty);
         }
         private void Squat_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
         {
-            if (GameManager.Instance != null && !GameManager.Instance.CanInputAction()) return;
+            if (!GameManager.Instance.CanInputAction()) return;
 
             OnSquat?.Invoke(this, EventArgs.Empty);
         }
         private void Jump_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
         {
-            if (GameManager.Instance != null && !GameManager.Instance.CanInputAction()) return;
+            if (!GameManager.Instance.CanInputAction()) return;
 
             OnJumped?.Invoke(this, EventArgs.Empty);
         }
@@ -285,64 +289,5 @@ namespace BulletHaunter
             PlayerPrefs.Save();
         }
 
-
-        public void RebindBinding(string inputActionId, int bindingIndex, Action afterBindAction, Action<string> duplicateBindAaction)
-        {
-            InputAction inputAction = playerInput.FindAction(inputActionId);
-            playerInput.Disable();
-            
-            inputAction.PerformInteractiveRebinding(bindingIndex)
-                .WithControlsExcluding("Mouse")
-                .WithCancelingThrough("<Keyboard>/escape")
-                .OnMatchWaitForAnother(0.1f)
-                .OnCancel(callback =>
-                {
-                    callback.Dispose();
-                    playerInput.Enable();
-                    afterBindAction();
-                })
-                .OnComplete(callback =>
-                {
-                    playerInput.Enable();
-
-                    if (CheckDuplicateBindings(inputAction, bindingIndex))
-                    {
-                        inputAction.RemoveBindingOverride(bindingIndex);
-                        callback.Dispose();
-                        duplicateBindAaction("KEY IS USED");
-                        RebindBinding(inputActionId, bindingIndex, afterBindAction, duplicateBindAaction);
-                        return;
-                    }
-
-                    callback.Dispose();
-                    afterBindAction();
-
-                    PlayerPrefs.SetString(PLAYER_PREFS_BINDING, playerInput.SaveBindingOverridesAsJson());
-                    PlayerPrefs.Save();
-
-                })
-               .Start();
-        }
-
-       
-        private bool CheckDuplicateBindings(InputAction inputAction, int bindingIndex)
-        {
-            InputBinding newInputBinding = inputAction.bindings[bindingIndex];
-            foreach (InputBinding inputBinding in playerInput.bindings)
-            {
-                if (inputBinding.id == newInputBinding.id)
-                    continue;
-
-                if (inputBinding.effectivePath == newInputBinding.effectivePath)
-                    return true;
-            }
-
-            return false;
-        }
-
-        public string GetBindingText(string inputActionId, int bindingIndex)
-        {
-            return playerInput.FindAction(inputActionId).bindings[bindingIndex].ToDisplayString();
-        }
     }
 }

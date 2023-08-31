@@ -37,6 +37,8 @@ namespace BulletHaunter
 
             }
         }
+
+        public static bool IsGameScene() => SceneManager.GetActiveScene().name == GameScene.Game.ToString();
  
         public enum GameScene
         {

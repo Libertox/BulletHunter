@@ -18,15 +18,18 @@ namespace BulletHaunter
         [SerializeField] private GameObject rebindMessage;
         [SerializeField] private TextMeshProUGUI rebindText;
 
+ 
         private void Awake()
         {
+           
+
             rebindButton.onClick.AddListener(() =>
             {
                 rebindText.SetText("PRESS A KEY TO REBIND");
                 ShowRebindMessage();
                 SoundManager.Instance.PlayButtonSound();
 
-                GameInput.Instance.RebindBinding(inputActions.action.id.ToString(), bindingsIndex,() =>
+                GameInput.Instance.RebindInput.RebindBinding(inputActions.action.id.ToString(), bindingsIndex,() =>
                 {
                     UpdateBindText();
                     HideRebindMessage();
@@ -38,7 +41,7 @@ namespace BulletHaunter
         private void Start() => UpdateBindText();
       
         private void UpdateBindText() => 
-            keyRebindText.SetText(GameInput.Instance.GetBindingText(inputActions.action.id.ToString(), bindingsIndex));
+            keyRebindText.SetText(GameInput.Instance.RebindInput.GetBindingText(inputActions.action.id.ToString(), bindingsIndex));
 
         private void ShowRebindMessage() => rebindMessage.SetActive(true);
 

@@ -11,7 +11,7 @@ namespace BulletHaunter
     public class GameManager : NetworkBehaviour
     {
         public const string PLAYER_PREFS_SHOW_PLAYER_NICK = "showPlayerNick";
-        public const int GameStartCoolDown = 30;
+        private const int GameStartCoolDown = 30;
 
         public static GameManager Instance { get; private set; }
 
@@ -45,7 +45,7 @@ namespace BulletHaunter
         private List<int> usedPointsIndexList;
         private GameState gameState = GameState.Play;
         private GameState previousGameState;
-        private NetworkVariable<float> startGameTimer = new NetworkVariable<float>(0f);
+        public NetworkVariable<float> StartGameTimer { get; private set; } = new NetworkVariable<float>(GameStartCoolDown);
 
         public enum GameState
         {
@@ -77,7 +77,7 @@ namespace BulletHaunter
                 StartCoroutine(StartGameCoroutine());
             }
 
-            startGameTimer.OnValueChanged += StartGameTimer_OnValueChanged;
+            StartGameTimer.OnValueChanged += StartGameTimer_OnValueChanged;
 
             if (PlayerStats.Instance != null)
                 PlayerStats.Instance.OnDeathed += PlayerStats_OnDeathed;
@@ -120,7 +120,7 @@ namespace BulletHaunter
 
         private void NetworkManager_OnClientConnectedCallback(ulong clientId)
         {
-            PlayerController playerController = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
+            PlayerController playerController = Instantiate(playerPrefab, GetRandomPosition(), Quaternion.identity);
             playerController.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true);
 
             PlayerReconnectedClientRpc();
@@ -140,11 +140,11 @@ namespace BulletHaunter
 
         private IEnumerator StartGameCoroutine()
         {
-            startGameTimer.Value = GameStartCoolDown;
-            while (startGameTimer.Value > 0)
+            StartGameTimer.Value = GameStartCoolDown;
+            while (StartGameTimer.Value > 0)
             {
                 yield return new WaitForSeconds(1);
-                startGameTimer.Value--;
+                StartGameTimer.Value--;
             }
         }
 

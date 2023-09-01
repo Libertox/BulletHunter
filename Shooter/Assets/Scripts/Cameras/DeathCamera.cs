@@ -8,6 +8,7 @@ namespace BulletHaunter.Cameras
     public class DeathCamera: NetworkBehaviour
     {
         private Camera deathCamera;
+        [SerializeField] private GameLayerMaskSO gameLayerMaskSO;
 
         private void Awake() => deathCamera = GetComponent<Camera>();
      
@@ -48,14 +49,14 @@ namespace BulletHaunter.Cameras
         {
             int index = GameManagerMultiplayer.Instance.GetPlayerDataIndexFromClientId(OwnerClientId);
             if (index == -1) return;
-            LayerMask gunLayerMask = GameManager.Instance.GetPlayerGunLayerMask(index);
+            LayerMask gunLayerMask = gameLayerMaskSO.PlayerGunLayerMask[index];
             deathCamera.cullingMask &= ~(1 << gunLayerMask);
         }
 
         private void ResetCullingMask()
         {
-            for (int i = 0; i < GameManager.Instance.GetPlayerGunLayerMaskLength(); i++)
-                deathCamera.cullingMask |= (1 << GameManager.Instance.GetPlayerGunLayerMask(i)); 
+            for (int i = 0; i < gameLayerMaskSO.PlayerGunLayerMask.Length; i++)
+                deathCamera.cullingMask |= (1 << gameLayerMaskSO.PlayerGunLayerMask[i]); 
         }
 
         private void PlayerStats_OnAnyPlayerSpawn(object sender, EventArgs e)

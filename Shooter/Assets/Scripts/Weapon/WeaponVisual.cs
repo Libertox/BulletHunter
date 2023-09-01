@@ -13,6 +13,8 @@ namespace BulletHaunter
         [SerializeField] private MeshFilter weaponMeshFiler;
         [SerializeField] private MeshRenderer weaponMeshRender;
 
+        [SerializeField] private GameLayerMaskSO gameLayerMaskSO;
+
         private void Start()
         {
             if (IsOwner)
@@ -87,7 +89,7 @@ namespace BulletHaunter
         {
             int index = GameManagerMultiplayer.Instance.GetPlayerDataIndexFromClientId(OwnerClientId);
             if (index == -1) return;
-            LayerMask gunLayerMask = GameManager.Instance.GetPlayerGunLayerMask(index);
+            LayerMask gunLayerMask = gameLayerMaskSO.PlayerGunLayerMask[index];
 
             scopeMeshFilter.gameObject.layer = gunLayerMask;
             weaponMeshFiler.gameObject.layer = gunLayerMask;

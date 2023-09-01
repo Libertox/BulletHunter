@@ -23,16 +23,10 @@ namespace BulletHaunter
             {
                 GameInput.Instance.OnThrowed += GameInput_OnThrowed;
                 GameInput.Instance.OnCancelThrowed += GameInput_OnCancelThrowed;
-                GameInput.Instance.OnPaused += GameInput_OnPaused;
             }     
         }
 
-        private void GameInput_OnPaused(object sender, EventArgs e)
-        {
-            isThrowed = false;
-            trajectoryLine.Hide();
-        }
-
+       
         private void Update()
         {
             if (!isThrowed || !IsOwner) return;
@@ -42,10 +36,11 @@ namespace BulletHaunter
 
         private void GameInput_OnCancelThrowed(object sender, EventArgs e)
         {
-            if (InventoryManager.Instance.CanThrowGrenade())
-            {
-                isThrowed = false;
-                trajectoryLine.Hide();
+            isThrowed = false;
+            trajectoryLine.Hide();
+
+            if (InventoryManager.Instance.CanThrowGrenade() && GameManager.Instance.CanInputAction())
+            {          
                 ThowGrenadeServerRpc(playerCamera.transform.forward.x, playerCamera.transform.forward.y, playerCamera.transform.forward.z);
                 InventoryManager.Instance.SubstractGranade();
             }

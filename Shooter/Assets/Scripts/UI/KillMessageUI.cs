@@ -20,14 +20,12 @@ namespace BulletHaunter
             if(PlayerStats.Instance != null)
             {
                 PlayerStats.Instance.OnDeathed += PlayerStats_OnDeathed;
+                PlayerStats.Instance.OnAnyPlayerKilled += PlayerShoot_OnAnyPlayerKilled;
             }
             else
             {
                 PlayerStats.OnAnyPlayerSpawn += PlayerStats_OnAnyPlayerSpawn;
             }
-            
-            PlayerShoot.OnAnyPlayerKilled += PlayerShoot_OnAnyPlayerKilled;
- 
             Hide();
         }
 
@@ -37,14 +35,16 @@ namespace BulletHaunter
             {
                 PlayerStats.Instance.OnDeathed -= PlayerStats_OnDeathed;
                 PlayerStats.Instance.OnDeathed += PlayerStats_OnDeathed;
+
+                PlayerStats.Instance.OnAnyPlayerKilled -= PlayerShoot_OnAnyPlayerKilled;
+                PlayerStats.Instance.OnAnyPlayerKilled += PlayerShoot_OnAnyPlayerKilled;
             }
         }
 
-        private void OnDestroy() => PlayerShoot.OnAnyPlayerKilled -= PlayerShoot_OnAnyPlayerKilled;
-      
 
-        private void PlayerShoot_OnAnyPlayerKilled(object sender, PlayerShoot.OnAnyPlayerKilledEventArgs e) => 
-            SetMessageText("YOU KILLED ", e.targetId);
+        private void PlayerShoot_OnAnyPlayerKilled(object sender, PlayerStats.OnAnyPlayerKilledEventArgs e) => 
+            SetMessageText("YOU KILLED ", e.targetId);    
+       
         
 
         private void PlayerStats_OnDeathed(object sender, PlayerStats.OnDeathedEventArgs e) => 

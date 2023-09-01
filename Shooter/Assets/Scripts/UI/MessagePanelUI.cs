@@ -17,6 +17,8 @@ namespace BulletHaunter
             {
                 Hide();
                 SoundManager.Instance.PlayButtonSound();
+                LobbyManager.Instance.LeaveLobby();
+                LobbyManager.Instance.DeleteLobby();
             });
         }
 

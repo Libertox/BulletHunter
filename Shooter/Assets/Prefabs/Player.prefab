@@ -248,6 +248,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f2b2c09dd7e97443820c472918e8e6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameLayerMaskSO: {fileID: 11400000, guid: 3e1846dc984c992418af3d9b8d035d65, type: 2}
 --- !u!1 &622592596777994495
 GameObject:
   m_ObjectHideFlags: 0
@@ -517,6 +518,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfaa2b60d72c4524f81c5d80e279f9e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameLayerMaskSO: {fileID: 11400000, guid: 3e1846dc984c992418af3d9b8d035d65, type: 2}
 --- !u!1 &1797723401077109415
 GameObject:
   m_ObjectHideFlags: 0
@@ -1306,6 +1308,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: befe8f3fb69e0de40a84d8a02593504a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameLayerMaskSO: {fileID: 11400000, guid: 3e1846dc984c992418af3d9b8d035d65, type: 2}
 --- !u!1 &5111465295376888599
 GameObject:
   m_ObjectHideFlags: 0
@@ -1767,6 +1770,7 @@ MonoBehaviour:
   shootDustPrefab: {fileID: 1067471869909948, guid: fbc5e59d75bc2f34c800d6a2e1da8362,
     type: 3}
   playerCamera: {fileID: 453851963519683567}
+  gameLayerMaskSO: {fileID: 11400000, guid: 3e1846dc984c992418af3d9b8d035d65, type: 2}
 --- !u!114 &8090684639417659927
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2351,6 +2355,7 @@ MonoBehaviour:
   uprightCameraPosition: {fileID: 54796652885097672}
   squatCameraPosition: {fileID: 1825368356770115657}
   teamPlayerCamera: {fileID: 5187516367835611251}
+  gameLayerMaskSO: {fileID: 11400000, guid: 3e1846dc984c992418af3d9b8d035d65, type: 2}
 --- !u!1 &7695670499590592247
 GameObject:
   m_ObjectHideFlags: 0
@@ -2450,6 +2455,7 @@ MonoBehaviour:
   playerSkinnedMeshRenderer: {fileID: 7144930750007447560}
   playerNickText: {fileID: 4396793836011975931}
   root: {fileID: 5130136199904776642}
+  gameLayerMaskSO: {fileID: 11400000, guid: 3e1846dc984c992418af3d9b8d035d65, type: 2}
 --- !u!1 &7702676856472561208
 GameObject:
   m_ObjectHideFlags: 0
@@ -2537,7 +2543,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8088441354236864231}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.457, y: -0.546, z: -0.61}
+  m_LocalPosition: {x: 0.294, y: 0.732, z: -0.008}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2690,6 +2696,7 @@ MonoBehaviour:
   scopeMeshRender: {fileID: 7421494466097956262}
   weaponMeshFiler: {fileID: 2866507215044030281}
   weaponMeshRender: {fileID: 8771964838380356712}
+  gameLayerMaskSO: {fileID: 11400000, guid: 3e1846dc984c992418af3d9b8d035d65, type: 2}
 --- !u!114 &2948129527913667180
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2706,7 +2713,8 @@ MonoBehaviour:
   downPointTransform: {fileID: 822928933650359070}
   aimPointTransform: {fileID: 333497680344922011}
   normalPointTransform: {fileID: 7782597081292136660}
-  swapModelSpeed: 24
+  swapModelDownSpeed: 16
+  swapModelUpSpeed: 30
   aimSpeed: 12
   weaponVisual: {fileID: 7420453034533491956}
 --- !u!1 &9034676294427090176

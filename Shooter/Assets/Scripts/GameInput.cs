@@ -144,8 +144,6 @@ namespace BulletHaunter
 
         private void Throw_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
         {
-            if(!GameManager.Instance.CanInputAction()) return;
-
             OnCancelThrowed?.Invoke(this, EventArgs.Empty);
         }
 

@@ -37,12 +37,9 @@ namespace BulletHaunter
             
         }
 
-        private void GameManager_OnPlayerReconnected(object sender, EventArgs e)
-        {
+        private void GameManager_OnPlayerReconnected(object sender, EventArgs e) => 
             SendColiderStatusServerRpc(uprightColider.enabled, squatColider.enabled, deathColider.enabled);
-        }
-
-   
+        
         private void PlayerStats_OnAnyPlayerSpawn(object sender, EventArgs e)
         {
             if (PlayerStats.Instance != null)

@@ -15,7 +15,10 @@ namespace BulletHaunter
         {
             if (UnityServices.State != ServicesInitializationState.Initialized)
             {
-                await UnityServices.InitializeAsync();
+                InitializationOptions initializationOptions = new InitializationOptions();
+                initializationOptions.SetProfile(UnityEngine.Random.Range(0, 1000).ToString());
+
+                await UnityServices.InitializeAsync(initializationOptions);
 
                 await AuthenticationService.Instance.SignInAnonymouslyAsync();
 

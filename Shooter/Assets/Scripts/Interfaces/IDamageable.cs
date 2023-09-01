@@ -7,7 +7,7 @@ namespace BulletHaunter
 {
     public interface IDamageable
     {
-        public bool TakeDamage(float damage, ulong clientId);
+        public void TakeDamage(float damage, ulong clientId);
 
         public NetworkObject GetNetworkObject();
     }

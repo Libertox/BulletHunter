@@ -16,6 +16,7 @@ namespace BulletHaunter.Cameras
         [SerializeField] private Transform squatCameraPosition;
 
         [SerializeField] private Camera teamPlayerCamera;
+        [SerializeField] private GameLayerMaskSO gameLayerMaskSO;
 
         private float rotationY;
         private float rotationX;
@@ -70,18 +71,18 @@ namespace BulletHaunter.Cameras
             if (index == -1)
                 return;
 
-            LayerMask playerMask = GameManager.Instance.GetPlayerLayerMask(index);
-            LayerMask gunLayerMask = GameManager.Instance.GetPlayerGunLayerMask(index);
+            LayerMask playerMask = gameLayerMaskSO.PlayerLayerMask[index];
+            LayerMask gunLayerMask = gameLayerMaskSO.PlayerGunLayerMask[index];
             cameraToControl.cullingMask &= ~(1 << playerMask);
             cameraToControl.cullingMask &= ~(1 << gunLayerMask);
         }
 
         private void ResetCullingMask()
         {
-            for (int i = 0; i < GameManager.Instance.GetPlayerGunLayerMaskLength(); i++)
+            for (int i = 0; i < gameLayerMaskSO.PlayerGunLayerMask.Length; i++)
             {
-                cameraToControl.cullingMask |= (1 << GameManager.Instance.GetPlayerGunLayerMask(i));
-                cameraToControl.cullingMask |= (1 << GameManager.Instance.GetPlayerLayerMask(i));
+                cameraToControl.cullingMask |= (1 << gameLayerMaskSO.PlayerGunLayerMask[i]);
+                cameraToControl.cullingMask |= (1 << gameLayerMaskSO.PlayerLayerMask[i]);
             }
         }
 

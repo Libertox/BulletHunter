@@ -13,7 +13,9 @@ namespace BulletHaunter
         [SerializeField] private Transform normalPointTransform;
 
 
-        [SerializeField] private float swapModelSpeed;
+        [SerializeField] private float swapModelDownSpeed;
+        [SerializeField] private float swapModelUpSpeed;
+
         [SerializeField] private float aimSpeed;
 
         [SerializeField] private WeaponVisual weaponVisual;
@@ -90,14 +92,14 @@ namespace BulletHaunter
 
         public bool MoveDown()
         {
-            transform.position = Vector3.Lerp(transform.position, downPointTransform.position, Time.deltaTime * swapModelSpeed);
+            transform.position = Vector3.Slerp(transform.position, downPointTransform.position, Time.deltaTime * swapModelDownSpeed);
             return transform.position == downPointTransform.position;
 
         }
 
         public bool MoveUp()
         {
-            transform.position = Vector3.Lerp(transform.position, upPointTransform.position, Time.deltaTime * swapModelSpeed);
+            transform.position = Vector3.Slerp(transform.position, upPointTransform.position, Time.deltaTime * swapModelUpSpeed);
             return transform.position == upPointTransform.position;   
         }
     }

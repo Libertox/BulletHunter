@@ -21,11 +21,8 @@ namespace BulletHaunter
             waitForSeconds = new WaitForSeconds(uprightingCooldown);
         }
 
-        public bool TakeDamage(float damage, ulong clientId) 
-        {
-            TakeDamageServerRpc();
-            return false;
-        } 
+        public void TakeDamage(float damage, ulong clientId) => TakeDamageServerRpc();
+      
 
         [ServerRpc(RequireOwnership = false)]
         private void TakeDamageServerRpc() => TakeDamageClientRpc();

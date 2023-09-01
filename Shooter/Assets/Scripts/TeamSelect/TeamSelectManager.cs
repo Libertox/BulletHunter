@@ -28,6 +28,14 @@ namespace BulletHaunter
             SetPlayerReadyClientRpc(serverRpcParams.Receive.SenderClientId);
             playerReadyDictionary[serverRpcParams.Receive.SenderClientId] = true;
 
+            CheckAllPlayerReady();
+
+            OnReadyChanged?.Invoke(this, EventArgs.Empty);
+
+        }
+
+        public void CheckAllPlayerReady()
+        {
             bool allClientsReady = true;
             foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
             {
@@ -43,9 +51,6 @@ namespace BulletHaunter
                 LobbyManager.Instance.UpdateLobbyData();
                 SceneLoader.LoadNetwork(SceneLoader.GameScene.LoadingScene);
             }
-
-            OnReadyChanged?.Invoke(this, EventArgs.Empty);
-
         }
 
         [ClientRpc()]

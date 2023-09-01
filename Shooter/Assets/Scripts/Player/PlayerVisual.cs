@@ -14,6 +14,7 @@ namespace BulletHaunter
         [SerializeField] private TextMeshPro playerNickText;
 
         [SerializeField] private GameObject root;
+        [SerializeField] private GameLayerMaskSO gameLayerMaskSO;
 
         private void Start()
         {
@@ -40,7 +41,7 @@ namespace BulletHaunter
             int index = GameManagerMultiplayer.Instance.GetPlayerDataIndexFromClientId(OwnerClientId);
             if (index == -1) return;
 
-            LayerMask playerLayerMask = GameManager.Instance.GetPlayerLayerMask(index);
+            LayerMask playerLayerMask = gameLayerMaskSO.PlayerLayerMask[index];
             SetGameLayerRecursive(gameObject, playerLayerMask);
             root.layer = playerLayerMask;
 
@@ -80,7 +81,7 @@ namespace BulletHaunter
             PlayerData playerData = GameManagerMultiplayer.Instance.GetPlayerDataFromClientId(OwnerClientId);
             playerNickText.SetText(playerData.playerName.ToString());
             playerNickText.color = GameManagerMultiplayer.Instance.GetTeamColor(playerData.teamColorId);
-            playerNickText.gameObject.layer = GameManager.Instance.GetPlayerTeamLayerMask(playerData.teamColorId);
+            playerNickText.gameObject.layer = gameLayerMaskSO.PlayerTeamLayerMask[playerData.teamColorId];
         }
 
         private void SetPlayerNickShow(bool isShow)

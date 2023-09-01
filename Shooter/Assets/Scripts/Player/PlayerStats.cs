@@ -20,6 +20,8 @@ namespace BulletHaunter
         public event EventHandler<OnDeathedEventArgs> OnDeathed;
         public event EventHandler<OnWaitedEventArgs> OnRestoreWaited;
         public event EventHandler OnRestored;
+        public event EventHandler<OnAnyPlayerKilledEventArgs> OnAnyPlayerKilled;
+        public class OnAnyPlayerKilledEventArgs : EventArgs { public ulong targetId; }
 
         public class OnStatsChangedEventArgs: EventArgs { public float stats; }
         public class OnDeathedEventArgs : EventArgs { public ulong targetId; public ulong ownerId; }
@@ -42,12 +44,12 @@ namespace BulletHaunter
             health = playerStatsSO.MaxHealth;
             Stamina = playerStatsSO.MaxStamina;
         }
-
-     
+ 
         public override void OnNetworkSpawn()
         {
             if(IsOwner)
                 Instance = this;
+
             StartCoroutine(InvulnerabilityCountdownCoroutine(GameManager.Instance.StartGameTimer.Value));
             OnAnyPlayerSpawn?.Invoke(this, EventArgs.Empty);
         }
@@ -107,22 +109,33 @@ namespace BulletHaunter
             ChnageHealthValue();
         }
 
-        public bool DecreaseHealth(float decreaseValue)
+        public void DecreaseHealth(float decreaseValue)
         {
             if (health > 0)
             {
                 health -= decreaseValue;
-                ChnageHealthValue();
+                
                 if (health <= 0)
                 {
                     OnDeathed?.Invoke(this, new OnDeathedEventArgs { targetId = opponentHitId , ownerId = OwnerClientId});
+                    SendDeathMessageServerRpc(opponentHitId);
                     StartCoroutine(RestoreCoroutine());
                     health = 0;
-                    return true;
                 }
+
+                ChnageHealthValue();
             }
-  
-            return false;        
+     
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void SendDeathMessageServerRpc(ulong clientId) => SendDeathMessageClientRpc(clientId);
+         
+        [ClientRpc()]
+        private void SendDeathMessageClientRpc(ulong clientId)
+        {
+            if (NetworkManager.Singleton.LocalClientId == clientId)
+                Instance.OnAnyPlayerKilled?.Invoke(this, new OnAnyPlayerKilledEventArgs { targetId = OwnerClientId});              
         }
 
         private void ChnageHealthValue()
@@ -133,6 +146,7 @@ namespace BulletHaunter
             });
         }
 
+     
         private IEnumerator RestoreCoroutine()
         {
             float restoreTimer = playerStatsSO.RestoreCooldown;
@@ -153,6 +167,7 @@ namespace BulletHaunter
             StartCoroutine(InvulnerabilityCountdownCoroutine(playerStatsSO.InvulnerabilityCooldown));
         }
 
+     
         public void IncreaseArmor(float increaseValue)
         {
             armor += increaseValue;
@@ -191,7 +206,7 @@ namespace BulletHaunter
         }
 
 
-        public bool TakeDamage(float damage, ulong clientId)
+        public void TakeDamage(float damage, ulong clientId)
         {
             if (CanTakeDamage())
             {
@@ -199,14 +214,13 @@ namespace BulletHaunter
                 SoundManager.Instance.PlayPlayerTakeDamageSound(transform.position);
 
                 if (armor <= 0)
-                    return DecreaseHealth(damage);
+                    DecreaseHealth(damage);
                 else
                     DecreaseArmor(damage);
             }
-            return false;
         }
 
-        private bool CanTakeDamage() => !isInvulnerable;
+        private bool CanTakeDamage() => !isInvulnerable && IsOwner;
        
         public NetworkObject GetNetworkObject() => NetworkObject;
 

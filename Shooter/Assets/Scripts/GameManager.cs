@@ -38,10 +38,6 @@ namespace BulletHaunter
 
         [SerializeField] private List<WeaponSO> weaponSOList;
 
-        [SerializeField] private int[] playerLayerMask;
-        [SerializeField] private int[] playerGunLayerMask;
-        [SerializeField] private int[] playerTeamLayerMask;
-
         private List<int> usedPointsIndexList;
         private GameState gameState = GameState.Play;
         private GameState previousGameState;
@@ -250,16 +246,6 @@ namespace BulletHaunter
         public int GetWeaponSOIndex(WeaponSO weaponSO) => weaponSOList.IndexOf(weaponSO);
       
         public WeaponSO GetWeaponSOFromIndex(int index) => weaponSOList[index];
- 
-        public LayerMask GetPlayerLayerMask(int index) => playerLayerMask[index];
-
-        public int GetPlayerLayerMaskLength() => playerLayerMask.Length;
-
-        public LayerMask GetPlayerGunLayerMask(int index) => playerGunLayerMask[index];
-
-        public int GetPlayerGunLayerMaskLength() => playerGunLayerMask.Length;
-
-        public LayerMask GetPlayerTeamLayerMask(int index) => playerTeamLayerMask[index];
 
         public bool IsPauseState() => gameState == GameState.Pause;
 

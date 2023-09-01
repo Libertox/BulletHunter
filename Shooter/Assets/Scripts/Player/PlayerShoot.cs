@@ -7,16 +7,14 @@ namespace BulletHaunter
 {
     public class PlayerShoot : NetworkBehaviour
     {
-        public static event EventHandler<OnAnyPlayerKilledEventArgs> OnAnyPlayerKilled;
-
-        public class OnAnyPlayerKilledEventArgs : EventArgs { public ulong targetId; }
-
+       
         [SerializeField] private LayerMask shootLayerMask;
 
         [SerializeField] private GameObject bulletTrackPrefab;
         [SerializeField] private GameObject shootDustPrefab;
 
         [SerializeField] private Camera playerCamera;
+        [SerializeField] private GameLayerMaskSO gameLayerMaskSO;
 
         private bool isShoot;
         private float shootTimerCooldown;
@@ -29,6 +27,7 @@ namespace BulletHaunter
                 GameInput.Instance.OnCancelShooted += GameInput_OnCancelShooted;
 
                 GameInput.Instance.OnPaused += GameInput_OnCancelShooted;
+
             }
 
             GameManagerMultiplayer.Instance.OnPlayerDataNetworkListChanged += GameManagerMultiplayer_OnPlayerDataNetworkListChanged;
@@ -50,15 +49,15 @@ namespace BulletHaunter
         {
             int index = GameManagerMultiplayer.Instance.GetPlayerDataIndexFromClientId(OwnerClientId);
             if (index == -1) return;
-            LayerMask playerLayerMask = GameManager.Instance.GetPlayerLayerMask(index);
+            LayerMask playerLayerMask = gameLayerMaskSO.PlayerLayerMask[index];
 
             shootLayerMask &= ~(1 << playerLayerMask);
         }
 
         private void ResetCullingMask()
         {
-            for (int i = 0; i < GameManager.Instance.GetPlayerLayerMaskLength(); i++)
-                shootLayerMask |= (1 << GameManager.Instance.GetPlayerLayerMask(i));
+            for (int i = 0; i < gameLayerMaskSO.PlayerLayerMask.Length; i++)
+                shootLayerMask |= (1 << gameLayerMaskSO.PlayerLayerMask[i]);
         }
 
         private void GameInput_OnCancelShooted(object sender, EventArgs e) 
@@ -131,21 +130,15 @@ namespace BulletHaunter
         }
 
         [ServerRpc(RequireOwnership = false)]
-        private void HitObjectServerRpc(NetworkObjectReference networkObjectReference, float damage)
-        {
+        private void HitObjectServerRpc(NetworkObjectReference networkObjectReference, float damage) => 
             HitObjectClientRpc(networkObjectReference, damage);
-        }
-
+       
         [ClientRpc()]
         private void HitObjectClientRpc(NetworkObjectReference networkObjectReference, float damage)
         {
             networkObjectReference.TryGet(out NetworkObject networkObject);
             IDamageable damageable = networkObject.GetComponent<IDamageable>();
-            if(damageable.TakeDamage(damage, OwnerClientId))
-            {
-                if (IsOwner)
-                    OnAnyPlayerKilled?.Invoke(this, new OnAnyPlayerKilledEventArgs { targetId = networkObject.OwnerClientId });  
-            }
+            damageable.TakeDamage(damage, OwnerClientId);   
         }
     }
 

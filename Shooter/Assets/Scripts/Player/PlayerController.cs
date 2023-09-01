@@ -59,8 +59,10 @@ namespace BulletHaunter
 
             PlayerStats.OnDeathed += PlayerStats_OnDeathed;
             PlayerStats.OnRestored += PlayerStats_OnRestored;
+
         }
 
+     
         private void PlayerStats_OnRestored(object sender, EventArgs e)
         {
             rgb.useGravity = true;
@@ -224,7 +226,6 @@ namespace BulletHaunter
             OnJumped = null;
             OnFalled = null;
         }
-
 
     }
 

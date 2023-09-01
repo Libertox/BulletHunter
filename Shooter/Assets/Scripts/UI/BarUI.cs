@@ -31,9 +31,9 @@ namespace BulletHaunter.UI
         {
             while (newValue < barImage.fillAmount)
             {
-                barImage.fillAmount -= Time.deltaTime * 2;
+                barImage.fillAmount -= Time.deltaTime;
 
-                yield return new WaitForSeconds(Time.deltaTime);
+                yield return new WaitForEndOfFrame();
             }
         }
 
@@ -41,9 +41,9 @@ namespace BulletHaunter.UI
         {
             while (newValue > barImage.fillAmount)
             {
-                barImage.fillAmount += Time.deltaTime * 2;
+                barImage.fillAmount += Time.deltaTime;
  
-                yield return new WaitForSeconds(Time.deltaTime);
+                yield return new WaitForEndOfFrame();
             }
         }
 

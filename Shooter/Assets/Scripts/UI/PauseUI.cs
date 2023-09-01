@@ -30,9 +30,9 @@ namespace BulletHaunter.UI
             });
             exitButton.onClick.AddListener(() => 
             {
-                PlayerController.ResetStaticData();
-                PlayerStats.ResetStaticData();
                 SoundManager.Instance.PlayButtonSound();
+                PlayerStats.ResetStaticData();
+                PlayerController.ResetStaticData();
                 SceneLoader.Load(SceneLoader.GameScene.MainMenu); 
             });
         }

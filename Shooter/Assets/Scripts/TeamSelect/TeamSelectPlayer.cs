@@ -24,6 +24,7 @@ namespace BulletHaunter
                 PlayerData playerData = GameManagerMultiplayer.Instance.GetPlayerDataFromIndex(playerIndex);
                 LobbyManager.Instance.KickLobby(playerData.playerId.ToString());
                 GameManagerMultiplayer.Instance.KickPlayer(playerData.clientId);
+                TeamSelectManager.Instance.CheckAllPlayerReady();
                 SoundManager.Instance.PlayButtonSound();
             });
         }

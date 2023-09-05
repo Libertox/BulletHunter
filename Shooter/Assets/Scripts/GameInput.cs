@@ -36,14 +36,13 @@ namespace BulletHaunter
         public event EventHandler<OnWeaponSelectedEventArgs> OnWeaponSelected;
 
         public class OnWeaponSelectedEventArgs: EventArgs { public int selectWeaponIndex; }
-
-        private PlayerInput playerInput;
-        private OnWeaponSelectedEventArgs selectedWeapon;
-
         public RebindInput RebindInput { get; private set; }
 
         public float MouseSensitivity { get; private set; }
         private readonly float defaultMouseSensitivity = 50f;
+
+        private PlayerInput playerInput;
+        private OnWeaponSelectedEventArgs selectedWeapon;
 
         private void Awake()
         {

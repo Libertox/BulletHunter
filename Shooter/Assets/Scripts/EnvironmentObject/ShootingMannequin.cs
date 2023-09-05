@@ -10,11 +10,11 @@ namespace BulletHaunter
     {
         private const string ANIM_IS_SHOOT = "isShoot";
 
+        [SerializeField] private float uprightingCooldown;
+
         private Animator animator;
         private WaitForSeconds waitForSeconds;
-
-        [SerializeField] private float uprightingCooldown;
-      
+ 
         private void Awake()
         {
             animator = GetComponent<Animator>();

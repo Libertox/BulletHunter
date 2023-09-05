@@ -101,5 +101,6 @@ namespace BulletHaunter
 
         public  void Hide() => gameObject.SetActive(false);
 
+        
     }
 }

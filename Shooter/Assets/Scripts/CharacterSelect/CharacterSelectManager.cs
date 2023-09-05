@@ -11,10 +11,10 @@ namespace BulletHaunter.CharacterSelect
         public event EventHandler<OnSkinChangedEventArgs> OnSkinChanged;
 
         public class OnSkinChangedEventArgs : EventArgs { public Material material; }
-  
-        [SerializeField] private PlayerSkinsSO playerSkinsSO;
 
         public int ChooseSkinIndex { get; private set; }
+
+        [SerializeField] private PlayerSkinsSO playerSkinsSO;
 
         private void Awake()
         {

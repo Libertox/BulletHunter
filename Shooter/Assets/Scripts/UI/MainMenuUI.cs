@@ -31,10 +31,8 @@ namespace BulletHaunter.UI
             });
             exitButton.onClick.AddListener(() =>
             {
-#if !UNITY_WEBGL
                 Application.Quit();
                 SoundManager.Instance.PlayButtonSound();
-#endif
             });
 
             characterSelectButton.onClick.AddListener(() => 
@@ -44,5 +42,5 @@ namespace BulletHaunter.UI
             });
         }
 
-    }
+    }  
 }

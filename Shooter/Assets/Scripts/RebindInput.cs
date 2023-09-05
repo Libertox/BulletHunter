@@ -10,12 +10,8 @@ namespace BulletHaunter
     {
         private PlayerInput playerInput;
 
-
-        public RebindInput(PlayerInput playerInput)
-        {
-            this.playerInput = playerInput;
-
-        }
+        public RebindInput(PlayerInput playerInput) => this.playerInput = playerInput;
+       
 
         public void RebindBinding(string inputActionId, int bindingIndex, Action afterBindAction, Action<string> duplicateBindAaction)
         {

@@ -33,6 +33,8 @@ namespace BulletHaunter
         
         public SortedDictionary<int, int> TeamPointsDictionary { get; private set; }
 
+        public NetworkVariable<float> StartGameTimer { get; private set; } = new NetworkVariable<float>(GameStartCoolDown);
+
         [SerializeField] private PlayerController playerPrefab;
         [SerializeField] private List<Transform> playerSpawnPointsList;
 
@@ -41,7 +43,7 @@ namespace BulletHaunter
         private List<int> usedPointsIndexList;
         private GameState gameState = GameState.Play;
         private GameState previousGameState;
-        public NetworkVariable<float> StartGameTimer { get; private set; } = new NetworkVariable<float>(GameStartCoolDown);
+      
 
         public enum GameState
         {

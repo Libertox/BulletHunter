@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,8 +16,6 @@ namespace BulletHaunter
             {
                 Hide();
                 SoundManager.Instance.PlayButtonSound();
-                LobbyManager.Instance.LeaveLobby();
-                LobbyManager.Instance.DeleteLobby();
             });
         }
 
@@ -33,25 +30,38 @@ namespace BulletHaunter
             Hide();
         }
 
-        private void LobbyManager_OnCreatedLobbyFailed(object sender, EventArgs e) => 
-            SetMessageText("FAILED TO CREATE LOBBY");
-        
-        private void LobbyManager_OnCreatedLobby(object sender, EventArgs e) => 
-            SetMessageText("CREATING LOBBY...");
-       
+        private void LobbyManager_OnCreatedLobbyFailed(object sender, EventArgs e) 
+        {
+            continueButton.gameObject.SetActive(true);
+            SetMessageText("FAILED TO CREATE LOBBY");      
+        }
 
-        private void LobbyManager_OnQuickJoinedLobbyFailed(object sender, EventArgs e) => 
+        private void LobbyManager_OnCreatedLobby(object sender, EventArgs e) 
+        {
+            continueButton.gameObject.SetActive(false);
+            SetMessageText("CREATING LOBBY...");           
+        }
+
+
+        private void LobbyManager_OnQuickJoinedLobbyFailed(object sender, EventArgs e) 
+        {
+            continueButton.gameObject.SetActive(true);
             SetMessageText("COULD NOT FIND A LOBBY TO JOIN");
-        
+        }
 
-        private void LobbyManager_OnJoinedLobbyFailed(object sender, EventArgs e) => 
+        private void LobbyManager_OnJoinedLobbyFailed(object sender, EventArgs e) 
+        {
+            continueButton.gameObject.SetActive(true);
             SetMessageText("FAILED TO JOIN LOBBY!");
-       
+        }
 
-        private void LobbyManager_OnJoinedLobby(object sender, EventArgs e) =>
+
+        private void LobbyManager_OnJoinedLobby(object sender, EventArgs e) 
+        {
+            continueButton.gameObject.SetActive(false);
             SetMessageText("JOINING LOBBY... ");
-        
-
+        }
+             
         private void Show() => gameObject.SetActive(true);
 
         private void Hide() => gameObject.SetActive(false);

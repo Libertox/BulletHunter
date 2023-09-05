@@ -43,11 +43,9 @@ namespace BulletHaunter
             PlayerPrefs.Save();
         }
 
-        private void PlaySoundEffect(AudioClip audioClip, Vector3 audioEffectPosition) 
-        {
+        private void PlaySoundEffect(AudioClip audioClip, Vector3 audioEffectPosition) => 
             AudioSource.PlayClipAtPoint(audioClip, audioEffectPosition, SoundEffectVolume);
-        }
-
+       
         private void PlaySoundEffect(AudioClip[] audioClips, Vector3 audioEffectPosition)
         {
             int audioClipIndex = Random.Range(0, audioClips.Length);

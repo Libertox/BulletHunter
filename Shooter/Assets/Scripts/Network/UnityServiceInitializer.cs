@@ -15,15 +15,11 @@ namespace BulletHaunter
         {
             if (UnityServices.State != ServicesInitializationState.Initialized)
             {
-                InitializationOptions initializationOptions = new InitializationOptions();
-                initializationOptions.SetProfile(UnityEngine.Random.Range(0, 1000).ToString());
-
-                await UnityServices.InitializeAsync(initializationOptions);
+                await UnityServices.InitializeAsync();
 
                 await AuthenticationService.Instance.SignInAnonymouslyAsync();
 
                 SceneLoader.Load(SceneLoader.GameScene.MainMenu);
-
             }
 
         }

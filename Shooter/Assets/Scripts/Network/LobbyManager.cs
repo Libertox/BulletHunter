@@ -24,6 +24,15 @@ namespace BulletHaunter
         public const int DEFAULT_TEAM_POINTS = 8;
         public const string DEFAULT_LOBBY_NAME = "My Lobby";
 
+        public event EventHandler OnJoinedLobby;
+        public event EventHandler OnJoinedLobbyFailed;
+        public event EventHandler OnQuickJoinedLobbyFailed;
+        public event EventHandler OnCreatedLobby;
+        public event EventHandler OnCreatedLobbyFailed;
+        public event EventHandler<OnLobbyListChangedEventArgs> OnLobbyListChanged;
+
+        public class OnLobbyListChangedEventArgs : EventArgs { public List<Lobby> lobbyList; }
+
         private Lobby joinedLobby;
 
         private float heartbeatTimer;
@@ -33,16 +42,6 @@ namespace BulletHaunter
         private readonly float listLobbiesTimerMax = 3f;
 
         private List<string> joinedLobbiesIdList;
-
-        public event EventHandler<OnLobbyListChangedEventArgs> OnLobbyListChanged;
-
-        public event EventHandler OnJoinedLobby;
-        public event EventHandler OnJoinedLobbyFailed;
-        public event EventHandler OnQuickJoinedLobbyFailed;
-        public event EventHandler OnCreatedLobby;
-        public event EventHandler OnCreatedLobbyFailed;
-
-        public class OnLobbyListChangedEventArgs : EventArgs { public List<Lobby> lobbyList; }
 
         private void Awake()
         {
@@ -363,7 +362,7 @@ namespace BulletHaunter
             OnJoinedLobby?.Invoke(this, EventArgs.Empty);
             try
             {
-                joinedLobby = await LobbyService.Instance.ReconnectToLobbyAsync(joinedLobbiesIdList[0]);
+                joinedLobby = await LobbyService.Instance.ReconnectToLobbyAsync(joinedLobbiesIdList[joinedLobbiesIdList.Count - 1]);
 
                 string relayJoinCode = joinedLobby.Data[KEY_RELAY_JOIN_CODE].Value;
                 JoinAllocation joinAllocation = await JoinRelay(relayJoinCode);
@@ -380,6 +379,12 @@ namespace BulletHaunter
                 Debug.Log(e);
                 OnJoinedLobbyFailed?.Invoke(this, EventArgs.Empty);
             }
+        }
+
+        private void OnDestroy()
+        {
+            if (IsLobbyHost())
+                DeleteLobby();
         }
     }
 }

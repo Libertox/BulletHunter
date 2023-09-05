@@ -8,6 +8,7 @@ namespace BulletHaunter.Cameras
     public class TeamPlayerCamera:NetworkBehaviour
     {
         private Camera teamPlayerCamera;
+
         [SerializeField] private GameLayerMaskSO gameLayerMaskSO;
 
         private void Awake() => teamPlayerCamera = GetComponent<Camera>();
